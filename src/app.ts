@@ -1,46 +1,60 @@
-import * as express from "express";
-import { Request, Response } from "express";
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
+import { sessionParser } from './config'
 
-// create typeorm connection
-createConnection().then(connection => {
-    const userRepository = connection.getRepository(User);
 
-    // create and setup express app
-    const app = express();
-    app.use(express.json());
+createConnection()
+    .then(async (connection) => {
+        // setup server once connection to the database is created
+        const express = require("express");
+        const cors = require("cors");
+        const auth = require("./util/passportStrategies");
+        const passport = require("passport");
+        const routes = require("./routes/routes");
 
-    // register routes
+        const PORT = 5000;
 
-    app.get("/users", async function (req: Request, res: Response) {
-        const users = await userRepository.find();
-        res.json(users);
-    });
+        const app = express();
 
-    app.get("/users/:id", async function (req: Request, res: Response) {
-        const results = await userRepository.findOne(req.params.id);
-        return res.send(results);
-    });
+        app.set('view engine', 'ejs');
 
-    app.post("/users", async function (req: Request, res: Response) {
-        const user = await userRepository.create(req.body);
-        const results = await userRepository.save(user);
-        return res.send(results);
-    });
+        // setup express middlewares
+        app.use(
+            sessionParser
+        );
+        app.use(
+            cors({
+                origin: ["http://localhost:3000", "localhost:3000"],
+                credentials: true
+            })
+        );
+        app.use(passport.initialize());
+        app.use(passport.session());
+        app.use(express.json());
+        app.use(express.urlencoded());
+        //setup passport middlewares
+        passport.use(auth);
+        passport.serializeUser((user, done) => {
+            done(null, user.id);
+        });
+        passport.deserializeUser((userId, done) => {
+            const user = connection.getRepository(User);
+            user
+                .findOne(userId, { select: ['id', 'username'] })
+                .then((data) => done(null, data))
+                .catch((error) => done(error));
+        });
 
-    app.put("/users/:id", async function (req: Request, res: Response) {
-        const user = await userRepository.findOne(req.params.id);
-        userRepository.merge(user, req.body);
-        const results = await userRepository.save(user);
-        return res.send(results);
-    });
 
-    app.delete("/users/:id", async function (req: Request, res: Response) {
-        const results = await userRepository.delete(req.params.id);
-        return res.send(results);
-    });
+        //setup routes
+        app.use(routes);
 
-    // start express server
-    app.listen(3000);
-});
+        // express server listen on PORT
+        const server = app.listen(PORT, (e: Error) => {
+            if (e) return console.log(e);
+            console.log(`server listening on port ${PORT}`);
+        });
+
+
+    })
+    .catch((error) => console.log(error));

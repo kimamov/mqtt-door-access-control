@@ -4,7 +4,10 @@ export let client = null
 
 export const setupMqtt = () => {
 
-    client = mqtt.connect("localhost:1883")
+    client = mqtt.connect({
+        host: "127.0.0.1",
+        port: "1883"
+    })
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {
         client.subscribe('presence', function (err) {

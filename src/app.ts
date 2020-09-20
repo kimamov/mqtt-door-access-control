@@ -1,7 +1,7 @@
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
 import { sessionParser } from './config'
-
+import { setupMqtt } from './mqtt/connection'
 
 createConnection()
     .then(async (connection) => {
@@ -49,6 +49,8 @@ createConnection()
         //setup routes
         app.use(routes);
 
+        //setup mqtt client
+        setupMqtt();
         // express server listen on PORT
         const server = app.listen(PORT, (e: Error) => {
             if (e) return console.log(e);

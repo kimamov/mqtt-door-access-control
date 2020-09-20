@@ -18,7 +18,6 @@ router.post(
 );
 
 router.get("/logout", (req, res) => {
-  const user = req.user;
   req.logout();
   req.session.destroy();
 

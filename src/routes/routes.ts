@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 import { checkAuth } from '../middlewares/middlewares';
+import { client } from '../mqtt/connection';
 
 router.post(
   "/login",
@@ -45,7 +46,19 @@ router.get("/testuser", (req, res) => {
   }
 }); */
 
+router.get("/mqtt", (req, res) => {
+  const message = req.query.m || "default message"
+  if (client.connected) {
+    client.publish('devnfc', JSON.stringify({
+      uuid: "15125",
+      user: "kantemir",
+      acctype: "999",
+      validuntil: Date.now() + 6000000
+    }))
 
+  }
+  res.send("published your message: " + message)
+})
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

@@ -66,11 +66,34 @@ return msg;
 
 function messageHandler(topic: string, message: Buffer) {
     // message is Buffer
-    /* console.log(topic)
-    console.log(message.toString()) */
-    //client.end()
+    try {
+        const messageString = message.toString()
+        const messageJSON = JSON.parse(messageString)
+        console.log(topic)
+        console.log(messageJSON)
+
+        // handle different topics
+        switch (topic) {
+            case "devnfc":
+                handleDevNFCMessages(messageJSON);
+                break;
+            default:
+                console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
+                break;
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
 }
 
+function handleDevNFCMessages(messageJSON) {
+    switch (messageJSON.type) {
+        case "boot":
+            // handle new or known reader connecting
+            break;
+    }
+}
 
 function handleDoorConnected() {
 

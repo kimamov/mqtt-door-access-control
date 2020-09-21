@@ -9,6 +9,7 @@ export const setupMqtt = () => {
         port: "1883",
         clientId: "1515134"
     })
+
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {
         client.subscribe('presence', function (err) {
@@ -47,12 +48,7 @@ export const setupMqtt = () => {
     });
     client.publish('devnfc/random/wow', 'test')
 
-    client.on('message', function (topic, message) {
-        // message is Buffer
-        console.log(topic)
-        console.log(message.toString())
-        //client.end()
-    })
+    client.on('message', messageHandler)
 }
 /* 
 var person = new Object();
@@ -67,6 +63,14 @@ msg.payload = person;
 
 return msg;
  */
+
+function messageHandler(topic: string, message: Buffer) {
+    // message is Buffer
+    /* console.log(topic)
+    console.log(message.toString()) */
+    //client.end()
+}
+
 
 function handleDoorConnected() {
 

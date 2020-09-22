@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const passport = require("passport");
+import { addKey } from '../handlers/AccessHandlers';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
 
@@ -59,6 +60,8 @@ router.get("/mqtt", (req, res) => {
   }
   res.send("published your message: " + message)
 })
+
+router.post("/key", addKey)
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

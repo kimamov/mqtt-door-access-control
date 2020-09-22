@@ -24,14 +24,14 @@ export const setupMqtt = () => {
         })
         client.subscribe('devnfc', function (err) {
             if (!err) {
-                client.publish('devnfc', JSON.stringify({
+                /* client.publish('devnfc', JSON.stringify({
                     cmd: "adduser",
                     doorip: "192.168.178.47",
                     uid: "1234567890",
                     user: "kantemirbb",
                     acctype: "1",
                     validuntil: 2145914800
-                }))
+                })) */
             }
         })
     })
@@ -83,7 +83,7 @@ function messageHandler(topic: string, message: Buffer) {
         }
 
     } catch (error) {
-        console.log(error)
+        //console.log(error)
     }
 }
 
@@ -93,6 +93,18 @@ function handleDevNFCMessages(messageJSON) {
             // handle new or known reader connecting
             break;
     }
+}
+
+function syncToReader(readerIp: string, key) {
+    // sync single key to target reader
+}
+
+function syncAllToReader(readerIp: string) {
+    // sync all keys to target reader
+}
+
+function syncAllReaders() {
+
 }
 
 function handleDoorConnected() {

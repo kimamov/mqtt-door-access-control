@@ -7,7 +7,7 @@ export async function createUser(username: string, password: string) {
             const repo = getRepository(User);
             // check if user with that name already exists
             const foundUser = await repo.findOne({ where: { username: username } });
-            console.dir(foundUser);
+            //console.dir(foundUser);
             // if so you are done here
             if (foundUser) throw new Error("user already exists");
             // create new user

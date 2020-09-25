@@ -8,9 +8,15 @@ export function getUser(username: string, password: string): Promise<User> {
     try {
       const userRepo: Repository<User> = getRepository(User);
       const user: User = await userRepo.findOneOrFail({ username: username });
-      console.log(password, user.password)
+      //console.log(password, user.password)
       if (!(await bcrypt.compare(password, user.password))) {
         throw new Error("password not matching");
+      }
+      // check if user is varified 
+      if (user.type < 1) {
+        reject(Error(
+          "user was not varified yet. Please contact an admin."
+        ))
       }
       // no need to share the password
       delete user.password;

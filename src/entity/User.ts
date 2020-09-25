@@ -12,6 +12,9 @@ export class User {
     @Column("varchar")
     password: string;
 
+    @Column("int", { default: 0 })
+    type: number;
+
     @BeforeInsert()
     async function() {
         this.password = await bcrypt.hash(this.password, 10);

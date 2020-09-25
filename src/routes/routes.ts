@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
-import { addKey } from '../handlers/AccessHandlers';
+import { addKey, getAllKeys } from '../controllers/keyController';
+import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
 
@@ -32,7 +33,7 @@ router.get("/testuser", (req, res) => {
   res.send("got user");
 });
 
-/* router.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -45,7 +46,7 @@ router.get("/testuser", (req, res) => {
     // status conflict most likely user with that name already exists
     res.status(409).send(e);
   }
-}); */
+});
 
 router.get("/mqtt", (req, res) => {
   const message = req.query.m || "default message"
@@ -62,6 +63,8 @@ router.get("/mqtt", (req, res) => {
 })
 
 router.post("/key", addKey)
+
+router.get("/keys", getAllKeys)
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

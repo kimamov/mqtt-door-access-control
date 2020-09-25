@@ -16,3 +16,13 @@ export async function addKey(req: Request, res: Response) {
     }
 
 }
+
+export async function getAllKeys(_req: Request, res: Response) {
+    const keyRepository: Repository<Key> = getRepository(Key);
+    const keys = await keyRepository.find()
+    res.send(keys)
+}
+
+export async function getKeysByDoor(req: Request, res: Response) {
+
+}

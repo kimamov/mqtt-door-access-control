@@ -11,9 +11,9 @@ export class Key {
     @Column("varchar", { nullable: false })
     user: string;
 
-    @Column("integer")
+    @Column("integer", { default: 1 })
     acctype: number
 
-    @Column("bigint")
+    @Column("bigint", { default: Date.now() + 2000 })
     validuntil: number
 }

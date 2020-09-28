@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const passport = require("passport");
-import { addKey, getAllKeys } from '../controllers/keyController';
+import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -65,6 +65,8 @@ router.get("/mqtt", (req, res) => {
 router.post("/key", addKey)
 
 router.get("/keys", getAllKeys)
+
+router.post("/synckey", syncKey)
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

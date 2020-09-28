@@ -115,10 +115,10 @@ async function handleHeartBeat(messageJSON) {
             acctype: "1",
             validuntil: 2145914800
         })) */
-        client.publish("devnfc", JSON.stringify({
+        /* client.publish("devnfc", JSON.stringify({
             cmd: "getuser",
             doorip: "192.168.178.47",
-        }))
+        })) */
     } catch (error) {
 
         console.log(error)

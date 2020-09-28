@@ -7,9 +7,9 @@ import { client } from '../mqtt/connection';
 
 router.post(
   "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/asd",
-  }),
+  passport.authenticate("local"/* , {
+    failureFlash: true
+  } */),
   async (req, res) => {
     req.session.myUser = "hello world";
 

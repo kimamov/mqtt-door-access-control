@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { ReaderToKey } from "./ReaderToKey";
 
 @Entity()
 export class Reader {
@@ -9,5 +10,9 @@ export class Reader {
     @Column("varchar", { unique: true, length: 40 })
     doorname: string;
 
+    @Column("bigint", { default: 0, nullable: false })
+    lastPing: number
 
+    @OneToMany(type => ReaderToKey, readerKey => readerKey.reader)
+    public readerToKeys!: ReaderToKey[];
 }

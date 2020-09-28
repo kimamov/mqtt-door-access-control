@@ -2,6 +2,7 @@ import { User } from "../entity/User";
 import { getRepository, Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
 
+// move this code to local passport strategy might use it again later
 
 export function getUser(username: string, password: string): Promise<User> {
   return new Promise<User>(async (resolve, reject) => {
@@ -14,9 +15,9 @@ export function getUser(username: string, password: string): Promise<User> {
       }
       // check if user is varified 
       if (user.type < 1) {
-        reject(Error(
+        throw Error(
           "user was not varified yet. Please contact an admin."
-        ))
+        )
       }
       // no need to share the password
       delete user.password;

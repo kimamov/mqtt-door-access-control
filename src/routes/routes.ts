@@ -51,33 +51,21 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-/* router.get("/mqtt", (req, res) => {
-  const message = req.query.m || "default message"
-  if (client.connected) {
-    client.publish('devnfc', JSON.stringify({
-      uuid: "15125",
-      user: "kantemir",
-      acctype: "999",
-      validuntil: Date.now() + 6000000
-    }))
 
-  }
-  res.send("published your message: " + message)
-}) */
 
-router.post("/key", addKey)
+router.post("/key", checkAuth, addKey)
 
-router.get("/keys", getAllKeys)
+router.get("/keys", checkAuth, getAllKeys)
 
-router.post("/synckey", syncKey)
+router.post("/synckey", checkAuth, syncKey)
 
-router.get("/doors", getAllDoors)
+router.get("/doors", checkAuth, getAllDoors)
 
-router.get("/doorkeys", getDoorKeys)
+router.get("/doorkeys", checkAuth, getDoorKeys)
 
-router.get("/access", getAllAccesses)
+router.get("/access", checkAuth, getAllAccesses)
 
-router.get("/events", getAllEvents)
+router.get("/events", checkAuth, getAllEvents)
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

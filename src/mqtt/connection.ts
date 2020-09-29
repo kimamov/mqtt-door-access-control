@@ -1,5 +1,6 @@
 import * as mqtt from 'mqtt'
 import { getRepository, Repository } from "typeorm"
+import { Event } from '../entity/Event'
 import { Reader } from "../entity/Reader"
 
 export let client = null
@@ -84,6 +85,9 @@ function messageHandler(topic: string, message: Buffer) {
             case "devnfc/sync":
                 handleHeartBeat(messageJSON)
                 break;
+            case "devnfc/send":
+                handleDoorEvent(messageJSON);
+                break;
             default:
                 /* console.log(messageJSON) */
                 console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
@@ -96,7 +100,7 @@ function messageHandler(topic: string, message: Buffer) {
 }
 
 async function handleHeartBeat(messageJSON) {
-    /* console.log(messageJSON) */
+    // store reader in database if exists update it (mostly update lastPing)
     try {
         const keyRepository: Repository<Reader> = getRepository(Reader);
         const reader = await keyRepository.create({
@@ -105,21 +109,6 @@ async function handleHeartBeat(messageJSON) {
             doorname: messageJSON.door
         });
         const result = await keyRepository.save(reader)
-        /* console.log(result)
-        console.log("succesfully created reader") */
-        /* client.publish('devnfc', JSON.stringify({
-            cmd: "adduser",
-            doorip: "192.168.178.47",
-            uid: "1234567890",
-            user: "kantemirbb",
-            acctype: "1",
-            validuntil: 2145914800
-        })) */
-        /* client.publish("devnfc", JSON.stringify({
-            cmd: "getuser",
-            doorip: "192.168.178.47",
-        })) */
-
     } catch (error) {
 
         console.log(error)
@@ -156,6 +145,35 @@ function handleDevNFCMessages(messageJSON) {
             // handle new or known reader connecting
             handleDoorConnected(messageJSON)
             break;
+    }
+}
+
+async function handleDoorEvent(messageJSON) {
+    /* devnfc / send
+    {
+        type: 'WARN',
+            src: 'websrv',
+                desc: 'New login attempt',
+                    data: '192.168.178.21',
+                        time: 1601410372,
+                            cmd: 'event',
+                                door: 'esp-rfid'
+    } */
+    try {
+        // store all incoming events in the database
+        const eventRepository: Repository<Event> = getRepository(Event);
+
+        const result = await eventRepository.save({
+            data: messageJSON.data,
+            type: messageJSON.type,
+            src: messageJSON.src,
+            time: messageJSON.time,
+            door: messageJSON.door,
+            description: messageJSON.desc
+        })
+        console.log(result)
+    } catch (error) {
+        console.log(error)
     }
 }
 

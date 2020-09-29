@@ -77,6 +77,7 @@ export async function syncKey(req: Request, res: Response) {
 
 }
 
+
 export async function getKeysByDoor(req: Request, res: Response) {
 
 }

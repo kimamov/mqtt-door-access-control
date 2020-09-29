@@ -1,10 +1,13 @@
 const router = require("express").Router();
 const passport = require("passport");
+import { getAllAccesses } from '../controllers/accessController';
+import { getAllEvents } from '../controllers/eventController';
 import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
+import { getDoorKeys, getAllDoors } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
-import { client } from '../mqtt/connection';
-
+/* import { client } from '../mqtt/connection';
+ */
 router.post(
   "/login",
   passport.authenticate("local"/* , {
@@ -48,7 +51,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.get("/mqtt", (req, res) => {
+/* router.get("/mqtt", (req, res) => {
   const message = req.query.m || "default message"
   if (client.connected) {
     client.publish('devnfc', JSON.stringify({
@@ -60,13 +63,21 @@ router.get("/mqtt", (req, res) => {
 
   }
   res.send("published your message: " + message)
-})
+}) */
 
 router.post("/key", addKey)
 
 router.get("/keys", getAllKeys)
 
 router.post("/synckey", syncKey)
+
+router.get("/doors", getAllDoors)
+
+router.get("/doorkeys", getDoorKeys)
+
+router.get("/access", getAllAccesses)
+
+router.get("/events", getAllEvents)
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

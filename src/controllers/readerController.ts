@@ -1,15 +1,15 @@
 import { getRepository, Repository } from "typeorm"
 import { Request, Response } from "express"
 import { Reader } from "../entity/Reader"
+import { client } from "../mqtt/connection";
 
-
-export async function addKey(req: Request, res: Response) {
+/* export async function addKey(req: Request, res: Response) {
     try {
-        const keyRepository: Repository<Reader> = getRepository(Reader);
-        const reader = await keyRepository.create({
+        const readerRepository: Repository<Reader> = getRepository(Reader);
+        const reader = await readerRepository.create({
 
         });
-        const result = await keyRepository.save(reader)
+        const result = await readerRepository.save(reader)
         console.log(result)
         res.send(result)
     } catch (error) {
@@ -18,4 +18,31 @@ export async function addKey(req: Request, res: Response) {
         })
     }
 
+} */
+
+
+export async function getDoorKeys(req: Request, res: Response) {
+    const id = req.params.doorid
+    if (!id) return res.status(404).send({
+        message: "please provide an id"
+    })
+    client.publish("devnfc", JSON.stringify({
+        /* cmd: "getuser", */
+        cmd: "listusr",
+        doorip: "192.168.178.47",
+    }))
+    res.send("success")
+
+}
+
+export async function getAllDoors(req: Request, res: Response) {
+    try {
+        const readerRepository: Repository<Reader> = getRepository(Reader);
+        const result = await readerRepository.find()
+        res.send(result)
+    } catch (error) {
+        res.status(500).send({
+            error: error
+        })
+    }
 }

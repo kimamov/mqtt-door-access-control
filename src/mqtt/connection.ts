@@ -85,7 +85,7 @@ function messageHandler(topic: string, message: Buffer) {
                 handleHeartBeat(messageJSON)
                 break;
             default:
-                console.log(messageJSON)
+                /* console.log(messageJSON) */
                 console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
                 break;
         }
@@ -96,7 +96,7 @@ function messageHandler(topic: string, message: Buffer) {
 }
 
 async function handleHeartBeat(messageJSON) {
-    console.log(messageJSON)
+    /* console.log(messageJSON) */
     try {
         const keyRepository: Repository<Reader> = getRepository(Reader);
         const reader = await keyRepository.create({
@@ -105,8 +105,8 @@ async function handleHeartBeat(messageJSON) {
             doorname: messageJSON.door
         });
         const result = await keyRepository.save(reader)
-        console.log(result)
-        console.log("succesfully created reader")
+        /* console.log(result)
+        console.log("succesfully created reader") */
         /* client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: "192.168.178.47",
@@ -119,6 +119,7 @@ async function handleHeartBeat(messageJSON) {
             cmd: "getuser",
             doorip: "192.168.178.47",
         })) */
+
     } catch (error) {
 
         console.log(error)
@@ -126,7 +127,7 @@ async function handleHeartBeat(messageJSON) {
 }
 
 async function handleDoorConnected(messageJSON) {
-    console.log(messageJSON)
+    /* console.log(messageJSON) */
     /* {
         type: 'boot',
         time: 1601312104,

@@ -8,9 +8,11 @@ export let client = null
 export const setupMqtt = () => {
 
     client = mqtt.connect({
-        host: "127.0.0.1",
+        host: "151.252.57.68",
         port: "1883",
-        clientId: "1515134"
+        clientId: "15151341531",
+        username: "rfid",
+        password: "rfidtest"
     })
 
     client.on("error", (err) => console.log(err))
@@ -95,7 +97,8 @@ function messageHandler(topic: string, message: Buffer) {
         }
 
     } catch (error) {
-        console.log(error)
+        console.log("json parse error")
+        //console.log(error)
     }
 }
 

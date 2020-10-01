@@ -18,25 +18,14 @@ export const setupMqtt = () => {
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {
         client.subscribe('presence', function (err) {
-            /* if (!err) {
-                client.publish('presence', 'Hello mqtt')
-            } */
+
         })
         client.subscribe('devnfc/#', function (err) {
-            /* if (!err) {
-                client.publish('devnfc/random/wow', 'test')
-            } */
+
         })
         client.subscribe('devnfc', function (err) {
             if (!err) {
-                /* client.publish('devnfc', JSON.stringify({
-                    cmd: "adduser",
-                    doorip: "192.168.178.47",
-                    uid: "1234567890",
-                    user: "kantemirbb",
-                    acctype: "1",
-                    validuntil: 2145914800
-                })) */
+
             }
         })
     })
@@ -74,20 +63,22 @@ function messageHandler(topic: string, message: Buffer) {
     const messageString = message.toString()
     try {
         const messageJSON = JSON.parse(messageString)
-        /* console.log(topic)
-        console.log(messageJSON) */
+
         console.log(topic)
         console.log(messageJSON)
 
         // handle different topics
         switch (topic) {
             case "devnfc":
+            case "/devnfc":
                 handleDevNFCMessages(messageJSON);
                 break;
             case "devnfc/sync":
+            case "/devnfc/sync":
                 handleHeartBeat(messageJSON)
                 break;
             case "devnfc/send":
+            case "/devnfc/send":
                 handleDoorEvent(messageJSON);
                 break;
             default:
@@ -97,7 +88,8 @@ function messageHandler(topic: string, message: Buffer) {
         }
 
     } catch (error) {
-        console.log("json parse error")
+        console.log("error parsing following content as json: " + messageString)
+        // maybe handle non json messages here but rather dont handle them :)
         //console.log(error)
     }
 }
@@ -115,6 +107,7 @@ async function handleHeartBeat(messageJSON) {
             doorname: door
         });
         const result = await keyRepository.save(reader)
+        console.log(result)
     } catch (error) {
         console.log(error)
     }

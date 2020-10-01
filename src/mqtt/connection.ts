@@ -100,17 +100,19 @@ function messageHandler(topic: string, message: Buffer) {
 }
 
 async function handleHeartBeat(messageJSON) {
+
     // store reader in database if exists update it (mostly update lastPing)
     try {
+        if (!(messageJSON.ip && messageJSON.time && messageJSON.door)) throw "required fileds are missing"
+        const { ip, time, door } = messageJSON;
         const keyRepository: Repository<Reader> = getRepository(Reader);
         const reader = await keyRepository.create({
-            ip: messageJSON.ip,
-            lastPing: messageJSON.time,
-            doorname: messageJSON.door
+            ip: ip,
+            lastPing: time,
+            doorname: door
         });
         const result = await keyRepository.save(reader)
     } catch (error) {
-
         console.log(error)
     }
 }

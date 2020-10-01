@@ -5,4 +5,8 @@ export const sessionParser = session({
     secret: "nyana",
     resave: true,
     saveUninitialized: true,
+    /* cookie: {
+        sameSite: "none",
+        secure: true
+    } */
 })

@@ -6,10 +6,10 @@ export class Key {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", { unique: true, length: 20, nullable: false })
+    @Column("varchar", { length: 20, nullable: false })
     uuid: string;
 
-    @Column("varchar", { nullable: false })
+    @Column("varchar", { nullable: false, unique: true, primary: true })
     user: string;
 
 

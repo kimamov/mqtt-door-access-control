@@ -25,6 +25,6 @@ module.exports = new LocalStrategy(async (username: string, password: string, do
     }
     catch (e) {
         console.log(e);
-        return done(e)
+        return done("could not find a user with the provided credentials")
     }
 });

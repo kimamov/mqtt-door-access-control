@@ -25,7 +25,8 @@ export function getUser(username: string, password: string): Promise<User> {
     }
     catch (e) {
       console.log(e);
-      reject(e);
+      //reject(e); giving the user the real error might not be a good idea :)
+      reject("could not find user")
     }
   })
 }

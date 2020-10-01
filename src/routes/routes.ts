@@ -3,7 +3,7 @@ const passport = require("passport");
 import { getAllAccesses } from '../controllers/accessController';
 import { getAllEvents } from '../controllers/eventController';
 import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
-import { getDoorKeys, getAllDoors } from '../controllers/readerController';
+import { getDoorKeys, getAllDoors, getMyDoorKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 /* import { client } from '../mqtt/connection';
@@ -61,7 +61,9 @@ router.post("/synckey", checkAuth, syncKey)
 
 router.get("/doors", checkAuth, getAllDoors)
 
-router.get("/doorkeys", checkAuth, getDoorKeys)
+router.get("/doorkeystest", checkAuth, getDoorKeys)
+
+router.get("/doorkeys"/* , checkAuth */, getMyDoorKeys)
 
 router.get("/access", checkAuth, getAllAccesses)
 

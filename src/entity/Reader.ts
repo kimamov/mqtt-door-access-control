@@ -13,6 +13,6 @@ export class Reader {
     @Column("bigint", { default: 0, nullable: false })
     lastPing: number
 
-    @OneToMany(type => ReaderToKey, readerKey => readerKey.reader)
-    public readerToKeys!: ReaderToKey[];
+    @OneToMany(type => ReaderToKey, readerToKey => readerToKey.reader)
+    readerToKeys!: ReaderToKey[];
 }

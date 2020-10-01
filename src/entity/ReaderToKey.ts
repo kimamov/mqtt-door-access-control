@@ -1,10 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, Index, Column, ManyToOne, PrimaryColumn, JoinTable } from "typeorm";
 import { Key } from "./Key";
 import { Reader } from "./Reader"
 
 @Entity()
 export class ReaderToKey {
 
+
+    @PrimaryColumn()
+    readerIp: number;
+
+    @PrimaryColumn()
+    keyId: number;
 
     @Column("integer", { default: 1 })
     acctype: number
@@ -18,10 +24,16 @@ export class ReaderToKey {
     @Column("integer", { default: 0 })
     acctype4: number
 
-    @ManyToOne(type => Key, key => key.readerToKeys, { primary: true })
-    public key!: Key;
+    @ManyToOne(() => Key, key => key.readerToKeys, {
+        primary: true
+    })
+    @JoinTable({ name: "keyId" })
+    key: Key;
 
-    @ManyToOne(type => Reader, reader => reader.readerToKeys, { primary: true })
-    public reader!: Reader;
+    @ManyToOne(() => Reader, reader => reader.readerToKeys, {
+        primary: true
+    })
+    @JoinTable({ name: "readerIp" })
+    reader: Reader;
 
 }

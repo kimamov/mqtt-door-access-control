@@ -46,3 +46,26 @@ export async function getAllDoors(req: Request, res: Response) {
         })
     }
 }
+
+
+
+export async function getMyDoorKeys(req: Request, res: Response) {
+    try {
+        const readerRepository: Repository<Reader> = getRepository(Reader);
+        /* const result = await readerRepository.findOne({ relations: ["readerToKeys"] })
+        if (result) {
+            const da = await result.readerToKeys
+            console.log(da)
+        } */
+        const result = await readerRepository
+            .createQueryBuilder("reader")
+            .leftJoinAndSelect("reader.readerToKeys", "key")
+            .getMany();
+        res.send(result)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            error: error
+        })
+    }
+}

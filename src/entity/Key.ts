@@ -9,7 +9,7 @@ export class Key {
     @Column("varchar", { length: 20, nullable: false })
     uuid: string;
 
-    @Column("varchar", { nullable: false, unique: true, primary: true })
+    @Column("varchar", { nullable: false, unique: true })
     user: string;
 
 
@@ -22,6 +22,6 @@ export class Key {
 
 
 
-    @OneToMany(type => ReaderToKey, readerKey => readerKey.key)
+    @OneToMany(type => ReaderToKey, readerToKey => readerToKey.key)
     public readerToKeys!: ReaderToKey[];
 }

@@ -64,7 +64,7 @@ export async function syncKey(req: Request, res: Response) {
             uid: result.uuid,
             user: result.user,
             acctype: "1",
-            validuntil: result.validuntil
+            validuntil: result.validUntil
         }))
 
         console.log(result)

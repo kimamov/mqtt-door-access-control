@@ -15,7 +15,7 @@ export class Key {
 
 
     @Column("bigint", { default: Date.now() + 2000 })
-    validuntil: number
+    validUntil: number
 
     @Column("bool", { default: false, nullable: false })
     isOneTimeCode: boolean

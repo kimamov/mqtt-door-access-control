@@ -10,9 +10,15 @@ export const setupMqtt = () => {
     client = mqtt.connect({
         host: "151.252.57.69",
         port: "1883",
-        clientId: "1515411531",
+        clientId: "server_" + Date.now(),
 
     })
+    /* client = mqtt.connect({
+        host: "localhost",
+        port: "1883",
+        clientId: "15152411531",
+
+    }) */
 
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {
@@ -64,6 +70,7 @@ return msg;
 function messageHandler(topic: string, message: Buffer) {
     // message is Buffer
     const messageString = message.toString()
+    console.log(messageString)
     try {
         const messageJSON = JSON.parse(messageString)
 
@@ -92,6 +99,7 @@ function messageHandler(topic: string, message: Buffer) {
 
     } catch (error) {
         console.log("error parsing following content as json: " + messageString)
+        console.log(error)
         // maybe handle non json messages here but rather dont handle them :)
         //console.log(error)
     }
@@ -107,7 +115,7 @@ async function handleHeartBeat(messageJSON) {
         const reader = await keyRepository.create({
             ip: ip,
             lastPing: time,
-            doorname: door
+            readerName: door
         });
         const result = await keyRepository.save(reader)
         console.log(result)

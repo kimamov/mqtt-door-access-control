@@ -3,7 +3,7 @@ const passport = require("passport");
 import { getAllAccesses } from '../controllers/accessController';
 import { getAllEvents } from '../controllers/eventController';
 import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
-import { getDoorKeys, getAllDoors, getMyDoorKeys, addDoorKeys } from '../controllers/readerController';
+import { getReaderKeys, getAllReaders, getMyReaderKeys, addReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -60,13 +60,13 @@ router.get("/keys"/* , checkAuth */, getAllKeys)
 
 router.post("/synckey"/* , checkAuth */, syncKey)
 
-router.get("/doors"/* , checkAuth */, getAllDoors)
+router.get("/readers"/* , checkAuth */, getAllReaders)
 
-router.get("/doorkeystest"/* , checkAuth */, getDoorKeys)
+router.get("/raederkeystest"/* , checkAuth */, getReaderKeys)
 
-router.get("/doorkeys"/* , checkAuth */, getMyDoorKeys)
+router.get("/readerkeys"/* , checkAuth */, getMyReaderKeys)
 
-router.post("/doorkeys"/* , checkAuth */, addDoorKeys)
+router.post("/readerkeys"/* , checkAuth */, addReaderKeys)
 
 router.get("/access"/* , checkAuth */, getAllAccesses)
 

@@ -23,7 +23,7 @@ import { ReaderToKey } from "../entity/ReaderToKey";
 } */
 
 
-export async function getDoorKeys(req: Request, res: Response) {
+export async function getReaderKeys(req: Request, res: Response) {
     const id = req.params.doorid
     if (!id) return res.status(404).send({
         message: "please provide an id"
@@ -37,7 +37,7 @@ export async function getDoorKeys(req: Request, res: Response) {
 
 }
 
-export async function getAllDoors(req: Request, res: Response) {
+export async function getAllReaders(req: Request, res: Response) {
     try {
         const readerRepository: Repository<Reader> = getRepository(Reader);
         const result = await readerRepository.find()
@@ -51,7 +51,7 @@ export async function getAllDoors(req: Request, res: Response) {
 
 
 
-export async function getMyDoorKeys(req: Request, res: Response) {
+export async function getMyReaderKeys(req: Request, res: Response) {
     try {
         const readerRepository: Repository<Reader> = getRepository(Reader);
         /* const result = await readerRepository.findOne({ relations: ["readerToKeys"] })
@@ -73,15 +73,18 @@ export async function getMyDoorKeys(req: Request, res: Response) {
 }
 
 
-export async function addDoorKeys(req: Request, res: Response) {
+export async function addReaderKeys(req: Request, res: Response) {
     try {
         const { body } = req;
         if (!(body.doorIp && body.keyId)) throw "invalid request body"
+        // check if reader with that ip exists
         const readerRepository: Repository<Reader> = getRepository(Reader);
-        const result = readerRepository.findOneOrFail({ ip: body.doorIp })
-        if (!result) throw "no door found"
+        const readerResult = readerRepository.findOneOrFail({ ip: body.doorIp })
+        if (!readerResult) throw "no door found"
+        // check if key with that id exists
         const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.keyId })
         if (!keyResult) throw "no key found"
+        // create connection between reader and key
         const readerToKeyRepo: Repository<ReaderToKey> = getRepository(ReaderToKey)
         const readerToKey: ReaderToKey = await readerToKeyRepo.create({
             keyId: body.keyId,
@@ -92,7 +95,6 @@ export async function addDoorKeys(req: Request, res: Response) {
             acctype4: body.acctype4 || false,
         })
         const linkResult = await readerToKeyRepo.save(readerToKey);
-
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: linkResult.readerIp,
@@ -104,11 +106,13 @@ export async function addDoorKeys(req: Request, res: Response) {
             acctype4: linkResult.acctype4,
             validuntil: 2145914800
         }))
-        res.send(linkResult)
+        res.send({
+            message: "successfully created"
+        })
     } catch (error) {
         console.log(error)
         res.status(500).send({
-            error: error
+            error: "failed to create link"
         })
     }
 }

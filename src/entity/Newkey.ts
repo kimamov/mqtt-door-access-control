@@ -12,10 +12,10 @@ export class Newkey {
     type: string;
 
     @Column("varchar", { nullable: false, length: 10 })
-    isknown: string;
+    isKnown: string;
 
     @Column("varchar", { nullable: false, length: 50 })
-    username: string;
+    userName: string;
 
     @Column("varchar", { nullable: false, length: 50 })
     door: string;

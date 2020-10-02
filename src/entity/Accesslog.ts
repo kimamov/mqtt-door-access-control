@@ -10,7 +10,7 @@ export class Accesslog {
     uid: string;
 
     @Column("varchar", { unique: true })
-    username: string;
+    userName: string;
 
     @Column("varchar")
     password: string;

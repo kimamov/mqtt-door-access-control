@@ -8,7 +8,7 @@ export class Reader {
     ip: string;
 
     @Column("varchar", { unique: true, length: 40 })
-    doorname: string;
+    readerName: string;
 
     @Column("bigint", { default: 0, nullable: false })
     lastPing: number

@@ -6,6 +6,7 @@ import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
 import { getDoorKeys, getAllDoors, getMyDoorKeys, addDoorKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
+import { client } from '../mqtt/connection';
 /* import { client } from '../mqtt/connection';
  */
 router.post(
@@ -70,6 +71,14 @@ router.post("/doorkeys"/* , checkAuth */, addDoorKeys)
 router.get("/access"/* , checkAuth */, getAllAccesses)
 
 router.get("/events"/* , checkAuth */, getAllEvents)
+
+router.get("/testmqtt", (req, res) => {
+  console.log(client.connected)
+  client.publish("devnfc", JSON.stringify({
+    message: "test message"
+  }))
+  res.send("succes")
+})
 
 router.get("/user", checkAuth, (req, res) => {
   res.send(req.user)

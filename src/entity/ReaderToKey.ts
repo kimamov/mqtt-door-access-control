@@ -7,7 +7,7 @@ export class ReaderToKey {
 
 
     @PrimaryColumn()
-    readerIp: number;
+    readerIp: string;
 
     @PrimaryColumn()
     keyId: number;

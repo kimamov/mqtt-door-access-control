@@ -8,24 +8,27 @@ export let client = null
 export const setupMqtt = () => {
 
     client = mqtt.connect({
-        host: "151.252.57.68",
+        host: "151.252.57.69",
         port: "1883",
-        clientId: "15151341531",
-        username: "rfid",
-        password: "rfidtest"
+        clientId: "1515411531",
+
     })
 
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {
-        client.subscribe('presence', function (err) {
 
-        })
         client.subscribe('devnfc/#', function (err) {
 
         })
         client.subscribe('devnfc', function (err) {
             if (!err) {
-
+                /* console.log("was called")
+                client.publish("devnfc/sync", JSON.stringify({
+                    type: "heartbeat",
+                    ip: "test",
+                    time: 1515151351,
+                    door: "delete this"
+                })) */
             }
         })
     })
@@ -95,9 +98,9 @@ function messageHandler(topic: string, message: Buffer) {
 }
 
 async function handleHeartBeat(messageJSON) {
-
     // store reader in database if exists update it (mostly update lastPing)
     try {
+        if (!(messageJSON.type === "heartbeat")) throw "invalid type expected heartbeat"
         if (!(messageJSON.ip && messageJSON.time && messageJSON.door)) throw "required fileds are missing"
         const { ip, time, door } = messageJSON;
         const keyRepository: Repository<Reader> = getRepository(Reader);

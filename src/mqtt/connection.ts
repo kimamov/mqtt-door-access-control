@@ -88,7 +88,11 @@ function messageHandler(topic: string, message: Buffer) {
                 break;
             case "devnfc/send":
             case "/devnfc/send":
-                handleDoorEvent(messageJSON);
+                handleAccessAndEvent(messageJSON);
+                break;
+            case "devnfc/accesslist":
+            case "/devnfc/accesslist":
+                handleDoorKeyList(messageJSON);
                 break;
             default:
                 /* console.log(messageJSON) */
@@ -156,7 +160,77 @@ function handleDevNFCMessages(messageJSON) {
     }
 }
 
+function handleAccessAndEvent(messageJSON) {
+    if (messageJSON.type === "event") return handleDoorEvent(messageJSON)
+    if (messageJSON.type === "access") {
+        return messageJSON.isKnown ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
+    }
+
+}
+
 async function handleDoorEvent(messageJSON) {
+    /* devnfc / send
+    {
+        type: 'WARN',
+            src: 'websrv',
+                desc: 'New login attempt',
+                    data: '192.168.178.21',
+                        time: 1601410372,
+                            cmd: 'event',
+                                door: 'esp-rfid'
+    } */
+    try {
+        // store all incoming events in the database
+        const eventRepository: Repository<Event> = getRepository(Event);
+
+        const result = await eventRepository.save({
+            data: messageJSON.data,
+            type: messageJSON.type,
+            src: messageJSON.src,
+            time: messageJSON.time,
+            door: messageJSON.door,
+            description: messageJSON.desc
+        })
+        console.log(result)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function handleKnownKey(messageJSON) {
+
+}
+
+async function handleUnknownKey(messageJSON) {
+    /* Access log on node-red
+    if ((msg.payload.type == "access") && (msg.payload.isKnown == "true")) {
+        if (msg.payload.cmd == "log") {
+            msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
+        }
+        msg.payload = "Tür von " + msg.payload.username + " geöffnet";
+        return msg;
+    }
+    adding event
+    else if (msg.payload.cmd == "event") {
+        msg.topic = "INSERT INTO events (type, src, description, data,time,door) VALUES ('" + msg.payload.type + "','" + msg.payload.src + "','" + msg.payload.desc + "','" + msg.payload.data + "','" + msg.payload.time + "','" + msg.payload.door + "')";
+        msg.paylod = "";
+        return msg;
+    }
+    user unknown with out log
+    else if ((msg.payload.type == "access") && (msg.payload.isKnown == "false")) {
+        ser unknown adding to newuser db
+        if (msg.payload.cmd == "log") {
+            msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "');" + " INSERT INTO newuser (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "');";
+        }
+        else {
+            msg.topic = "INSERT INTO newuser (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
+        }
+        msg.payload = "Kein Zugang User unbekannt";
+        return msg;
+    } */
+}
+
+async function handleDoorKeyList(messageJSON) {
     /* devnfc / send
     {
         type: 'WARN',

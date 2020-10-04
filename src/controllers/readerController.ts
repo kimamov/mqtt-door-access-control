@@ -89,21 +89,18 @@ export async function addReaderKeys(req: Request, res: Response) {
         const readerToKey: ReaderToKey = await readerToKeyRepo.create({
             keyId: body.keyId,
             readerIp: body.doorIp,
-            acctype: body.acctype || false,
-            acctype2: body.acctype2 || false,
-            acctype3: body.acctype3 || false,
-            acctype4: body.acctype4 || false,
+
         })
         const linkResult = await readerToKeyRepo.save(readerToKey);
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: linkResult.readerIp,
             uid: keyResult.uuid,
-            user: keyResult.user,
-            acctype: linkResult.acctype,
-            acctype2: linkResult.acctype2,
-            acctype3: linkResult.acctype3,
-            acctype4: linkResult.acctype4,
+            user: keyResult.name,
+            acctype: keyResult.acctype,
+            acctype2: keyResult.acctype2,
+            acctype3: keyResult.acctype3,
+            acctype4: keyResult.acctype4,
             validuntil: 2145914800
         }))
         res.send({

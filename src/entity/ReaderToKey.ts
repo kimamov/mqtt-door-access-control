@@ -12,20 +12,9 @@ export class ReaderToKey {
     @PrimaryColumn()
     keyId: number;
 
-    @Column("varchar")
-    keyName: string;
+    /* @Column("varchar")
+    keyName: string; */
 
-    @Column("integer", { default: 1 })
-    acctype: number
-
-    @Column("integer", { default: 0 })
-    acctype2: number
-
-    @Column("integer", { default: 0 })
-    acctype3: number
-
-    @Column("integer", { default: 0 })
-    acctype4: number
 
     @ManyToOne(() => Key, key => key.readerToKeys, {
         primary: true

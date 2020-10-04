@@ -1,25 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 
 @Entity()
-export class Newkey {
+export class NewKey {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", { unique: true, length: 20, nullable: false, primary: true })
-    uid: string;
+    @Column("varchar", { length: 20, nullable: false })
+    uuid: string;
 
-    @Column("varchar", { nullable: false, length: 20 })
-    type: string;
+    @Column("varchar")
+    name: string;
 
-    @Column("varchar", { nullable: false, length: 10 })
-    isKnown: string;
+    @Column("bigint", { default: Date.now() + 2000 })
+    validUntil: number
 
-    @Column("varchar", { nullable: false, length: 50 })
-    userName: string;
+    @Column("bool", { default: false, nullable: false })
+    isOneTimeCode: boolean
 
-    @Column("varchar", { nullable: false, length: 50 })
-    door: string;
+    @Column("integer", { default: 1 })
+    acctype: number
 
-    @Column("int")
-    time: number;
+    @Column("integer", { default: 0 })
+    acctype2: number
+
+    @Column("integer", { default: 0 })
+    acctype3: number
+
+    @Column("integer", { default: 0 })
+    acctype4: number
+
+
+
 }

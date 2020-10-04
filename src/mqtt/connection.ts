@@ -49,7 +49,6 @@ export const setupMqtt = () => {
     client.on('reconnect', function () {
         console.log('reconnect');
     });
-    client.publish('devnfc/random/wow', 'test')
 
     client.on('message', messageHandler)
 }

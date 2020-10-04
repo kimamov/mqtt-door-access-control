@@ -12,6 +12,9 @@ export class ReaderToKey {
     @PrimaryColumn()
     keyId: number;
 
+    @Column("varchar")
+    keyName: string;
+
     @Column("integer", { default: 1 })
     acctype: number
 

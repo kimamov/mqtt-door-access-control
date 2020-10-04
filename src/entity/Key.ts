@@ -9,8 +9,8 @@ export class Key {
     @Column("varchar", { length: 20, nullable: false })
     uuid: string;
 
-    @Column("varchar", { nullable: false, unique: true })
-    user: string;
+    @Column("varchar", { nullable: false })
+    name: string;
 
 
 

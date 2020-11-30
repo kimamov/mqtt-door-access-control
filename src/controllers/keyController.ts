@@ -49,20 +49,24 @@ export async function getAllKeys(_req: Request, res: Response) {
 
 export async function syncKey(req: Request, res: Response) {
     try {
+        // check if id was provided with the request
         const id = req.body.id;
         if (!id) throw "you need to provide the an id"
+        // search for the key inside the database
         const keyRepository: Repository<Key> = getRepository(Key);
         const result: Key = await keyRepository.findOne({ id: id })
         if (!result) return res.status(404).send({
             messages: "could not find item with the provided id: " + id
         })
+        // throw if non was found
         if (!client.connected) throw "mqtt client lost connection please try again later"
 
+        // send the retrieved key to the device
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: "192.168.178.47",
             uid: result.uuid,
-            user: result.user,
+            user: result.name,
             acctype: "1",
             validuntil: result.validUntil
         }))

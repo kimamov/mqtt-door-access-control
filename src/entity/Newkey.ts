@@ -11,13 +11,19 @@ export class NewKey {
     @Column("varchar")
     name: string;
 
-    @Column("bigint", { default: Date.now() + 2000 })
-    validUntil: number
+    @Column("varchar", { nullable: false, length: 20 })
+    time: string;
 
-    @Column("bool", { default: false, nullable: false })
-    isOneTimeCode: boolean
+    @Column("varchar", { nullable: false, length: 20 })
+    door: string;
 
-    @Column("integer", { default: 1 })
+    /* @Column("bigint", { default: Date.now() + 2000 })
+    validUntil: number */
+
+    /* @Column("bool", { default: false, nullable: false })
+    isOneTimeCode: boolean */
+
+    /* @Column("integer", { default: 1 })
     acctype: number
 
     @Column("integer", { default: 0 })
@@ -27,7 +33,7 @@ export class NewKey {
     acctype3: number
 
     @Column("integer", { default: 0 })
-    acctype4: number
+    acctype4: number */
 
 
 

@@ -24,6 +24,7 @@ import { ReaderToKey } from "../entity/ReaderToKey";
 
 
 export async function getReaderKeys(req: Request, res: Response) {
+    // tell the reader to send us all keys that are currently stored on it
     const id = req.params.doorid
     if (!id) return res.status(404).send({
         message: "please provide an id"
@@ -74,6 +75,7 @@ export async function getMyReaderKeys(req: Request, res: Response) {
 
 
 export async function addReaderKeys(req: Request, res: Response) {
+    // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const { body } = req;
         if (!(body.doorIp && body.keyId)) throw "invalid request body"

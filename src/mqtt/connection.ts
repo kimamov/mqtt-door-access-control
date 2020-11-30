@@ -1,6 +1,7 @@
 import * as mqtt from 'mqtt'
 import { getRepository, Repository } from "typeorm"
 import { Event } from '../entity/Event'
+import { NewKey } from '../entity/NewKey'
 import { Reader } from "../entity/Reader"
 
 export let client = null
@@ -202,32 +203,24 @@ async function handleKnownKey(messageJSON) {
 }
 
 async function handleUnknownKey(messageJSON) {
-    /* Access log on node-red
-    if ((msg.payload.type == "access") && (msg.payload.isKnown == "true")) {
-        if (msg.payload.cmd == "log") {
-            msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
-        }
-        msg.payload = "Tür von " + msg.payload.username + " geöffnet";
-        return msg;
+
+    try {
+        console.log(messageJSON)
+        const { uid, type, isknown, username, door, time } = messageJSON;
+        const keyRepository: Repository<NewKey> = getRepository(NewKey);
+        const key = await keyRepository.create({
+            uuid: uid,
+            name: username,
+            door: door,
+            time: time
+        });
+        const result = await keyRepository.save(key)
+        console.log(result)
+        /* log success as event in database */
+    } catch (error) {
+        /* log failure as event in database */
+        console.log(error)
     }
-    adding event
-    else if (msg.payload.cmd == "event") {
-        msg.topic = "INSERT INTO events (type, src, description, data,time,door) VALUES ('" + msg.payload.type + "','" + msg.payload.src + "','" + msg.payload.desc + "','" + msg.payload.data + "','" + msg.payload.time + "','" + msg.payload.door + "')";
-        msg.paylod = "";
-        return msg;
-    }
-    user unknown with out log
-    else if ((msg.payload.type == "access") && (msg.payload.isKnown == "false")) {
-        ser unknown adding to newuser db
-        if (msg.payload.cmd == "log") {
-            msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "');" + " INSERT INTO newuser (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "');";
-        }
-        else {
-            msg.topic = "INSERT INTO newuser (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
-        }
-        msg.payload = "Kein Zugang User unbekannt";
-        return msg;
-    } */
 }
 
 async function handleDoorKeyList(messageJSON) {

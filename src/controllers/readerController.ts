@@ -25,10 +25,11 @@ import { ReaderToKey } from "../entity/ReaderToKey";
 
 export async function getReaderKeys(req: Request, res: Response) {
     // tell the reader to send us all keys that are currently stored on it
-    const id = req.params.doorid
-    if (!id) return res.status(404).send({
+    const { doorid } = req.params
+    if (!doorid) return res.status(404).send({
         message: "please provide an id"
     })
+    /* TODO: get the reader from the doorid then use its ip to the command */
     client.publish("devnfc", JSON.stringify({
         /* cmd: "getuser", */
         cmd: "listusr",
@@ -42,6 +43,8 @@ export async function getAllReaders(req: Request, res: Response) {
     try {
         const readerRepository: Repository<Reader> = getRepository(Reader);
         const result = await readerRepository.find()
+        res.set('Content-Range', `key 0-${result.length}/${result.length}`)
+
         res.send(result)
     } catch (error) {
         res.status(500).send({
@@ -97,7 +100,7 @@ export async function addReaderKeys(req: Request, res: Response) {
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: linkResult.readerIp,
-            uid: keyResult.uuid,
+            uid: keyResult.uid,
             user: keyResult.name,
             acctype: keyResult.acctype,
             acctype2: keyResult.acctype2,

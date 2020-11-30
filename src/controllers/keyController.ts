@@ -18,32 +18,19 @@ export async function addKey(req: Request, res: Response) {
 
 }
 
-/* export async function addKey(req: Request, res: Response) {
-    try {
-        const keyData = req.body;
-        const storeKey = async (keyData) => {
-            const keyRepository: Repository<Key> = getRepository(Key);
-            const key = await keyRepository.create(keyData);
-            const result = await keyRepository.save(key)
-            console.log(result)
-            res.send(result)
-        }
-        if (Array.isArray(keyData)) {
-            throw "arrays are not supported yet"
-        } else {
-            await storeKey(keyData)
-        }
-    } catch (error) {
-        res.status(500).send({
-            error: error
-        })
-    }
-} */
 
-export async function getAllKeys(_req: Request, res: Response) {
-    const keyRepository: Repository<Key> = getRepository(Key);
-    const keys = await keyRepository.find()
-    res.send(keys)
+
+export async function getAllKeys(req: Request, res: Response) {
+    try {
+        console.log(req.query)
+        const keyRepository: Repository<Key> = getRepository(Key);
+        const keys = await keyRepository.find()
+        res.set('Content-Range', `key 0-${keys.length}/${keys.length}`)
+        res.send(keys)
+    } catch (error) {
+        res.status(404).send("could not find any items");
+    }
+
 }
 
 
@@ -65,7 +52,7 @@ export async function syncKey(req: Request, res: Response) {
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: "192.168.178.47",
-            uid: result.uuid,
+            uid: result.uid,
             user: result.name,
             acctype: "1",
             validuntil: result.validUntil

@@ -6,7 +6,7 @@ export class NewKey {
     id: number;
 
     @Column("varchar", { length: 20, nullable: false })
-    uuid: string;
+    uid: string;
 
     @Column("varchar")
     name: string;

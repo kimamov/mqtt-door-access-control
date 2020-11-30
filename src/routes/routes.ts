@@ -56,13 +56,13 @@ router.post("/signup", async (req, res) => {
 
 router.post("/key"/* , checkAuth */, addKey)
 
-router.get("/keys"/* , checkAuth */, getAllKeys)
+router.get("/key"/* , checkAuth */, getAllKeys)
 
 router.post("/synckey"/* , checkAuth */, syncKey)
 
 router.get("/readers"/* , checkAuth */, getAllReaders)
 
-router.get("/raederkeystest"/* , checkAuth */, getReaderKeys)
+router.get("/raederkeystest/:doorid"/* , checkAuth */, getReaderKeys)
 
 router.get("/readerkeys"/* , checkAuth */, getMyReaderKeys)
 

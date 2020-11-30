@@ -26,7 +26,8 @@ createConnection()
         app.use(
             cors({
                 origin: ["http://localhost:3000", "localhost:3000"],
-                credentials: true
+                credentials: true,
+                exposedHeaders: ['Content-Range']
             })
         );
         app.use(passport.initialize());
@@ -53,7 +54,7 @@ createConnection()
         //setup mqtt client
         setupMqtt();
         // express server listen on PORT
-        const server = app.listen(PORT, (e: Error) => {
+        app.listen(PORT, (e: Error) => {
             if (e) return console.log(e);
             console.log(`server listening on port ${PORT}`);
         });

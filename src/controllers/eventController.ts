@@ -8,7 +8,6 @@ export async function getAllEvents(req: Request, res: Response) {
         const eventRepository: Repository<Event> = getRepository(Event);
         const result = await eventRepository.find()
         res.set('Content-Range', `key 0-${result.length}/${result.length}`)
-
         res.send(result)
     } catch (error) {
         res.status(500).send({

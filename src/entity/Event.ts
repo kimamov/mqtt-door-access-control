@@ -17,8 +17,8 @@ export class Event {
     @Column("varchar", { nullable: false, length: 20 })
     data: string;
 
-    @Column("varchar", { nullable: false, length: 20 })
-    time: string;
+    @Column("timestamp")
+    time: Date;
 
     @Column("varchar", { nullable: false, length: 20 })
     door: string;

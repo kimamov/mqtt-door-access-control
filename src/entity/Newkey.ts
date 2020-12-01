@@ -11,8 +11,8 @@ export class NewKey {
     @Column("varchar")
     name: string;
 
-    @Column("varchar", { nullable: false, length: 20 })
-    time: string;
+    @Column("timestamp")
+    time: Date
 
     @Column("varchar", { nullable: false, length: 20 })
     door: string;

@@ -10,8 +10,8 @@ export class Reader {
     @Column("varchar", { unique: true, length: 40 })
     readerName: string;
 
-    @Column("bigint", { default: 0, nullable: false })
-    lastPing: number
+    @Column("timestamp")
+    lastPing: Date
 
     @OneToMany(type => ReaderToKey, readerToKey => readerToKey.reader)
     readerToKeys!: ReaderToKey[];

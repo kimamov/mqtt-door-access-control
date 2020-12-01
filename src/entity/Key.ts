@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, BeforeInsert, BeforeUpdate } from "typeorm";
 import { ReaderToKey } from "./ReaderToKey";
 
 @Entity()
@@ -12,8 +12,8 @@ export class Key {
     @Column("varchar", { nullable: false })
     name: string;
 
-    @Column("bigint", { default: Date.now() + 2000 })
-    validUntil: number
+    @Column("timestamp")
+    validUntil: Date
 
     @Column("bool", { default: false, nullable: false })
     isOneTimeCode: boolean
@@ -33,4 +33,6 @@ export class Key {
 
     @OneToMany(type => ReaderToKey, readerToKey => readerToKey.key)
     public readerToKeys!: ReaderToKey[];
+
+
 }

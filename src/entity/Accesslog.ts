@@ -24,8 +24,8 @@ export class AccessLog {
     @Column("varchar", { length: 20, nullable: false })
     type: string;
 
-    @Column("varchar", { nullable: false, length: 20 })
-    time: string;
+    @Column("timestamp")
+    time: Date;
 
 
 }

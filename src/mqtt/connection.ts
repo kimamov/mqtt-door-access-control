@@ -119,7 +119,7 @@ async function handleHeartBeat(messageJSON) {
         const keyRepository: Repository<Reader> = getRepository(Reader);
         const reader = await keyRepository.create({
             ip: ip,
-            lastPing: time,
+            lastPing: new Date(time * 1000),  // transform unix timestamp to date
             readerName: door
         });
         const result = await keyRepository.save(reader)
@@ -189,7 +189,7 @@ async function handleDoorEvent(messageJSON) {
             data: messageJSON.data,
             type: messageJSON.type,
             src: messageJSON.src,
-            time: messageJSON.time,
+            time: new Date(messageJSON.time * 1000),  // transform unix timestamp to datemessageJSON.time,
             door: messageJSON.door,
             description: messageJSON.desc
         })
@@ -214,7 +214,7 @@ async function logAccess(messageJSON) {
             uid: uid,
             name: username,
             door: door,
-            time: time,
+            time: new Date(time * 1000),
             isKnown: isKnown || false,
             type: type
         });
@@ -226,7 +226,6 @@ async function logAccess(messageJSON) {
         console.log(error)
     }
     logAccess(messageJSON);
-
 }
 
 async function handleUnknownKey(messageJSON) {
@@ -264,7 +263,7 @@ async function handleUnknownKey(messageJSON) {
             uid: uid,
             name: username,
             door: door,
-            time: time
+            time: new Date(time * 1000),  // transform unix timestamp to date
         });
         const result = await keyRepository.save(key)
         console.log(result)
@@ -294,7 +293,7 @@ async function handleDoorKeyList(messageJSON) {
             data: messageJSON.data,
             type: messageJSON.type,
             src: messageJSON.src,
-            time: messageJSON.time,
+            time: new Date(messageJSON.time * 1000),
             door: messageJSON.door,
             description: messageJSON.desc
         })

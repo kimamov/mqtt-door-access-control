@@ -23,6 +23,10 @@ export class AccessLog {
     @Column("varchar", { length: 20, nullable: false })
     type: string;
 
+    @Column("varchar", { length: 20, nullable: false })
+    access: string;
+
+
     @Column("timestamp")
     time: Date;
 

@@ -3,6 +3,7 @@ const passport = require("passport");
 import { getAllAccesses } from '../controllers/accessController';
 import { getAllEvents } from '../controllers/eventController';
 import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
+import { getAllNewKeys } from '../controllers/newKeyController';
 import { getReaderKeys, getAllReaders, getMyReaderKeys, addReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
@@ -57,6 +58,8 @@ router.post("/signup", async (req, res) => {
 router.post("/key"/* , checkAuth */, addKey)
 
 router.get("/key"/* , checkAuth */, getAllKeys)
+
+router.get("/newkey", getAllNewKeys)
 
 router.post("/synckey"/* , checkAuth */, syncKey)
 

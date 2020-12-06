@@ -5,16 +5,9 @@ import { List, Datagrid, Edit, Create, SimpleForm, TextField, DateField, TextInp
 export const KeyList = (props) => (
     <List {...props}>
         <Datagrid>
-            <TextField source="id" />
             <TextField source="name" />
+            <TextField source="uid" />
             <DateField source="validUntil" showTime locales="de"/>
-            <p>
-                {(()=>{
-                const date=new Date(115316161616 * 100);
-                return date.toLocaleDateString('de');
-                })()}
-            </p>
-            <NumberField source="uid" />
             <BooleanField source="isOneTimeCode" />
         </Datagrid>
     </List>

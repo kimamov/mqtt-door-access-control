@@ -82,7 +82,7 @@ export async function addReaderKeys(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const { body } = req;
-        if (!(body.readerName && body.keyId)) throw "invalid request body"
+        if (!(body.readerId && body.keyId)) throw "invalid request body"
         // check if reader with that ip exists
         const readerRepository: Repository<Reader> = getRepository(Reader);
         const readerResult = await readerRepository.findOneOrFail({ readerName: body.readerName })
@@ -94,13 +94,13 @@ export async function addReaderKeys(req: Request, res: Response) {
         const readerToKeyRepo: Repository<ReaderToKey> = getRepository(ReaderToKey)
         const readerToKey: ReaderToKey = await readerToKeyRepo.create({
             keyId: body.keyId,
-            readerName: body.readerName
+            readerId: body.readerId
         })
         
         await readerToKeyRepo.save(readerToKey);
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
-            doorip: readerResult.readerName,
+            doorip: readerResult.ip,
             uid: keyResult.uid,
             user: keyResult.name,
             acctype: keyResult.acctype,

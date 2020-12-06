@@ -138,7 +138,6 @@ async function handleHeartBeat(messageJSON) {
             });
             const result = await readerRepo.save(reader)
             console.log(result)
-
         }
         
     } catch (error) {
@@ -180,9 +179,10 @@ function handleDevNFCMessages(messageJSON) {
 }
 
 function handleAccessAndEvent(messageJSON) {
-    if (messageJSON.type === "event") return handleDoorEvent(messageJSON)
-    if (messageJSON.type === "access") {
-        messageJSON.isKnown ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
+    if (messageJSON.cmd === "event") handleDoorEvent(messageJSON)
+    else if (messageJSON.type === "access") {
+        messageJSON.isKnown = messageJSON.isKnown === "true"
+        messageJSON.isKnown  ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
         if(messageJSON.cmd==="log"){
             logAccess(messageJSON);
         }
@@ -227,17 +227,18 @@ async function logAccess(messageJSON) {
     try {
 
         console.log(messageJSON)
-        const { uid, username, door, time, isKnown, type } = messageJSON;
-        const keyRepository: Repository<AccessLog> = getRepository(AccessLog);
-        const key = await keyRepository.create({
+        const { uid, username, door, time, isKnown, type, access } = messageJSON;
+        const accessRepo: Repository<AccessLog> = getRepository(AccessLog);
+        const key = await accessRepo.create({
             uid: uid,
             name: username,
             door: door,
             time: new Date(time * 1000),
             isKnown: isKnown || false,
-            type: type
+            type: type,
+            access: access
         });
-        const result = await keyRepository.save(key)
+        const result = await accessRepo.save(key)
         console.log(result)
         /* log success as event in database */
     } catch (error) {
@@ -276,14 +277,14 @@ async function handleUnknownKey(messageJSON) {
     try {
         console.log("WAS CALLED")
         const { uid, username, door, time } = messageJSON;
-        const keyRepository: Repository<NewKey> = getRepository(NewKey);
-        const key = await keyRepository.create({
+        const newKeyRepo: Repository<NewKey> = getRepository(NewKey);
+        const key = await newKeyRepo.create({
             uid: uid,
             name: username,
             door: door,
             time: new Date(time * 1000),  // transform unix timestamp to date
         });
-        const result = await keyRepository.save(key)
+        const result = await newKeyRepo.save(key)
         console.log(result)
         /* log success as event in database */
     } catch (error) {
@@ -305,9 +306,9 @@ async function handleDoorKeyList(messageJSON) {
     } */
     try {
         // store all incoming events in the database
-        const eventRepository: Repository<Event> = getRepository(Event);
+        const eventRepo: Repository<Event> = getRepository(Event);
 
-        const result = await eventRepository.save({
+        const result = await eventRepo.save({
             data: messageJSON.data,
             type: messageJSON.type,
             src: messageJSON.src,

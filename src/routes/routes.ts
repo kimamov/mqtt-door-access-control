@@ -60,17 +60,17 @@ router.get("/key"/* , checkAuth */, getAllKeys)
 
 router.post("/synckey"/* , checkAuth */, syncKey)
 
-router.get("/readers"/* , checkAuth */, getAllReaders)
+router.get("/reader"/* , checkAuth */, getAllReaders)
 
-router.get("/raederkeystest/:doorid"/* , checkAuth */, getReaderKeys)
+router.get("/raederkeytest/:doorName"/* , checkAuth */, getReaderKeys)
 
-router.get("/readerkeys"/* , checkAuth */, getMyReaderKeys)
+router.get("/readerkey"/* , checkAuth */, getMyReaderKeys)
 
-router.post("/readerkeys"/* , checkAuth */, addReaderKeys)
+router.post("/readerkey"/* , checkAuth */, addReaderKeys)
 
 router.get("/access"/* , checkAuth */, getAllAccesses)
 
-router.get("/events"/* , checkAuth */, getAllEvents)
+router.get("/event"/* , checkAuth */, getAllEvents)
 
 router.get("/testmqtt", (req, res) => {
   console.log(client.connected)

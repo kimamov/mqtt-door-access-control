@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import * as bcrypt from "bcrypt";
 
 /* 
 msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";

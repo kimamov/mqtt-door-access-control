@@ -7,7 +7,7 @@ export class ReaderToKey {
 
 
     @PrimaryColumn()
-    readerIp: string;
+    readerName: string;
 
     @PrimaryColumn()
     keyId: number;
@@ -25,7 +25,7 @@ export class ReaderToKey {
     @ManyToOne(() => Reader, reader => reader.readerToKeys, {
         primary: true
     })
-    @JoinTable({ name: "readerIp" })
+    @JoinTable({ name: "readerName" })
     reader: Reader;
 
 }

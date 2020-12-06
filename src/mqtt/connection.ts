@@ -96,6 +96,9 @@ function messageHandler(topic: string, message: Buffer) {
             case "/devnfc/accesslist":
                 handleDoorKeyList(messageJSON);
                 break;
+            case "devnfc/#":
+            case "/devnfc/#":
+                console.log(messageJSON)
             default:
                 /* console.log(messageJSON) */
                 console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
@@ -116,14 +119,28 @@ async function handleHeartBeat(messageJSON) {
         if (!(messageJSON.type === "heartbeat")) throw "invalid type expected heartbeat"
         if (!(messageJSON.ip && messageJSON.time && messageJSON.door)) throw "required fileds are missing"
         const { ip, time, door } = messageJSON;
-        const keyRepository: Repository<Reader> = getRepository(Reader);
-        const reader = await keyRepository.create({
-            ip: ip,
-            lastPing: new Date(time * 1000),  // transform unix timestamp to date
-            readerName: door
-        });
-        const result = await keyRepository.save(reader)
-        console.log(result)
+        
+        const readerRepo: Repository<Reader> = getRepository(Reader);
+        /* check if reader already exists */
+        const foundReader=await readerRepo.findOne({readerName: door, ip: ip});
+        const lastPingDateTime=new Date(time * 1000);
+        if(foundReader){
+            /* if there already is a reader with that name and ip update it */
+            foundReader.lastPing=lastPingDateTime;
+            const result=await readerRepo.save(foundReader);
+            console.log(result)
+        }else {
+            /* otherwise create a new one */
+            const reader = await readerRepo.create({
+                ip: ip,
+                lastPing: lastPingDateTime,  // transform unix timestamp to date
+                readerName: door
+            });
+            const result = await readerRepo.save(reader)
+            console.log(result)
+
+        }
+        
     } catch (error) {
         console.log(error)
     }
@@ -165,7 +182,10 @@ function handleDevNFCMessages(messageJSON) {
 function handleAccessAndEvent(messageJSON) {
     if (messageJSON.type === "event") return handleDoorEvent(messageJSON)
     if (messageJSON.type === "access") {
-        return messageJSON.isKnown ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
+        messageJSON.isKnown ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
+        if(messageJSON.cmd==="log"){
+            logAccess(messageJSON);
+        }
     }
 
 }
@@ -201,7 +221,6 @@ async function handleDoorEvent(messageJSON) {
 
 async function handleKnownKey(messageJSON) {
     console.log(`known key with the UID: ${messageJSON.uid} accessed door ${messageJSON.door}`);
-    logAccess(messageJSON);
 }
 
 async function logAccess(messageJSON) {
@@ -225,7 +244,6 @@ async function logAccess(messageJSON) {
         /* log failure as event in database */
         console.log(error)
     }
-    logAccess(messageJSON);
 }
 
 async function handleUnknownKey(messageJSON) {
@@ -256,7 +274,7 @@ async function handleUnknownKey(messageJSON) {
             return msg;
         } */
     try {
-        console.log(messageJSON)
+        console.log("WAS CALLED")
         const { uid, username, door, time } = messageJSON;
         const keyRepository: Repository<NewKey> = getRepository(NewKey);
         const key = await keyRepository.create({

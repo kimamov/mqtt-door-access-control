@@ -25,8 +25,9 @@ import { ReaderToKey } from "../entity/ReaderToKey";
 
 export async function getReaderKeys(req: Request, res: Response) {
     // tell the reader to send us all keys that are currently stored on it
-    const { doorid } = req.params
-    if (!doorid) return res.status(404).send({
+    console.log("was called")
+    const { doorName } = req.params
+    if (!doorName) return res.status(404).send({
         message: "please provide an id"
     })
     /* TODO: get the reader from the doorid then use its ip to the command */
@@ -81,10 +82,10 @@ export async function addReaderKeys(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const { body } = req;
-        if (!(body.doorIp && body.keyId)) throw "invalid request body"
+        if (!(body.readerName && body.keyId)) throw "invalid request body"
         // check if reader with that ip exists
         const readerRepository: Repository<Reader> = getRepository(Reader);
-        const readerResult = readerRepository.findOneOrFail({ ip: body.doorIp })
+        const readerResult = await readerRepository.findOneOrFail({ readerName: body.readerName })
         if (!readerResult) throw "no door found"
         // check if key with that id exists
         const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.keyId })
@@ -93,13 +94,13 @@ export async function addReaderKeys(req: Request, res: Response) {
         const readerToKeyRepo: Repository<ReaderToKey> = getRepository(ReaderToKey)
         const readerToKey: ReaderToKey = await readerToKeyRepo.create({
             keyId: body.keyId,
-            readerIp: body.doorIp,
-
+            readerName: body.readerName
         })
-        const linkResult = await readerToKeyRepo.save(readerToKey);
+        
+        await readerToKeyRepo.save(readerToKey);
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
-            doorip: linkResult.readerIp,
+            doorip: readerResult.readerName,
             uid: keyResult.uid,
             user: keyResult.name,
             acctype: keyResult.acctype,

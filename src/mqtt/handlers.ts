@@ -9,12 +9,12 @@ import dateFromUnix from "../util/dateFromUnix"
 export default function messageHandler(topic: string, message: Buffer) {
     // message is Buffer
     const messageString = message.toString()
-    console.log(messageString)
+    /* console.log(messageString) */
     try {
         const messageJSON = JSON.parse(messageString)
 
-        console.log(topic)
-        console.log(messageJSON)
+        /* console.log(topic)
+        console.log(messageJSON) */
 
         // handle different topics
         switch (topic) {
@@ -60,13 +60,13 @@ async function handleHeartBeat(messageJSON) {
         
         const readerRepo: Repository<Reader> = getRepository(Reader);
         /* check if reader already exists */
-        const foundReader=await readerRepo.findOne({readerName: door, ip: ip});
+        const foundReader=await readerRepo.findOne({readerName: door});
         const lastPingDateTime=dateFromUnix(time);
         if(foundReader){
             /* if there already is a reader with that name and ip update it */
             foundReader.lastPing=lastPingDateTime;
             const result=await readerRepo.save(foundReader);
-            console.log(result)
+            //console.log(result)
         }else {
             /* otherwise create a new one */
             const reader = await readerRepo.create({
@@ -75,7 +75,8 @@ async function handleHeartBeat(messageJSON) {
                 readerName: door
             });
             const result = await readerRepo.save(reader)
-            console.log(result)
+            /* console.log(result)
+            console.log("new reader but wont create it") */
         }
         
     } catch (error) {

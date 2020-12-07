@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const passport = require("passport");
-import { getAllAccesses } from '../controllers/accessController';
-import { getAllEvents } from '../controllers/eventController';
-import { addKey, getAllKeys, syncKey } from '../controllers/keyController';
-import { getAllNewKeys } from '../controllers/newKeyController';
-import { getReaderKeys, getAllReaders, getMyReaderKeys, addReaderKeys } from '../controllers/readerController';
+import { getAccesses } from '../controllers/accessController';
+import { getEvents } from '../controllers/eventController';
+import { addKey, getKeys, syncKey } from '../controllers/keyController';
+import { getNewKeys } from '../controllers/newKeyController';
+import { getReaderKeys, getReaders, getMyReaderKeys, addReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -57,13 +57,13 @@ router.post("/signup", async (req, res) => {
 
 router.post("/key"/* , checkAuth */, addKey)
 
-router.get("/key"/* , checkAuth */, getAllKeys)
+router.get("/key"/* , checkAuth */, getKeys)
 
-router.get("/newkey", getAllNewKeys)
+router.get("/newkey", getNewKeys)
 
 router.post("/synckey"/* , checkAuth */, syncKey)
 
-router.get("/reader"/* , checkAuth */, getAllReaders)
+router.get("/reader"/* , checkAuth */, getReaders)
 
 router.get("/raederkeytest/:doorName"/* , checkAuth */, getReaderKeys)
 
@@ -71,9 +71,9 @@ router.get("/readerkey"/* , checkAuth */, getMyReaderKeys)
 
 router.post("/readerkey"/* , checkAuth */, addReaderKeys)
 
-router.get("/access"/* , checkAuth */, getAllAccesses)
+router.get("/access"/* , checkAuth */, getAccesses)
 
-router.get("/event"/* , checkAuth */, getAllEvents)
+router.get("/event"/* , checkAuth */, getEvents)
 
 router.get("/testmqtt", (req, res) => {
   console.log(client.connected)

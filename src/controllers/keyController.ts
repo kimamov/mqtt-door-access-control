@@ -2,6 +2,7 @@ import { getRepository, Repository } from "typeorm"
 import { Request, Response } from "express"
 import { Key } from "../entity/Key"
 import { client } from "../mqtt/connection";
+import optionsFromReqQuery from "../util/optionsFromQuery";
 
 export async function addKey(req: Request, res: Response) {
     try {
@@ -20,11 +21,10 @@ export async function addKey(req: Request, res: Response) {
 
 
 
-export async function getAllKeys(req: Request, res: Response) {
+export async function getKeys(req: Request, res: Response) {
     try {
-        console.log(req.query)
         const keyRepository: Repository<Key> = getRepository(Key);
-        const keys = await keyRepository.find()
+        const keys = await keyRepository.find(optionsFromReqQuery(req))
         res.set('Content-Range', `key 0-${keys.length}/${keys.length}`)
         res.send(keys)
     } catch (error) {

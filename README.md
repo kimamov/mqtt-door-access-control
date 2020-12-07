@@ -1,5 +1,6 @@
 # mqtt-door-access-control
-node server that lets you sync users of rfid doors over MQTT.  
+Node React App that lets you sync users of rfid doors over MQTT. 
+Currently using exp rfid https://github.com/esprfid/esp-rfid for the hardware but might switch to Raspberry Pi.
 
 
 # usage

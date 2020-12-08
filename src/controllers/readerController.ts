@@ -43,10 +43,9 @@ export async function getReaderKeys(req: Request, res: Response) {
 
 export async function getReaders(req: Request, res: Response) {
     try {
-        const readerRepository: Repository<Reader> = getRepository(Reader);
-        const result = await readerRepository.find(optionsFromReqQuery(req))
-        res.set('Content-Range', `key 0-${result.length}/${result.length}`)
-
+        const repo: Repository<Reader> = getRepository(Reader);
+        const [result, total] = await repo.findAndCount(optionsFromReqQuery(req))
+        res.set('Content-Range', `key 0-${result.length}/${total}`)
         res.send(result)
     } catch (error) {
         res.status(500).send({

@@ -23,10 +23,10 @@ export async function addKey(req: Request, res: Response) {
 
 export async function getKeys(req: Request, res: Response) {
     try {
-        const keyRepository: Repository<Key> = getRepository(Key);
-        const keys = await keyRepository.find(optionsFromReqQuery(req))
-        res.set('Content-Range', `key 0-${keys.length}/${keys.length}`)
-        res.send(keys)
+        const repo: Repository<Key> = getRepository(Key);
+        const [result, total] = await repo.findAndCount(optionsFromReqQuery(req))
+        res.set('Content-Range', `key 0-${result.length}/${total}`)
+        res.send(result)
     } catch (error) {
         res.status(404).send("could not find any items");
     }

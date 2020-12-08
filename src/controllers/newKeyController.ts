@@ -6,10 +6,10 @@ import optionsFromReqQuery from "../util/optionsFromQuery";
 export async function getNewKeys(req: Request, res: Response) {
     try {
         console.log(req.query)
-        const keyRepository: Repository<NewKey> = getRepository(NewKey);
-        const keys = await keyRepository.find(optionsFromReqQuery(req))
-        res.set('Content-Range', `key 0-${keys.length}/${keys.length}`)
-        res.send(keys)
+        const repo: Repository<NewKey> = getRepository(NewKey);
+        const [result, total] = await repo.findAndCount(optionsFromReqQuery(req))
+        res.set('Content-Range', `key 0-${result.length}/${total}`)
+        res.send(result)
     } catch (error) {
         res.status(404).send("could not find any items");
     }

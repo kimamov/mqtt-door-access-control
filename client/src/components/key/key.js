@@ -1,9 +1,10 @@
 // in posts.js
 import * as React from "react";
 import { List, Datagrid, Edit, Create, SimpleForm, TextField, DateField, TextInput, DateInput, NumberField, BooleanField } from 'react-admin';
+import KeyActions from "./KeyActions";
 
 export const KeyList = (props) => (
-    <List {...props}>
+    <List {...props} actions={<KeyActions/>}>
         <Datagrid>
             <TextField source="name" />
             <TextField source="uid" />

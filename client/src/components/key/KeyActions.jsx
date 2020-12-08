@@ -29,6 +29,9 @@ const KeyActions = (props) => {
         showFilter,
         total,
     } = useListContext();
+
+    const listContext = useListContext();
+
     return (
         <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
             {filters && cloneElement(filters, {
@@ -48,7 +51,7 @@ const KeyActions = (props) => {
             />
             {/* Add your custom actions */}
             <Button
-                onClick={() => { alert('Your custom action'); }}
+                onClick={() => {console.log(listContext)}}
                 label="Show calendar"
             >
                 <IconEvent />

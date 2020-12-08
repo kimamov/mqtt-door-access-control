@@ -2,7 +2,7 @@ import { getRepository, Repository } from "typeorm"
 import { Request, Response } from "express"
 import { Key } from "../entity/Key"
 import { client } from "../mqtt/connection";
-import optionsFromReqQuery from "../util/optionsFromQuery";
+import getList from "../util/getList";
 
 export async function addKey(req: Request, res: Response) {
     try {
@@ -22,15 +22,7 @@ export async function addKey(req: Request, res: Response) {
 
 
 export async function getKeys(req: Request, res: Response) {
-    try {
-        const repo: Repository<Key> = getRepository(Key);
-        const [result, total] = await repo.findAndCount(optionsFromReqQuery(req))
-        res.set('Content-Range', `key 0-${result.length}/${total}`)
-        res.send(result)
-    } catch (error) {
-        res.status(404).send("could not find any items");
-    }
-
+    getList(getRepository(Key), req, res)
 }
 
 

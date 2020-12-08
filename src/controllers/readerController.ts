@@ -4,7 +4,7 @@ import { Reader } from "../entity/Reader"
 import { client } from "../mqtt/connection";
 import { Key } from "../entity/Key";
 import { ReaderToKey } from "../entity/ReaderToKey";
-import optionsFromReqQuery from "../util/optionsFromQuery";
+import getList from "../util/getList";
 
 /* export async function addKey(req: Request, res: Response) {
     try {
@@ -42,16 +42,7 @@ export async function getReaderKeys(req: Request, res: Response) {
 }
 
 export async function getReaders(req: Request, res: Response) {
-    try {
-        const repo: Repository<Reader> = getRepository(Reader);
-        const [result, total] = await repo.findAndCount(optionsFromReqQuery(req))
-        res.set('Content-Range', `key 0-${result.length}/${total}`)
-        res.send(result)
-    } catch (error) {
-        res.status(500).send({
-            error: error
-        })
-    }
+    getList(getRepository(Reader), req, res)
 }
 
 

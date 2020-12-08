@@ -1,4 +1,4 @@
-import { getRepository, Repository, Entity } from "typeorm";
+import { getRepository, Repository } from "typeorm";
 import { AccessLog } from "../entity/AccessLog";
 import { Request, Response } from "express"
 import optionsFromReqQuery from "../util/optionsFromQuery";

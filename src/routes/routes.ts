@@ -67,7 +67,7 @@ router.get("/reader"/* , checkAuth */, getReaders)
 
 router.get("/raederkeytest/:doorName"/* , checkAuth */, getReaderKeys)
 
-router.get("/readerkey"/* , checkAuth */, getMyReaderKeys)
+router.get("/readerkey/:readerId"/* , checkAuth */, getMyReaderKeys)
 
 router.post("/readerkey"/* , checkAuth */, addReaderKeys)
 

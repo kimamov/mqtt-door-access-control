@@ -3,8 +3,11 @@ import { Request, Response } from "express"
 import { Reader } from "../entity/Reader"
 import { client } from "../mqtt/connection";
 import { Key } from "../entity/Key";
-import { ReaderToKey } from "../entity/ReaderToKey";
 import getList from "../util/getList";
+import { ReaderKey } from "../entity/ReaderKey";
+
+
+let gettingKeyList=false;
 
 /* export async function addKey(req: Request, res: Response) {
     try {
@@ -26,8 +29,6 @@ import getList from "../util/getList";
 
 export async function openDoor(req: Request, res: Response){
     // get the door from the DB
-    res.send({message: "suc"})
-    return
     try {
         const id=req.params.id;
         const readerRepository: Repository<Reader> = getRepository(Reader);
@@ -40,29 +41,105 @@ export async function openDoor(req: Request, res: Response){
         }
         client.publish("devnfc", JSON.stringify({
             cmd: "opendoor",
-            doorip: reader.ip
+            doorip: reader.ip,
+            acctype0: true,
+            acctype1: true,
+            acctype2: true,
+            acctype3: true,
+            acctype4: true,
         }))
+        res.send({message: "succes"})
     } catch (error) {
         res.status(500).send({error: error})
     }
     
 }
 
-export async function getReaderKeys(req: Request, res: Response) {
+export async function getReaderKeys(req: Request, res: Response){
+    
+}
+
+
+export async function generateReaderKeys(req: Request, res: Response) {
     // tell the reader to send us all keys that are currently stored on it
-    console.log("was called")
-    const { doorName } = req.params
-    if (!doorName) return res.status(404).send({
-        message: "please provide an id"
-    })
+    if(gettingKeyList){
+        return res.status(500).send({message: "already getting the keylist of another reader"})
+    }
+    const id=req.params.id;
+    const readerRepository: Repository<Reader> = getRepository(Reader);
+    const reader=await readerRepository.findOne(id);
+    if(!reader){
+        return res.status(404).send({message: `could not find reader with the provided id: ${id}`})
+    }
     /* TODO: get the reader from the doorid then use its ip to the command */
     client.publish("devnfc", JSON.stringify({
         /* cmd: "getuser", */
         cmd: "listusr",
-        doorip: "192.168.178.47",
+        doorip: reader.ip,
     }))
-    res.send("success")
 
+    gettingKeyList=true;
+    
+    let timeout=null;
+    const keys=[];
+    
+    function messageHandler(topic: string, message: Buffer) {
+        // message is Buffer
+        const messageString = message.toString()
+        try {
+            const messageJSON = JSON.parse(messageString)
+    
+            console.log(topic)
+            if(topic==="devnfc/send" || topic==="/devnfc/send"){
+                const keyObj={
+                    readerIp: reader.ip,
+                    readerId: reader.id,
+                    uid: messageJSON.uid,
+                    name: messageJSON.user,
+                    acctype: messageJSON.acctype,
+                    acctype2: messageJSON.acctype2,
+                    acctype3: messageJSON.acctype3,
+                    acctype4: messageJSON.acctype4,
+                    validUntil: messageJSON.validuntil
+                    
+                };
+                keys.push(keyObj);
+                createReaderKey(keyObj);
+                if(timeout) clearTimeout(timeout);
+                timeout=setTimeout(()=>{
+                    client.off('message', messageHandler);
+                    gettingKeyList=false;
+                    res.send({
+                        ip: reader.ip,
+                        keys: keys
+                    });
+
+                }, 2500);
+            }
+    
+        } catch (error) {
+            console.log("error parsing following content as json: " + messageString)
+            console.log(error)
+            
+        }
+    }
+
+    client.on('message', messageHandler)
+}
+
+async function createReaderKey(keyObj){
+    try {
+        const repo=getRepository(ReaderKey);
+        const key=await repo.findOne({readerIp: keyObj.ip, readerId: keyObj.id, uid: keyObj.uid});
+        if(key){
+            // do up date
+        }else {
+            // create new one
+            repo.create(keyObj);
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export async function getReaders(req: Request, res: Response) {
@@ -79,7 +156,7 @@ export async function getReaderWithKeys(req: Request, res: Response){
             .where(`reader.id = ${id}`)
             .getOne(); */
 
-        const result = await readerRepository.findOne(id, {relations: ["readerToKeys"]});
+        const result = await readerRepository.findOne(id, {relations: ["keys"]});
 
         if(!result){
             return res.status(404).send({message: `could not find reader with the provided id ${id}`})
@@ -101,7 +178,7 @@ export async function getMyReaderKeys(req: Request, res: Response) {
         } */
         const result = await readerRepository
             .createQueryBuilder("reader")
-            .leftJoinAndSelect("reader.readerToKeys", "key")
+            .leftJoinAndSelect("reader.keys", "key")
             .getMany();
         res.send(result)
     } catch (error) {
@@ -126,13 +203,9 @@ export async function addReaderKeys(req: Request, res: Response) {
         const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
         if (!keyResult) throw "no key found"
         // create connection between reader and key
-        const readerToKeyRepo: Repository<ReaderToKey> = getRepository(ReaderToKey)
-        const readerToKey: ReaderToKey = await readerToKeyRepo.create({
-            keyId: body.key_id,
-            readerId: body.id
-        })
+        readerResult.keys=[keyResult];
+        await readerRepository.save(readerResult);
         
-        await readerToKeyRepo.save(readerToKey);
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: readerResult.ip,

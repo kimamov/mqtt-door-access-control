@@ -4,7 +4,7 @@ import { getAccesses } from '../controllers/accessController';
 import { getEvents } from '../controllers/eventController';
 import { addKey, getKeys, syncKey } from '../controllers/keyController';
 import { getNewKeys } from '../controllers/newKeyController';
-import { getReaderKeys, getReaders, getMyReaderKeys, addReaderKeys, openDoor, getReaderWithKeys } from '../controllers/readerController';
+import { getReaderKeys, getReaders, getMyReaderKeys, addReaderKeys, openDoor, getReaderWithKeys, generateReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -71,7 +71,7 @@ router.get("/reader/:id", getReaderWithKeys)
 
 router.post("/reader", addReaderKeys)
 
-router.get("/raederkeytest/:doorName"/* , checkAuth */, getReaderKeys)
+router.get("/readerkey/:id"/* , checkAuth */, generateReaderKeys)
 
 router.get("/readerkey/:readerId"/* , checkAuth */, getMyReaderKeys)
 

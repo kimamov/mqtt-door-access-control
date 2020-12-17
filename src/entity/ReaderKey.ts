@@ -1,10 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
-import { Reader } from "./Reader";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+
 
 @Entity()
-export class Key {
+export class ReaderKey {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column("varchar", { length: 30, nullable: true })
+    readerIp: string;
+
+    @Column("integer", {nullable: true})
+    readerId: number;
+
 
     @Column("varchar", { length: 20, nullable: false })
     uid: string;
@@ -31,8 +38,5 @@ export class Key {
     acctype4: number
 
 
-
-    @ManyToMany(type => Reader, reader => reader.keys)
-    readers: Reader[];
 
 }

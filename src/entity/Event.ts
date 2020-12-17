@@ -8,18 +8,18 @@ export class Event {
     @Column("varchar", { length: 20, nullable: false })
     type: string;
 
-    @Column("varchar", { nullable: false, length: 20 })
+    @Column("varchar", { nullable: false, length: 60 })
     src: string;
 
-    @Column("varchar", { nullable: true, length: 40 })
+    @Column("varchar", { nullable: true, length: 100 })
     description: string;
 
-    @Column("varchar", { nullable: false, length: 20 })
+    @Column("varchar", { nullable: false, length: 60 })
     data: string;
 
     @Column("timestamp")
     time: Date;
 
-    @Column("varchar", { nullable: false, length: 20 })
+    @Column("varchar", { nullable: false, length: 100 })
     door: string;
 }

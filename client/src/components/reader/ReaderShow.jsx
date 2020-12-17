@@ -22,7 +22,7 @@ const ReaderShow = (props) => {
                         </ReferenceInput>
                     </SimpleForm>
                 </Create>
-                <ArrayField source="readerToKeys">
+                <ArrayField source="keys">
                     <Datagrid>
                         <TextField source="name" />
                         <TextField source="uid" />

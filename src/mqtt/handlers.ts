@@ -6,6 +6,8 @@ import { Reader } from "../entity/Reader"
 import dateFromUnix from "../util/dateFromUnix"
 
 
+
+
 export default function messageHandler(topic: string, message: Buffer) {
     // message is Buffer
     const messageString = message.toString()
@@ -13,8 +15,9 @@ export default function messageHandler(topic: string, message: Buffer) {
     try {
         const messageJSON = JSON.parse(messageString)
 
-        /* console.log(topic)
-        console.log(messageJSON) */
+        console.log(topic)
+        //console.log(messageJSON)
+
 
         // handle different topics
         switch (topic) {
@@ -28,6 +31,7 @@ export default function messageHandler(topic: string, message: Buffer) {
                 break;
             case "devnfc/send":
             case "/devnfc/send":
+                //handleDoorKeyList(messageJSON);
                 handleAccessAndEvent(messageJSON);
                 break;
             case "devnfc/accesslist":
@@ -231,11 +235,29 @@ async function handleUnknownKey(messageJSON) {
     }
 }
 
+
+function waitForUserList(){
+
+}
+
 async function handleDoorKeyList(messageJSON) {
-    console.log("accesslist received")
-    console.dir(messageJSON)
+    return null;
+    /* console.log("accesslist received")
+    console.dir(messageJSON) */
+
+    
+    /* {
+        [0]   command: 'userfile',
+        [0]   uid: 'zzzzzzzz',
+        [0]   user: 'qqqqqqq',
+        [0]   acctype: 1,
+        [0]   acctype2: null,
+        [0]   acctype3: null,
+        [0]   acctype4: null,
+        [0]   validuntil: 2145916800
+        [0] } */
     /* const keyObject={
-        data: messageJSON.data,
+        data: messageJSON.command,
         type: messageJSON.type,
         src: messageJSON.src,
         time: dateFromUnix(messageJSON.time),
@@ -246,6 +268,7 @@ async function handleDoorKeyList(messageJSON) {
 }
 
 async function handleDoorKeyListOld(messageJSON) {
+    console.log("was called")
     /* devnfc / send
     {
         type: 'WARN',

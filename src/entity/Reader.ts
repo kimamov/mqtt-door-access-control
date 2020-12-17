@@ -1,21 +1,24 @@
-import { Entity, Column, OneToMany, PrimaryColumn, Generated, PrimaryGeneratedColumn } from "typeorm";
-import { ReaderToKey } from "./ReaderToKey";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
+import { Key } from "./Key";
 
 @Entity()
 export class Reader {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", { length: 15, nullable: false })
+    @Column("varchar", { length: 20, nullable: false })
     ip: string;
 
-    @Column("varchar", { unique: true, length: 40, nullable: false })
+    @Column("varchar", { unique: true, length: 100, nullable: false })
     readerName: string;
 
     @Column("timestamp")
     lastPing: Date
 
     
-    @OneToMany(() => ReaderToKey, readerToKey => readerToKey.reader)
-    readerToKeys!: ReaderToKey[];
+    
+
+    @ManyToMany(type => Key, key => key.readers)
+    @JoinTable()
+    keys: Key[];
 }

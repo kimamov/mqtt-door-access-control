@@ -5,11 +5,12 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.2.2",
-    "ra-data-simple-rest": "^3.10.2",
+    "@testing-library/user-event": "^12.6.0",
+    "ra-data-simple-rest": "^3.10.4",
     "react": "^17.0.1",
-    "react-admin": "^3.10.3",
+    "react-admin": "^3.11.0",
     "react-dom": "^17.0.1",
+    "react-final-form": "^6.5.2",
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4"
   },

@@ -1,10 +1,9 @@
 import { FindOperator } from "../FindOperator";
-/**
- * Find Options Operator.
- * Example: { someField: Raw([...]) }
- */
-export function Raw(value) {
-    return new FindOperator("raw", value, false);
+export function Raw(valueOrSqlGenerator, sqlGeneratorParameters) {
+    if (typeof valueOrSqlGenerator !== 'function') {
+        return new FindOperator("raw", valueOrSqlGenerator, false);
+    }
+    return new FindOperator("raw", [], true, true, valueOrSqlGenerator, sqlGeneratorParameters);
 }
 
 //# sourceMappingURL=Raw.js.map

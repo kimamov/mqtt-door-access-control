@@ -1,10 +1,10 @@
 {
     "type": "mysql",
-    "host": "localhost",
+    "host": "151.252.56.145",
     "port": 3306,
-    "username": "root",
-    "password": "",
-    "database": "lock",
+    "username": "access-control",
+    "password": "rpPfcp4Cv5xQn26o",
+    "database": "access-control",
     "entities": [
         "src/entity/*.ts"
     ],

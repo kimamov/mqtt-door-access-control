@@ -3,6 +3,7 @@ import { NativescriptConnectionOptions } from "./NativescriptConnectionOptions";
 import { QueryRunner } from "../../query-runner/QueryRunner";
 import { Connection } from "../../connection/Connection";
 import { ColumnType } from "../types/ColumnTypes";
+import { ReplicationMode } from "../types/ReplicationMode";
 /**
  * Organizes communication with sqlite DBMS within Nativescript.
  */
@@ -25,7 +26,7 @@ export declare class NativescriptDriver extends AbstractSqliteDriver {
     /**
      * Creates a query runner used to execute database queries.
      */
-    createQueryRunner(mode?: "master" | "slave"): QueryRunner;
+    createQueryRunner(mode: ReplicationMode): QueryRunner;
     normalizeType(column: {
         type?: ColumnType;
         length?: number | string;

@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __read } from "tslib";
 /**
  * Helper utility functions for QueryBuilder.
  */
@@ -14,7 +14,7 @@ var QueryBuilderUtils = /** @class */ (function () {
         if (typeof str !== "string" || str.indexOf(".") === -1)
             return false;
         // extra alias and its property relation
-        var _a = tslib_1.__read(str.split("."), 2), aliasName = _a[0], propertyName = _a[1]; // todo: what about relations in embedded?
+        var _a = __read(str.split("."), 2), aliasName = _a[0], propertyName = _a[1]; // todo: what about relations in embedded?
         if (!aliasName || !propertyName)
             return false;
         // alias and property must be represented in a special format

@@ -3,6 +3,7 @@ import { ColumnType } from "../types/ColumnTypes";
 import { QueryRunner } from "../../query-runner/QueryRunner";
 import { AbstractSqliteDriver } from "../sqlite-abstract/AbstractSqliteDriver";
 import { BetterSqlite3ConnectionOptions } from "./BetterSqlite3ConnectionOptions";
+import { ReplicationMode } from "../types/ReplicationMode";
 /**
  * Organizes communication with sqlite DBMS.
  */
@@ -23,7 +24,7 @@ export declare class BetterSqlite3Driver extends AbstractSqliteDriver {
     /**
      * Creates a query runner used to execute database queries.
      */
-    createQueryRunner(mode?: "master" | "slave"): QueryRunner;
+    createQueryRunner(mode: ReplicationMode): QueryRunner;
     normalizeType(column: {
         type?: ColumnType;
         length?: number | string;

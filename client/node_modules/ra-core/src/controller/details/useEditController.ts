@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, MutableRefObject } from 'react';
 import inflection from 'inflection';
 
 import useVersion from '../useVersion';
@@ -51,6 +51,9 @@ export interface EditControllerProps<RecordType extends Record = Record> {
     hasList?: boolean;
     loading: boolean;
     loaded: boolean;
+    onSuccessRef: MutableRefObject<OnSuccess>;
+    onFailureRef: MutableRefObject<OnFailure>;
+    transformRef: MutableRefObject<TransformData>;
     save: (
         data: Partial<Record>,
         redirect?: RedirectionSideEffect,
@@ -204,7 +207,15 @@ export const useEditController = <RecordType extends Record = Record>(
                                           ? error
                                           : error.message ||
                                                 'ra.notification.http_error',
-                                      'warning'
+                                      'warning',
+                                      {
+                                          _:
+                                              typeof error === 'string'
+                                                  ? error
+                                                  : error && error.message
+                                                  ? error.message
+                                                  : undefined,
+                                      }
                                   );
                                   if (undoable) {
                                       refresh();
@@ -237,6 +248,9 @@ export const useEditController = <RecordType extends Record = Record>(
         hasEdit,
         hasList,
         hasShow,
+        onSuccessRef,
+        onFailureRef,
+        transformRef,
         save,
         setOnSuccess,
         setOnFailure,

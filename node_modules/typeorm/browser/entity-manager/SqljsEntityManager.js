@@ -1,11 +1,11 @@
-import * as tslib_1 from "tslib";
+import { __awaiter, __extends, __generator } from "tslib";
 import { EntityManager } from "./EntityManager";
 /**
  * A special EntityManager that includes import/export and load/save function
  * that are unique to Sql.js.
  */
 var SqljsEntityManager = /** @class */ (function (_super) {
-    tslib_1.__extends(SqljsEntityManager, _super);
+    __extends(SqljsEntityManager, _super);
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -22,8 +22,8 @@ var SqljsEntityManager = /** @class */ (function (_super) {
      * or uses the given definition to open a new database.
      */
     SqljsEntityManager.prototype.loadDatabase = function (fileNameOrLocalStorageOrData) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.driver.load(fileNameOrLocalStorageOrData)];
                     case 1:
@@ -38,8 +38,8 @@ var SqljsEntityManager = /** @class */ (function (_super) {
      * if fileNameOrLocalStorage is not set options.location is used.
      */
     SqljsEntityManager.prototype.saveDatabase = function (fileNameOrLocalStorage) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.driver.save(fileNameOrLocalStorage)];
                     case 1:

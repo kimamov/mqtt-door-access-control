@@ -4,7 +4,7 @@ import { getAccesses } from '../controllers/accessController';
 import { getEvents } from '../controllers/eventController';
 import { addKey, getKeys, syncKey } from '../controllers/keyController';
 import { getNewKeys } from '../controllers/newKeyController';
-import { getReaderKeys, getReaders, getMyReaderKeys, addReaderKeys } from '../controllers/readerController';
+import { getReaderKeys, getReaders, getMyReaderKeys, addReaderKeys, openDoor, getReaderWithKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -63,7 +63,13 @@ router.get("/newkey", getNewKeys)
 
 router.post("/synckey"/* , checkAuth */, syncKey)
 
+router.get("/opendoor/:id", openDoor)
+
 router.get("/reader"/* , checkAuth */, getReaders)
+
+router.get("/reader/:id", getReaderWithKeys)
+
+router.post("/reader", addReaderKeys)
 
 router.get("/raederkeytest/:doorName"/* , checkAuth */, getReaderKeys)
 
@@ -76,7 +82,6 @@ router.get("/access"/* , checkAuth */, getAccesses)
 router.get("/event"/* , checkAuth */, getEvents)
 
 router.get("/testmqtt", (req, res) => {
-  console.log(client.connected)
   client.publish("devnfc", JSON.stringify({
     message: "test message"
   }))

@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __awaiter, __extends, __generator } from "tslib";
 import { AbstractSqliteDriver } from "../sqlite-abstract/AbstractSqliteDriver";
 import { NativescriptQueryRunner } from "./NativescriptQueryRunner";
 import { DriverOptionNotSetError } from "../../error/DriverOptionNotSetError";
@@ -7,7 +7,7 @@ import { DriverPackageNotInstalledError } from "../../error/DriverPackageNotInst
  * Organizes communication with sqlite DBMS within Nativescript.
  */
 var NativescriptDriver = /** @class */ (function (_super) {
-    tslib_1.__extends(NativescriptDriver, _super);
+    __extends(NativescriptDriver, _super);
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -32,9 +32,9 @@ var NativescriptDriver = /** @class */ (function (_super) {
      * Closes connection with database.
      */
     NativescriptDriver.prototype.disconnect = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (ok, fail) {
                         _this.queryRunner = undefined;
                         _this.databaseConnection.close().then(ok).catch(fail);
@@ -46,7 +46,6 @@ var NativescriptDriver = /** @class */ (function (_super) {
      * Creates a query runner used to execute database queries.
      */
     NativescriptDriver.prototype.createQueryRunner = function (mode) {
-        if (mode === void 0) { mode = "master"; }
         if (!this.queryRunner) {
             this.queryRunner = new NativescriptQueryRunner(this);
         }

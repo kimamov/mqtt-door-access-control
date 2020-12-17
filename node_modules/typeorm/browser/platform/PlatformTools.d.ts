@@ -1,9 +1,9 @@
+
+export { ReadStream } from "fs";
+export { EventEmitter } from "events";
+export { Readable, Writable } from "stream";
 /**
- * Browser's implementation of the platform-specific tools.
- *
- * This file gonna replace PlatformTools for browser environment.
- * For node.js environment this class is not getting packaged.
- * Don't use methods of this class in the code, use PlatformTools methods instead.
+ * Platform-specific tools.
  */
 export declare class PlatformTools {
     /**
@@ -35,13 +35,19 @@ export declare class PlatformTools {
      * Synchronously checks if file exist. Does "fs.existsSync".
      */
     static fileExist(pathStr: string): boolean;
+    static readFileSync(filename: string): Buffer;
+    static appendFileSync(filename: string, data: any): void;
+    static writeFile(path: string, data: any): Promise<void>;
+    /**
+     * Loads a dotenv file into the environment variables.
+     *
+     * @param path The file to load as a dotenv configuration
+     */
+    static dotenv(pathStr: string): void;
     /**
      * Gets environment variable.
      */
     static getEnvVariable(name: string): any;
-    static readFileSync(filename: string): any;
-    static appendFileSync(filename: string, data: any): void;
-    static writeFile(path: string, data: any): Promise<void>;
     /**
      * Highlights sql string to be print in the console.
      */
@@ -51,23 +57,11 @@ export declare class PlatformTools {
      */
     static highlightJson(json: string): string;
     /**
-     * Logging functions needed by AdvancedConsoleLogger (but here without chalk)
+     * Logging functions needed by AdvancedConsoleLogger
      */
     static logInfo(prefix: string, info: any): void;
     static logError(prefix: string, error: any): void;
     static logWarn(prefix: string, warning: any): void;
     static log(message: string): void;
     static warn(message: string): string;
-}
-/**
- * These classes are needed for stream operations or
- * in the mongodb driver. Both aren't supported in the browser.
- */
-export declare class EventEmitter {
-}
-export declare class Readable {
-}
-export declare class Writable {
-}
-export interface ReadStream {
 }

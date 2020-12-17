@@ -48,6 +48,30 @@ export declare class Broadcaster {
      */
     broadcastAfterInsertEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral): void;
     /**
+     * Broadcasts "BEFORE_TRANSACTION_START" event.
+     */
+    broadcastBeforeTransactionStartEvent(result: BroadcasterResult): void;
+    /**
+     * Broadcasts "AFTER_TRANSACTION_START" event.
+     */
+    broadcastAfterTransactionStartEvent(result: BroadcasterResult): void;
+    /**
+     * Broadcasts "BEFORE_TRANSACTION_COMMIT" event.
+     */
+    broadcastBeforeTransactionCommitEvent(result: BroadcasterResult): void;
+    /**
+     * Broadcasts "AFTER_TRANSACTION_COMMIT" event.
+     */
+    broadcastAfterTransactionCommitEvent(result: BroadcasterResult): void;
+    /**
+     * Broadcasts "BEFORE_TRANSACTION_ROLLBACK" event.
+     */
+    broadcastBeforeTransactionRollbackEvent(result: BroadcasterResult): void;
+    /**
+     * Broadcasts "AFTER_TRANSACTION_ROLLBACK" event.
+     */
+    broadcastAfterTransactionRollbackEvent(result: BroadcasterResult): void;
+    /**
      * Broadcasts "AFTER_UPDATE" event.
      * After update event is executed after entity is being updated in the database.
      * All subscribers and entity listeners who listened to this event will be executed at this point.

@@ -3,8 +3,8 @@
  * Using those classes reduces the build size by one third.
  *
  * If we don't include those dummy classes (and just disable the driver import
- * with `false` in `package.json`) typeorm will throw an error on runtime,
- * even if those driver are not used.
+ * with `false` in `package.json`) typeorm will throw an error on runtime and
+ * during webpack builds even if those driver are not used.
  */
 /**
  * DO NOT IMPORT THIS CLASS -
@@ -60,6 +60,26 @@ export { PostgresDriver };
  * DO NOT IMPORT THIS CLASS -
  * This is a dummy class for replacement via `package.json` in browser builds
  */
+var AuroraDataApiDriver = /** @class */ (function () {
+    function AuroraDataApiDriver() {
+    }
+    return AuroraDataApiDriver;
+}());
+export { AuroraDataApiDriver };
+/**
+ * DO NOT IMPORT THIS CLASS -
+ * This is a dummy class for replacement via `package.json` in browser builds
+ */
+var CockroachDriver = /** @class */ (function () {
+    function CockroachDriver() {
+    }
+    return CockroachDriver;
+}());
+export { CockroachDriver };
+/**
+ * DO NOT IMPORT THIS CLASS -
+ * This is a dummy class for replacement via `package.json` in browser builds
+ */
 var AuroraDataApiPostgresDriver = /** @class */ (function () {
     function AuroraDataApiPostgresDriver() {
     }
@@ -106,5 +126,25 @@ var OracleDriver = /** @class */ (function () {
     return OracleDriver;
 }());
 export { OracleDriver };
+/**
+ * DO NOT IMPORT THIS CLASS -
+ * This is a dummy class for replacement via `package.json` in browser builds
+ */
+var SqliteDriver = /** @class */ (function () {
+    function SqliteDriver() {
+    }
+    return SqliteDriver;
+}());
+export { SqliteDriver };
+/**
+ * DO NOT IMPORT THIS CLASS -
+ * This is a dummy class for replacement via `package.json` in browser builds
+ */
+var BetterSqlite3Driver = /** @class */ (function () {
+    function BetterSqlite3Driver() {
+    }
+    return BetterSqlite3Driver;
+}());
+export { BetterSqlite3Driver };
 
 //# sourceMappingURL=BrowserDisabledDriversDummy.js.map

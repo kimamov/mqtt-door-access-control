@@ -3,11 +3,27 @@ import { Request, Response } from "express"
 import { Key } from "../entity/Key"
 import { client } from "../mqtt/connection";
 import getList from "../util/getList";
+import { NewKey } from "../entity/NewKey";
 
 export async function addKey(req: Request, res: Response) {
     try {
+        const {newkey_id, uid, name, validUntil, isOneTimeCode}=req.body;
+        let realUid=uid;
+        if(newkey_id){
+            const newKeyRepo: Repository<NewKey>=getRepository(NewKey);
+            const newKey=await newKeyRepo.findOne(newkey_id);
+            if(newKey){ // if there is a newkey with that id use its uid and remove it afterwards since its not new now
+                realUid=newKey.uid;
+                await newKeyRepo.delete(newKey.id);
+            }
+        }
         const keyRepository: Repository<Key> = getRepository(Key);
-        const key = await keyRepository.create(req.body);
+        const key = await keyRepository.create({
+            uid: realUid,
+            name: name,
+            validUntil: validUntil,
+            isOneTimeCode: false
+        });
         const result = await keyRepository.save(key)
         console.log(result)
         res.send(result)

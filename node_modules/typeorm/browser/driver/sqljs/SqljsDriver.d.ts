@@ -3,6 +3,7 @@ import { SqljsConnectionOptions } from "./SqljsConnectionOptions";
 import { QueryRunner } from "../../query-runner/QueryRunner";
 import { Connection } from "../../connection/Connection";
 import { EntityMetadata } from "../../metadata/EntityMetadata";
+import { ReplicationMode } from "../types/ReplicationMode";
 export declare class SqljsDriver extends AbstractSqliteDriver {
     options: SqljsConnectionOptions;
     constructor(connection: Connection);
@@ -17,7 +18,7 @@ export declare class SqljsDriver extends AbstractSqliteDriver {
     /**
      * Creates a query runner used to execute database queries.
      */
-    createQueryRunner(mode?: "master" | "slave"): QueryRunner;
+    createQueryRunner(mode: ReplicationMode): QueryRunner;
     /**
      * Loads a database from a given file (Node.js), local storage key (browser) or array.
      * This will delete the current database!

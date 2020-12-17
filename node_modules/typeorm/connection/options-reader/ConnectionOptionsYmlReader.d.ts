@@ -6,5 +6,5 @@ export declare class ConnectionOptionsYmlReader {
     /**
      * Reads connection options from given yml file.
      */
-    read(path: string): ConnectionOptions[];
+    read(path: string): Promise<ConnectionOptions[]>;
 }

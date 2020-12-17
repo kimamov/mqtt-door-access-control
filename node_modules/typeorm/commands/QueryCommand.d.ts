@@ -6,6 +6,8 @@ export declare class QueryCommand implements yargs.CommandModule {
     command: string;
     describe: string;
     builder(args: yargs.Argv): yargs.Argv<{
+        query: string | undefined;
+    } & {
         c: string;
     } & {
         f: string;

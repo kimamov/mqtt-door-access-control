@@ -16,6 +16,6 @@ export class Reader {
     lastPing: Date
 
     
-    @OneToMany(type => ReaderToKey, readerToKey => readerToKey.reader)
+    @OneToMany(() => ReaderToKey, readerToKey => readerToKey.reader)
     readerToKeys!: ReaderToKey[];
 }

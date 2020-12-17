@@ -6,11 +6,11 @@ export declare type EventListenerType = "after-load" | "before-insert" | "after-
  * Provides a constants for each entity listener type.
  */
 export declare class EventListenerTypes {
-    static AFTER_LOAD: EventListenerType;
-    static BEFORE_INSERT: EventListenerType;
-    static AFTER_INSERT: EventListenerType;
-    static BEFORE_UPDATE: EventListenerType;
-    static AFTER_UPDATE: EventListenerType;
-    static BEFORE_REMOVE: EventListenerType;
-    static AFTER_REMOVE: EventListenerType;
+    static AFTER_LOAD: "after-load";
+    static BEFORE_INSERT: "before-insert";
+    static AFTER_INSERT: "after-insert";
+    static BEFORE_UPDATE: "before-update";
+    static AFTER_UPDATE: "after-update";
+    static BEFORE_REMOVE: "before-remove";
+    static AFTER_REMOVE: "after-remove";
 }

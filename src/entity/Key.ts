@@ -12,7 +12,7 @@ export class Key {
     @Column("varchar", { nullable: false })
     name: string;
 
-    @Column("timestamp")
+    @Column("timestamp", {default: ()=>'CURRENT_TIMESTAMP'})
     validUntil: Date
 
     @Column("bool", { default: false, nullable: false })
@@ -31,7 +31,7 @@ export class Key {
     acctype4: number
 
 
-    @OneToMany(type => ReaderToKey, readerToKey => readerToKey.key)
+    @OneToMany(() => ReaderToKey, readerToKey => readerToKey.key)
     public readerToKeys!: ReaderToKey[];
 
 

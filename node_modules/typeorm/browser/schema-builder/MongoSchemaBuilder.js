@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __awaiter, __generator } from "tslib";
 import { SqlInMemory } from "../driver/SqlInMemory";
 /**
  * Creates complete tables schemas in the database based on the entity metadatas.
@@ -28,12 +28,12 @@ var MongoSchemaBuilder = /** @class */ (function () {
      * Creates complete schemas for the given entity metadatas.
      */
     MongoSchemaBuilder.prototype.build = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var queryRunner, promises;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        queryRunner = this.connection.driver.createQueryRunner();
+                        queryRunner = this.connection.createQueryRunner();
                         promises = [];
                         this.connection.entityMetadatas.forEach(function (metadata) {
                             metadata.indices.forEach(function (index) {

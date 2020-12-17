@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __read } from "tslib";
 import { Subject } from "../Subject";
 /**
  * Finds all cascade operations of the given subject and cascade operations of the found cascaded subjects,
@@ -22,7 +22,7 @@ var CascadesSubjectBuilder = /** @class */ (function () {
         subject.metadata
             .extractRelationValuesFromEntity(subject.entity, subject.metadata.relations) // todo: we can create EntityMetadata.cascadeRelations
             .forEach(function (_a) {
-            var _b = tslib_1.__read(_a, 3), relation = _b[0], relationEntity = _b[1], relationEntityMetadata = _b[2];
+            var _b = __read(_a, 3), relation = _b[0], relationEntity = _b[1], relationEntityMetadata = _b[2];
             // we need only defined values and insert, update, soft-remove or recover cascades of the relation should be set
             if (relationEntity === undefined ||
                 relationEntity === null ||

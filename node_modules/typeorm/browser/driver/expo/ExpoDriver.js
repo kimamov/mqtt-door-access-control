@@ -1,9 +1,9 @@
-import * as tslib_1 from "tslib";
+import { __awaiter, __extends, __generator } from "tslib";
 import { AbstractSqliteDriver } from "../sqlite-abstract/AbstractSqliteDriver";
 import { ExpoQueryRunner } from "./ExpoQueryRunner";
 import { DriverOptionNotSetError } from "../../error/DriverOptionNotSetError";
 var ExpoDriver = /** @class */ (function (_super) {
-    tslib_1.__extends(ExpoDriver, _super);
+    __extends(ExpoDriver, _super);
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -26,9 +26,9 @@ var ExpoDriver = /** @class */ (function (_super) {
      * Closes connection with database.
      */
     ExpoDriver.prototype.disconnect = function () {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (ok, fail) {
                         try {
                             _this.queryRunner = undefined;
@@ -47,7 +47,6 @@ var ExpoDriver = /** @class */ (function (_super) {
      * Creates a query runner used to execute database queries.
      */
     ExpoDriver.prototype.createQueryRunner = function (mode) {
-        if (mode === void 0) { mode = "master"; }
         if (!this.queryRunner)
             this.queryRunner = new ExpoQueryRunner(this);
         return this.queryRunner;

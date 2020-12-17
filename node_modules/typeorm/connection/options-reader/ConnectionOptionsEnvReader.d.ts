@@ -8,7 +8,7 @@ export declare class ConnectionOptionsEnvReader {
     /**
      * Reads connection options from environment variables.
      */
-    read(): ConnectionOptions;
+    read(): Promise<ConnectionOptions[]>;
     /**
      * Transforms logging string into real logging value connection requires.
      */
@@ -21,4 +21,8 @@ export declare class ConnectionOptionsEnvReader {
      * Converts a string which contains multiple elements split by comma into a string array of strings.
      */
     protected stringToArray(variable?: string): string[];
+    /**
+     * Converts a string which contains a number into a javascript number
+     */
+    private stringToNumber;
 }

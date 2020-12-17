@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __read } from "tslib";
 /**
  * Provides utilities to transform hydrated and persisted data.
  */
@@ -53,7 +53,7 @@ var DateUtils = /** @class */ (function () {
      */
     DateUtils.mixedTimeToDate = function (value) {
         if (typeof value === "string") {
-            var _a = tslib_1.__read(value.split(":"), 3), hours = _a[0], minutes = _a[1], seconds = _a[2];
+            var _a = __read(value.split(":"), 3), hours = _a[0], minutes = _a[1], seconds = _a[2];
             var date = new Date();
             if (hours)
                 date.setHours(parseInt(hours));
@@ -145,13 +145,7 @@ var DateUtils = /** @class */ (function () {
         return JSON.stringify(value);
     };
     DateUtils.stringToSimpleJson = function (value) {
-        try {
-            var simpleJSON = JSON.parse(value);
-            return (typeof simpleJSON === "object") ? simpleJSON : {};
-        }
-        catch (err) {
-            return {};
-        }
+        return typeof value === "string" ? JSON.parse(value) : value;
     };
     DateUtils.simpleEnumToString = function (value) {
         return "" + value;

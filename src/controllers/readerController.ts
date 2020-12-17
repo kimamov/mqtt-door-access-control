@@ -24,6 +24,30 @@ import getList from "../util/getList";
 } */
 
 
+export async function openDoor(req: Request, res: Response){
+    // get the door from the DB
+    res.send({message: "suc"})
+    return
+    try {
+        const id=req.params.id;
+        const readerRepository: Repository<Reader> = getRepository(Reader);
+        const reader=await readerRepository.findOne(id);
+        if(!reader){
+            return res.status(404).send({message: `could not find reader with the provided id: ${id}`})
+        }
+        if(!client.connected){
+            res.status(500).send({error: "connection to the MQTT client was lost"})
+        }
+        client.publish("devnfc", JSON.stringify({
+            cmd: "opendoor",
+            doorip: reader.ip
+        }))
+    } catch (error) {
+        res.status(500).send({error: error})
+    }
+    
+}
+
 export async function getReaderKeys(req: Request, res: Response) {
     // tell the reader to send us all keys that are currently stored on it
     console.log("was called")
@@ -45,7 +69,27 @@ export async function getReaders(req: Request, res: Response) {
     getList(getRepository(Reader), req, res)
 }
 
+export async function getReaderWithKeys(req: Request, res: Response){
+    try {
+        const {id}=req.params;
+        const readerRepository: Repository<Reader> = getRepository(Reader);
+        /* const result = await readerRepository
+            .createQueryBuilder("reader")
+            .leftJoinAndSelect("reader.readerToKeys", "key")
+            .where(`reader.id = ${id}`)
+            .getOne(); */
 
+        const result = await readerRepository.findOne(id, {relations: ["readerToKeys"]});
+
+        if(!result){
+            return res.status(404).send({message: `could not find reader with the provided id ${id}`})
+        }
+        return res.send(result);
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({error: "server error"})
+    }
+}
 
 export async function getMyReaderKeys(req: Request, res: Response) {
     try {
@@ -73,19 +117,19 @@ export async function addReaderKeys(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const { body } = req;
-        if (!(body.readerId && body.keyId)) throw "invalid request body"
+        if (!(body.id && body.key_id)) throw "invalid request body"
         // check if reader with that ip exists
         const readerRepository: Repository<Reader> = getRepository(Reader);
-        const readerResult = await readerRepository.findOneOrFail({ readerName: body.readerName })
+        const readerResult = await readerRepository.findOneOrFail({ id: body.id })
         if (!readerResult) throw "no door found"
         // check if key with that id exists
-        const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.keyId })
+        const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
         if (!keyResult) throw "no key found"
         // create connection between reader and key
         const readerToKeyRepo: Repository<ReaderToKey> = getRepository(ReaderToKey)
         const readerToKey: ReaderToKey = await readerToKeyRepo.create({
-            keyId: body.keyId,
-            readerId: body.readerId
+            keyId: body.key_id,
+            readerId: body.id
         })
         
         await readerToKeyRepo.save(readerToKey);

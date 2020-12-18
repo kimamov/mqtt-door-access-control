@@ -1,5 +1,7 @@
 import React from 'react'
 import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, CreateActions} from 'react-admin';
+import ReaderShowActions from './ReaderShowActions'
+
 
 const KeyEditToolbar = props => (
     <Toolbar {...props} >
@@ -10,7 +12,7 @@ const KeyEditToolbar = props => (
 
 const ReaderShow = (props) => {
     return (
-        <Show title=" "  {...props}>
+        <Show title=" " actions={<ReaderShowActions/>} {...props}>
             <SimpleShowLayout>
                 <TextField source="readerName" />
                 <TextField source="ip" />

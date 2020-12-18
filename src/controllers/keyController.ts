@@ -14,7 +14,7 @@ export async function addKey(req: Request, res: Response) {
             const newKey=await newKeyRepo.findOne(newkey_id);
             if(newKey){ // if there is a newkey with that id use its uid and remove it afterwards since its not new now
                 realUid=newKey.uid;
-                await newKeyRepo.delete(newKey.id);
+                await newKeyRepo.delete({id: newKey.id});
             }
         }
         const keyRepository: Repository<Key> = getRepository(Key);
@@ -25,7 +25,6 @@ export async function addKey(req: Request, res: Response) {
             isOneTimeCode: false
         });
         const result = await keyRepository.save(key)
-        console.log(result)
         res.send(result)
     } catch (error) {
         res.status(500).send({

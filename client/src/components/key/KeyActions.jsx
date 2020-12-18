@@ -30,7 +30,6 @@ const KeyActions = (props) => {
         total,
     } = useListContext();
 
-    const listContext = useListContext();
 
     return (
         <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
@@ -51,7 +50,7 @@ const KeyActions = (props) => {
             />
             {/* Add your custom actions */}
             <Button
-                onClick={() => {console.log(listContext)}}
+                onClick={() => {console.log("listContext")}}
                 label="Show calendar"
             >
                 <IconEvent />

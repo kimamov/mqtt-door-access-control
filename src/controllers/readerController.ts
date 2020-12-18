@@ -5,6 +5,7 @@ import { client } from "../mqtt/connection";
 import { Key } from "../entity/Key";
 import getList from "../util/getList";
 import { ReaderKey } from "../entity/ReaderKey";
+import dateFromUnix from "../util/dateFromUnix";
 
 
 let gettingKeyList=false;
@@ -31,6 +32,8 @@ export async function openDoor(req: Request, res: Response){
     // get the door from the DB
     try {
         const id=req.params.id;
+        const port=req.query.port? Number(req.query.port) : 1;
+
         const readerRepository: Repository<Reader> = getRepository(Reader);
         const reader=await readerRepository.findOne(id);
         if(!reader){
@@ -42,11 +45,11 @@ export async function openDoor(req: Request, res: Response){
         client.publish("devnfc", JSON.stringify({
             cmd: "opendoor",
             doorip: reader.ip,
-            acctype0: true,
-            acctype1: true,
-            acctype2: true,
-            acctype3: true,
-            acctype4: true,
+            acctype: port===1? 1 : 0,
+            acctype1: port===1? 1 : 0,
+            acctype2: port===2? 1 : 0,
+            acctype3: port===3? 1 : 0,
+            acctype4: port===4? 1 : 0,
         }))
         res.send({message: "succes"})
     } catch (error) {
@@ -96,11 +99,11 @@ export async function generateReaderKeys(req: Request, res: Response) {
                     readerId: reader.id,
                     uid: messageJSON.uid,
                     name: messageJSON.user,
-                    acctype: messageJSON.acctype,
-                    acctype2: messageJSON.acctype2,
-                    acctype3: messageJSON.acctype3,
-                    acctype4: messageJSON.acctype4,
-                    validUntil: messageJSON.validuntil
+                    acctype: messageJSON.acctype || 0,
+                    acctype2: messageJSON.acctype2  || 0,
+                    acctype3: messageJSON.acctype3 || 0,
+                    acctype4: messageJSON.acctype4 || 0,
+                    validUntil: dateFromUnix(messageJSON.validuntil)
                     
                 };
                 keys.push(keyObj);
@@ -129,13 +132,13 @@ export async function generateReaderKeys(req: Request, res: Response) {
 
 async function createReaderKey(keyObj){
     try {
-        const repo=getRepository(ReaderKey);
+        const repo: Repository<ReaderKey>=getRepository(ReaderKey);
         const key=await repo.findOne({readerIp: keyObj.ip, readerId: keyObj.id, uid: keyObj.uid});
+        console.log(key)
         if(key){
             // do up date
         }else {
-            // create new one
-            repo.create(keyObj);
+            await repo.save(keyObj);
         }
     } catch (error) {
         console.log(error)
@@ -197,13 +200,17 @@ export async function addReaderKeys(req: Request, res: Response) {
         if (!(body.id && body.key_id)) throw "invalid request body"
         // check if reader with that ip exists
         const readerRepository: Repository<Reader> = getRepository(Reader);
-        const readerResult = await readerRepository.findOneOrFail({ id: body.id })
+        const readerResult = await readerRepository.findOneOrFail({ id: body.id}, {relations: ["keys"]})
         if (!readerResult) throw "no door found"
         // check if key with that id exists
         const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
         if (!keyResult) throw "no key found"
+        
+        // load all the keys that are already related to the reader
+
         // create connection between reader and key
-        readerResult.keys=[keyResult];
+
+        readerResult.keys=Array.isArray(readerResult.keys)? [...readerResult.keys, keyResult] : [keyResult];
         await readerRepository.save(readerResult);
         
         client.publish('devnfc', JSON.stringify({

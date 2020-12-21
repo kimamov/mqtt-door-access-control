@@ -1,22 +1,12 @@
 import * as mqtt from 'mqtt';
+import { mqttConfig } from '../config';
 import messageHandler from './handlers'
 
 export let client = null
 
 export const setupMqtt = () => {
+    client = mqtt.connect(mqttConfig)
 
-    client = mqtt.connect({
-        host: "151.252.57.69",
-        port: "1883",
-        clientId: "server_" + Date.now(),
-
-    })
-    /* client = mqtt.connect({
-        host: "localhost",
-        port: "1883",
-        clientId: "15152411531",
-
-    }) */
 
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {

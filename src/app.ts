@@ -1,7 +1,18 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
 import { sessionParser } from './config'
-import { setupMqtt } from './mqtt/connection'
+import {  setupMqtt } from './mqtt/connection'
+
+console.log(process.env.MQTT_HOST)
+
+if(!process.env.CLIENT_ADRESS){
+    console.warn("please provide the url of the client for cors. Falling back to the default http://localhost:3000")
+}
+const clientAdress=process.env.CLIENT_ADRESS || "http://localhost:3000";
+
 
 createConnection()
     .then(async (connection) => {
@@ -12,7 +23,7 @@ createConnection()
         const passport = require("passport");
         const routes = require("./routes/routes");
 
-        const PORT = 5000;
+        const PORT = process.env.PORT || 5000;
 
 
         const app = express();
@@ -25,7 +36,7 @@ createConnection()
         );
         app.use(
             cors({
-                origin: ["http://localhost:3000", "localhost:3000"],
+                origin: [clientAdress],
                 credentials: true,
                 exposedHeaders: ['Content-Range']
             })

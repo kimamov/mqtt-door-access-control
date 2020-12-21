@@ -1,9 +1,10 @@
+const serverAdress=process.env.REACT_APP_SERVER || "http://locaholst:5000";
 
 
 const authProvider = {
     // authentication
     login: ({ username, password })=>{
-        const request = new Request('http://localhost:5000/login', {
+        const request = new Request(`${serverAdress}/login`, {
             method: 'POST',
             body: JSON.stringify({ username, password }),
             headers: new Headers({ 'Content-Type': 'application/json' }),

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, CreateActions} from 'react-admin';
+import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, CreateActions, ReferenceArrayField, List, ReferenceField, ReferenceManyField} from 'react-admin';
 import ReaderShowActions from './ReaderShowActions'
 
 
@@ -11,7 +11,9 @@ const KeyEditToolbar = props => (
 
 
 const ReaderShow = (props) => {
+    console.log(props)
     return (
+        /* maybe make this a tab layout instead  */
         <Show title=" " actions={<ReaderShowActions/>} {...props}>
             <SimpleShowLayout>
                 <TextField source="readerName" />
@@ -24,7 +26,8 @@ const ReaderShow = (props) => {
                         </ReferenceInput>
                     </SimpleForm>
                 </Create>
-                <ArrayField source="keys">
+
+                <ArrayField label="KEYS IN THE DB" source="keys" >
                     <Datagrid>
                         <TextField source="name" />
                         <TextField source="uid" />
@@ -32,6 +35,16 @@ const ReaderShow = (props) => {
                         <BooleanField source="isOneTimeCode" />
                     </Datagrid>
                 </ArrayField>
+
+               <ReferenceManyField reference="readerkey" target="readerId" label="KEYS ON READER" allowEmpty>
+                    <Datagrid >
+                        <TextField source="name" />
+                        <TextField source="uid" />
+                        <DateField source="validUntil" showTime locales="de"/>
+                        <BooleanField source="isOneTimeCode" />
+                    </Datagrid>
+                </ReferenceManyField>
+
             </SimpleShowLayout>
         </Show>
     )

@@ -1,6 +1,6 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, Edit, Create, SimpleForm, TextField, DateField, TextInput, DateInput, NumberField, BooleanField, BooleanInput, DateTimeInput, ReferenceInput, SelectInput } from 'react-admin';
+import { Create, SimpleForm, TextInput, BooleanInput, DateTimeInput, ReferenceInput, SelectInput } from 'react-admin';
 
 
 

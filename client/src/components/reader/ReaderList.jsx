@@ -18,9 +18,9 @@ function ShowTimePassed({date}){
     const parsedDate=new Date(date)
     const oldDate=parsedDate instanceof Date? parsedDate : new Date();
     const currenDate=new Date();
-    const difference=new Date(Math.abs(currenDate - oldDate)).getSeconds()
+    const difference=new Date(Math.abs(currenDate - oldDate)).getTime() / 1000;
 
-    return <div>{difference} seconds ago</div>
+    return <div>{Math.round(difference)} seconds ago</div>
 }
 
 const ReaderGrid = () => {

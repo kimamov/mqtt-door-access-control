@@ -22,7 +22,7 @@ export async function addKey(req: Request, res: Response) {
             uid: realUid,
             name: name,
             validUntil: validUntil,
-            isOneTimeCode: false
+            isOneTimeCode: isOneTimeCode? true : false
         });
         const result = await keyRepository.save(key)
         res.send(result)
@@ -40,7 +40,7 @@ export async function getKeys(req: Request, res: Response) {
     getList(getRepository(Key), req, res)
 }
 
-
+/* 
 export async function syncKey(req: Request, res: Response) {
     try {
         // check if id was provided with the request
@@ -73,7 +73,7 @@ export async function syncKey(req: Request, res: Response) {
         })
     }
 
-}
+} */
 
 
 export async function getKeysByDoor(req: Request, res: Response) {

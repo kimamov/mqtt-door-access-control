@@ -16,7 +16,7 @@ export default function messageHandler(topic: string, message: Buffer) {
         const messageJSON = JSON.parse(messageString)
 
         console.log(topic)
-        //console.log(messageJSON)
+        console.log(messageJSON)
 
 
         // handle different topics
@@ -40,7 +40,7 @@ export default function messageHandler(topic: string, message: Buffer) {
                 break;
             case "devnfc/#":
             case "/devnfc/#":
-                console.log(messageJSON)
+                console.log("messageJSON")
             default:
                 /* console.log(messageJSON) */
                 console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
@@ -241,6 +241,7 @@ function waitForUserList(){
 }
 
 async function handleDoorKeyList(messageJSON) {
+    console.log("handleDoorKeyList reached:  "+messageJSON)
     return null;
     /* console.log("accesslist received")
     console.dir(messageJSON) */

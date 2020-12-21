@@ -1,4 +1,5 @@
 node_modules
+ormconfig*
 ormconfig.json
 /ormconfig.json
 package-lock.json

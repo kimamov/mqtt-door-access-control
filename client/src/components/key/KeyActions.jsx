@@ -5,10 +5,8 @@ import {
     TopToolbar,
     CreateButton,
     ExportButton,
-    Button,
     sanitizeListRestProps,
 } from 'react-admin';
-import IconEvent from '@material-ui/icons/Event';
 
 const KeyActions = (props) => {
     const {
@@ -23,9 +21,7 @@ const KeyActions = (props) => {
         resource,
         displayedFilters,
         filterValues,
-        hasCreate,
         basePath,
-        selectedIds,
         showFilter,
         total,
     } = useListContext();
@@ -48,13 +44,7 @@ const KeyActions = (props) => {
                 filterValues={filterValues}
                 maxResults={maxResults}
             />
-            {/* Add your custom actions */}
-            <Button
-                onClick={() => {console.log("listContext")}}
-                label="Show calendar"
-            >
-                <IconEvent />
-            </Button>
+            
         </TopToolbar>
     );
 };

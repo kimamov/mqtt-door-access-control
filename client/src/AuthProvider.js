@@ -16,7 +16,6 @@ const authProvider = {
                 return response.json();
             })
             .then(json => {
-                console.log(json);
                 const {user}=json;
                 if(!user) throw Error('no user data found in response')
                 localStorage.setItem('auth', JSON.stringify({
@@ -39,9 +38,7 @@ const authProvider = {
         return Promise.resolve();
     },
     checkAuth: ()=>{
-        console.log("was called")
         const auth=localStorage.getItem('auth')
-        console.log(auth);
         return auth
         ? Promise.resolve()
         : Promise.reject()
@@ -52,12 +49,9 @@ const authProvider = {
     },
     getIdentity: () => {
         try {
-            console.log("getting identity");
             const { id, fullName, avatar } = JSON.parse(localStorage.getItem('auth'));
-            console.log(fullName)
             return Promise.resolve({ id, fullName, avatar });
         } catch (error) {
-            console.log("failed to get identity")
             return Promise.reject(error);
         }
     },

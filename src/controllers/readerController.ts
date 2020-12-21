@@ -57,9 +57,9 @@ export async function openDoor(req: Request, res: Response){
     
 }
 
-export async function getReaderKeys(req: Request, res: Response){
+/* export async function getReaderKeys(req: Request, res: Response){
     
-}
+} */
 
 
 export async function generateReaderKeys(req: Request, res: Response) {

@@ -1,15 +1,18 @@
-const router = require("express").Router();
-const passport = require("passport");
-import { getAccesses } from '../controllers/accessController';
-import { getEvents } from '../controllers/eventController';
-import { addKey, getKeys } from '../controllers/keyController';
-import { getNewKeys } from '../controllers/newKeyController';
+import { deleteAccess, editAccess, getAccess, getAccesses } from '../controllers/accessController';
+import { deleteEvent, editEvent, getEvent, getEvents } from '../controllers/eventController';
+import { addKey, editKey, getKey, getKeys, deleteKey } from '../controllers/keyController';
+import { deleteNewKey, editNewKey, getNewKey, getNewKeys } from '../controllers/newKeyController';
 import { syncAllKeys, deleteAllKeys, getReaders, addReaderKeys, openDoor, getReaderWithKeys, generateReaderKeys, generateAllReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
 /* import { client } from '../mqtt/connection';
  */
+
+const router = require("express").Router();
+const passport = require("passport");
+
+
 router.post(
   "/login",
   passport.authenticate("local"/* , {
@@ -54,12 +57,52 @@ router.post("/signup", async (req, res) => {
 });
 
 
-
+// TODO: split the routes into different files
 router.post("/key"/* , checkAuth */, addKey)
 
 router.get("/key"/* , checkAuth */, getKeys)
 
+router.get("/key/:id", getKey)
+
+router.put("/key/:id", editKey)
+
+router.delete("/key/:id", deleteKey)
+
+
+
+
 router.get("/newkey", getNewKeys)
+
+router.get("/newkey/:id", getNewKey)
+
+router.put("/newkey/:id", editNewKey)
+
+router.delete("/newkey/:id", deleteNewKey)
+
+
+
+
+router.get("/access"/* , checkAuth */, getAccesses)
+
+router.get("/access/:id", getAccess)
+
+router.put("/access/:id", editAccess)
+
+router.delete("/access/:id", deleteAccess)
+
+
+
+
+router.get("/event"/* , checkAuth */, getEvents)
+
+router.get("/event/:id", getEvent)
+
+router.put("/event/:id", editEvent)
+
+router.delete("/event/:id", deleteEvent)
+
+
+
 
 
 router.get("/opendoor/:id", openDoor)
@@ -81,9 +124,7 @@ router.get("/readerkey/:id"/* , checkAuth */, generateReaderKeys)
 
 router.post("/readerkey"/* , checkAuth */, addReaderKeys)
 
-router.get("/access"/* , checkAuth */, getAccesses)
 
-router.get("/event"/* , checkAuth */, getEvents)
 
 router.get("/testmqtt", (req, res) => {
   client.publish("devnfc", JSON.stringify({

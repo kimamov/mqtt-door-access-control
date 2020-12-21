@@ -1,7 +1,7 @@
 // in src/comments.js
 import * as React from 'react';
 import { useListContext, List, TextField, DateField, ShowButton, Button, useNotify } from 'react-admin';
-import { Card, CardActions, CardContent, CardHeader, Avatar } from '@material-ui/core';
+import { Card, CardActions, CardContent, CardHeader } from '@material-ui/core';
 import IconEvent from '@material-ui/icons/Event';
 
 
@@ -24,7 +24,7 @@ function ShowTimePassed({date}){
 }
 
 const ReaderGrid = () => {
-    const { ids, data, basePath } = useListContext();
+    const { ids, data/* , basePath */ } = useListContext();
     const notify=useNotify();
     
     const openDoor=async(id)=>{

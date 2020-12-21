@@ -1,5 +1,5 @@
 import * as React from "react";
-import { List, Datagrid, Edit, Create, SimpleForm, TextField, DateField, TextInput, DateInput, NumberField, BooleanField } from 'react-admin';
+import { List, Datagrid, TextField, DateField } from 'react-admin';
 
 
 /* @Column("varchar", { length: 20, nullable: false })

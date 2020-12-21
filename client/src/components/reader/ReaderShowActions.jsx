@@ -5,6 +5,8 @@ import {
     useNotify,
     useRefresh
 } from 'react-admin';
+const serverAdress=process.env.REACT_APP_SERVER || "http://locaholst:5000";
+
 
 const ReaderShowActions = ({ basePath, data, resource }) => {
     const notify=useNotify();
@@ -12,7 +14,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
     
     const openDoor=async(port)=>{
         try {
-            const response=await fetch(`http://localhost:5000/opendoor/${data.id}?port=${port}`)
+            const response=await fetch(`${serverAdress}/opendoor/${data.id}?port=${port}`)
             const json=await response.json();
             notify(`door ${data.id} opened port ${port}`, "info")
             console.log(json);
@@ -25,7 +27,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
 
     const deleteAllKeys=async()=>{
         try {
-            const response=await fetch(`http://localhost:5000/deleteall/${data.id}`)
+            const response=await fetch(`${serverAdress}/deleteall/${data.id}`)
             const json=await response.json();
             notify(json.message? json.message :`reader ${data.id} deleted all keys. Reader keys will be refreshed shortly`, "info")
             setTimeout(refresh, 1000);
@@ -38,7 +40,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
 
     const syncAllKeys=async()=>{
         try {
-            const response=await fetch(`http://localhost:5000/syncall/${data.id}`)
+            const response=await fetch(`${serverAdress}/syncall/${data.id}`)
             const json=await response.json();
             notify(json.message? json.message :`reader ${data.id} synced all keys`, "info")
             console.log(json);

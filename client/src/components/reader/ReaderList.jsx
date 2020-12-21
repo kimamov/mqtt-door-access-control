@@ -29,7 +29,7 @@ const ReaderGrid = () => {
     
     const openDoor=async(id)=>{
         try {
-            const response=await fetch(`http://localhost:5000/opendoor/${id}`)
+            const response=await fetch(`/${id}`)
             const json=await response.json();
             notify("door opened", "info")
             console.log(json);

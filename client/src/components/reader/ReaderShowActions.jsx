@@ -23,7 +23,6 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             const response=await fetch(`${serverAdress}/opendoor/${data.id}?port=${port}`)
             const json=await response.json();
             notify(`door ${data.id} opened port ${port}`, "info")
-            console.log(json);
         } catch (error) {
             console.log(error)
             notify("could not open door", "error")
@@ -56,7 +55,6 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             const json=await response.json();
             dispatch(fetchEnd());
             notify(json.message? json.message :`reader ${data.id} synced all keys`, "info")
-            console.log(json);
         } catch (error) {
             dispatch(fetchEnd());
             console.log(error)

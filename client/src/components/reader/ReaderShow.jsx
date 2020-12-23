@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField, BooleanInput, DeleteButton} from 'react-admin';
+import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField} from 'react-admin';
 import ReaderShowActions from './ReaderShowActions'
 
 
@@ -12,8 +12,7 @@ const KeyEditToolbar = props => (
 const ShowPropsExtractor=({children, ...props})=>{
     const {keys=[]}=props.record;
 
-    const readerKeyRowStyle = (record, index) => {
-        console.log(record, index, props)
+    const readerKeyRowStyle = (record, _index) => {
         return {
             backgroundColor: keys.find(key=>{
                 return ( 
@@ -31,9 +30,10 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextField source="readerName" />
             <TextField source="ip" />
             <DateField source="lastPing" showTime locales="de"/>
+            
             <Create resource={props.resource}>
-                <SimpleForm toolbar={<KeyEditToolbar/>} margin="none">
-                    <ReferenceInput reference="key" source="key_id"  allowEmpty required>
+                <SimpleForm  toolbar={<KeyEditToolbar/>}>
+                    <ReferenceInput label="ADD KEY TO READER" reference="key" source="key_id"  allowEmpty required>
                         <SelectInput optionText="name" />
                     </ReferenceInput>
                 </SimpleForm>
@@ -54,7 +54,6 @@ const ShowPropsExtractor=({children, ...props})=>{
 
             <ReferenceManyField reference="readerkey" target="readerId" label="KEYS ON READER" allowEmpty {...props}>
                 <Datagrid  rowStyle={readerKeyRowStyle} {...props}>
-                    {console.log(props)}
                     <TextField source="name" />
                     <TextField source="uid" />
                     <DateField source="validUntil" showTime locales="de"/>

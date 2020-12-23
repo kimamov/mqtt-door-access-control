@@ -1,7 +1,6 @@
 import React from 'react'
 
 const DateField = (props) => {
-    console.log(props)
     if (!props.record) {
         return null;
     }

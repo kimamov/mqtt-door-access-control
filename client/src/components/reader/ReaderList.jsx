@@ -32,7 +32,6 @@ const ReaderGrid = () => {
             const response=await fetch(`/${id}`)
             const json=await response.json();
             notify("door opened", "info")
-            console.log(json);
         } catch (error) {
             console.log(error)
             notify("could not open door", "error")

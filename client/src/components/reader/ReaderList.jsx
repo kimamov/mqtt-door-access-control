@@ -1,17 +1,20 @@
 // in src/comments.js
 import * as React from 'react';
-import { useListContext, List, TextField, DateField, ShowButton, Button, useNotify, EditButton } from 'react-admin';
+import { useListContext, List, TextField, DateField, ShowButton, EditButton } from 'react-admin';
 import { Card, CardActions, CardContent, CardHeader } from '@material-ui/core';
-import IconEvent from '@material-ui/icons/Event';
 
 
 const cardStyle = {
-    width: 300,
-    minHeight: 250,
     margin: '0.5em',
     display: 'inline-block',
     verticalAlign: 'top'
 };
+
+const gridStyle ={
+    margin: "1em",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))"
+}
 
 
 function ShowTimePassed({date}){
@@ -25,22 +28,10 @@ function ShowTimePassed({date}){
 
 const ReaderGrid = () => {
     const { ids, data/* , basePath */ } = useListContext();
-    const notify=useNotify();
     
-    const openDoor=async(id)=>{
-        try {
-            const response=await fetch(`/${id}`)
-            const json=await response.json();
-            notify("door opened", "info")
-        } catch (error) {
-            console.log(error)
-            notify("could not open door", "error")
-
-        }
-    }
 
     return (
-        <div style={{ margin: '1em' }}>
+        <div style={gridStyle}>
         {ids.map(id =>
             <Card key={id} style={cardStyle}>
                 <CardHeader
@@ -53,13 +44,6 @@ const ReaderGrid = () => {
                     <ShowTimePassed date={data[id].lastPing}/>
                 </CardContent>
                 <CardActions style={{ textAlign: 'right' }}>
-                    <Button
-                        onClick={() => openDoor(id)}
-                        label="open"
-                        variant="contained"
-                    >
-                        <IconEvent />
-                    </Button>
                     <ShowButton label="SHOW" record={data[id]} variant="contained" basePath="reader"/>
                     <EditButton label="EDIT" record={data[id]} variant="contained" basePath="reader"/>
                 </CardActions>

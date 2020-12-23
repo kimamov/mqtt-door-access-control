@@ -295,11 +295,11 @@ export async function addReaderKeys(req: Request, res: Response) {
         if (!readerResult) throw "no door found"
         // check if key with that id exists
         const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
-        //if (!keyResult) throw "no key found"
         
-        // load all the keys that are already related to the reader
-
-        // create connection between reader and key
+        const readerHasKey=readerResult.keys.some(key=>key.uid === keyResult.uid)
+        if(readerHasKey){
+            return res.status(409).send({error: `reader already has a key with the same uid: ${keyResult.uid}`})
+        }
 
         readerResult.keys=Array.isArray(readerResult.keys)? [...readerResult.keys, keyResult] : [keyResult];
         await readerRepository.save(readerResult);
@@ -394,13 +394,13 @@ export async function syncAllKeys(req: Request, res: Response){
         doorip: readerResult.ip,
         doorname: readerResult.readerName
     }))
-    const deleteWaitTime=5000; // lets give the reader 5 seconds to delete all keys
+    const deleteWaitTime=2000; // lets give the reader 5 seconds to delete all keys
     await wait(deleteWaitTime); 
     // we should wait for an answer here
     // now get all keys that are related to the reader from our database
     
     if(readerResult.keys && readerResult.keys.length){
-        const delay=5000;
+        const delay=300;
         const keyCount=readerResult.keys.length;
         const totalTime=delay*keyCount;
         //readerResult.keys.forEach()
@@ -422,7 +422,8 @@ export async function syncAllKeys(req: Request, res: Response){
                 }))
             }
         }
-        res.send({message: `started syncing ${keyCount} keys to the reader it should be done in ${(totalTime+deleteWaitTime) / 1000} seconds`})
+        const timeInSeconds=(totalTime+deleteWaitTime) / 1000;
+        res.send({message: `started syncing ${keyCount} keys to the reader it should be done in ${timeInSeconds} seconds`, time: timeInSeconds})
 
     }else {
         res.status(404).send({message: `looks like the reader does not have any keys related to it in the database`})

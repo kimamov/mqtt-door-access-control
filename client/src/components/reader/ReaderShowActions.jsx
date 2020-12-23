@@ -21,7 +21,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
     const openDoor=async(port)=>{
         try {
             const response=await fetch(`${serverAdress}/opendoor/${data.id}?port=${port}`)
-            const json=await response.json();
+            await response.json();
             notify(`door ${data.id} opened port ${port}`, "info")
         } catch (error) {
             console.log(error)
@@ -52,9 +52,11 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             dispatch(fetchStart());
             notify("started syncing please wait", "info")
             const response=await fetch(`${serverAdress}/syncall/${data.id}`)
-            const json=await response.json();
+            await response.json();
             dispatch(fetchEnd());
-            notify(json.message? json.message :`reader ${data.id} synced all keys`, "info")
+            //notify(json.message? json.message :`reader ${data.id} synced all keys`, "info")
+            notify(`reader ${data.id} synced all keys`, "info");
+            setTimeout(refresh, 800);
         } catch (error) {
             dispatch(fetchEnd());
             console.log(error)

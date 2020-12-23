@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField} from 'react-admin';
+import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField, useNotify, useRefresh } from 'react-admin';
 import ReaderShowActions from './ReaderShowActions'
 
 
@@ -10,11 +10,13 @@ const KeyEditToolbar = props => (
 );
 
 const ShowPropsExtractor=({children, ...props})=>{
+    const notify=useNotify();
+    const refresh=useRefresh();
     const {keys=[]}=props.record;
 
     const readerKeyRowStyle = (record, _index) => {
         return {
-            backgroundColor: keys.find(key=>{
+            backgroundColor: record && keys && keys.find(key=>{
                 return ( 
                     key.uid === record.uid && 
                     key.name === record.name &&
@@ -25,14 +27,20 @@ const ShowPropsExtractor=({children, ...props})=>{
             }) ? '#efe' : 'white',
         }
     }
+
+    const onSuccess = () => {
+        notify(`successfully added key to reader`)
+        refresh();
+    };
+
     return (
         <SimpleShowLayout {...props}>
             <TextField source="readerName" />
             <TextField source="ip" />
             <DateField source="lastPing" showTime locales="de"/>
             
-            <Create resource={props.resource}>
-                <SimpleForm  toolbar={<KeyEditToolbar/>}>
+            <Create resource={props.resource} onSuccess={onSuccess}>
+                <SimpleForm toolbar={<KeyEditToolbar/>}>
                     <ReferenceInput label="ADD KEY TO READER" reference="key" source="key_id"  allowEmpty required>
                         <SelectInput optionText="name" />
                     </ReferenceInput>
@@ -52,8 +60,8 @@ const ShowPropsExtractor=({children, ...props})=>{
                 </Datagrid>
             </ArrayField>
 
-            <ReferenceManyField reference="readerkey" target="readerId" label="KEYS ON READER" allowEmpty {...props}>
-                <Datagrid  rowStyle={readerKeyRowStyle} {...props}>
+            <ReferenceManyField reference="readerkey" target="readerId" label="KEYS ON READER" {...props}>
+                <Datagrid rowStyle={readerKeyRowStyle} {...props}>
                     <TextField source="name" />
                     <TextField source="uid" />
                     <DateField source="validUntil" showTime locales="de"/>

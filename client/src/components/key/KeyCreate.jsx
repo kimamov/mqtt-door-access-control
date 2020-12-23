@@ -13,9 +13,13 @@ const KeyCreate = (props) => (
             <TextInput source="uid" />
             <DateTimeInput source="validUntil" showTime locales="de" />
             <BooleanInput source="isOneTimeCode" />
-            {<ReferenceInput reference="newkey" source="newkey_id"  allowEmpty {...props}>
+            <BooleanInput source="acctype" />
+            <BooleanInput source="acctype2" />
+            <BooleanInput source="acctype3" />
+            <BooleanInput source="acctype4" />
+            <ReferenceInput reference="newkey" source="newkey_id"  allowEmpty {...props}>
                 <SelectInput optionText="uid" />
-            </ReferenceInput>}
+            </ReferenceInput>
         </SimpleForm>
     </Create>
 );

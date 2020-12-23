@@ -329,6 +329,33 @@ export async function addReaderKeys(req: Request, res: Response) {
     }
 }
 
+export async function editReaderKeys(req: Request, res: Response) {
+    // function creates a connection between the reader and key inside the database and sends it over to the reader
+    try {
+        const readerId=req.params.id;
+        if(readerId === undefined){
+            throw "please provide a valid reader id"
+        }
+        const { body } = req;
+        if (!body.keys || !Array.isArray(body.keys)) throw "invalid request body"
+        // check if reader with that ip exists
+        const readerRepository: Repository<Reader> = getRepository(Reader);
+        const readerResult = await readerRepository.findOne(readerId, {relations: ["keys"]})
+        if (!readerResult) throw "no door found"
+        
+        readerResult.keys=body.keys;
+        await readerRepository.save(readerResult);
+
+        return res.send(readerResult)
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            error: "failed to update keys on reader"
+        })
+    }
+}
+
 
 export async function deleteAllKeys(req: Request, res: Response){
     const {id}=req.params;

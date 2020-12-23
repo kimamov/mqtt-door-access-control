@@ -2,7 +2,7 @@ import { deleteAccess, editAccess, getAccess, getAccesses } from '../controllers
 import { deleteEvent, editEvent, getEvent, getEvents } from '../controllers/eventController';
 import { addKey, editKey, getKey, getKeys, deleteKey } from '../controllers/keyController';
 import { deleteNewKey, editNewKey, getNewKey, getNewKeys } from '../controllers/newKeyController';
-import { syncAllKeys, deleteAllKeys, getReaders, addReaderKeys, openDoor, getReaderWithKeys, generateReaderKeys, generateAllReaderKeys } from '../controllers/readerController';
+import { syncAllKeys, deleteAllKeys, getReaders, addReaderKeys, openDoor, getReaderWithKeys, generateReaderKeys, generateAllReaderKeys, editReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -112,6 +112,8 @@ router.get("/reader"/* , checkAuth */, getReaders)
 router.get("/reader/:id", getReaderWithKeys)
 
 router.post("/reader", addReaderKeys)
+
+router.put("/reader/:id", editReaderKeys)
 
 router.get("/deleteall/:id", deleteAllKeys)
 

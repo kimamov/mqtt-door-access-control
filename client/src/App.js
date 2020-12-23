@@ -3,6 +3,7 @@ import { Admin, Resource } from 'react-admin';
 import restProvider from 'ra-data-simple-rest';
 import {KeyList} from './components/key/key';
 import KeyCreate from './components/key/KeyCreate'
+import KeyShow from './components/key/KeyShow'
 import KeyEdit from './components/key/KeyEdit'
 import ReaderList from './components/reader/ReaderList';
 import ReaderShow from './components/reader/ReaderShow';
@@ -11,6 +12,7 @@ import EventList from './components/event/EventList';
 import AccessList from './components/access/AccessList'
 import { NewKeyList } from './components/newKey/NewKeyList';
 import authProvider from './AuthProvider';
+import ReaderEdit from './components/reader/ReaderEdit';
 
 
 
@@ -24,8 +26,8 @@ function App() {
   }
   return (
     <Admin dataProvider={restProvider(serverAdress)} locale="en" authProvider={authProvider}>
-        <Resource name="reader" list={ReaderList} show={ReaderShow}/>
-        <Resource name="key" list={KeyList} create={KeyCreate} edit={KeyEdit}/>
+        <Resource name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit}/>
+        <Resource name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>
         <Resource name="newkey" list={NewKeyList} />
         <Resource name="event" list={EventList}   />
         <Resource name="access" list={AccessList}   />

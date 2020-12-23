@@ -1,6 +1,6 @@
 // in src/comments.js
 import * as React from 'react';
-import { useListContext, List, TextField, DateField, ShowButton, Button, useNotify } from 'react-admin';
+import { useListContext, List, TextField, DateField, ShowButton, Button, useNotify, EditButton } from 'react-admin';
 import { Card, CardActions, CardContent, CardHeader } from '@material-ui/core';
 import IconEvent from '@material-ui/icons/Event';
 
@@ -62,6 +62,7 @@ const ReaderGrid = () => {
                         <IconEvent />
                     </Button>
                     <ShowButton label="SHOW" record={data[id]} variant="contained" basePath="reader"/>
+                    <EditButton label="EDIT" record={data[id]} variant="contained" basePath="reader"/>
                 </CardActions>
             </Card>
         )}

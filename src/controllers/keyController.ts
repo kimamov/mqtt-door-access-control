@@ -1,13 +1,12 @@
 import { getRepository, Repository } from "typeorm"
 import { Request, Response } from "express"
 import { Key } from "../entity/Key"
-import { client } from "../mqtt/connection";
 import getList from "../util/getList";
 import { NewKey } from "../entity/NewKey";
 
 export async function addKey(req: Request, res: Response) {
     try {
-        const {newkey_id, uid, name, validUntil, isOneTimeCode}=req.body;
+        const {newkey_id, uid, name, validUntil, isOneTimeCode, acctype, acctype2, acctype3, acctype4}=req.body;
         let realUid=uid;
         if(newkey_id){
             const newKeyRepo: Repository<NewKey>=getRepository(NewKey);
@@ -22,7 +21,11 @@ export async function addKey(req: Request, res: Response) {
             uid: realUid,
             name: name,
             validUntil: validUntil,
-            isOneTimeCode: isOneTimeCode? true : false
+            isOneTimeCode: isOneTimeCode? true : false,
+            acctype: acctype || 1,
+            acctype2: acctype2 || 0,
+            acctype3: acctype3 || 0,
+            acctype4: acctype4 || 0
         });
         const result = await keyRepository.save(key)
         res.send(result)
@@ -42,8 +45,9 @@ export async function getKeys(req: Request, res: Response) {
 
 export async function getKey(req: Request, res: Response){
     try {
-        const keyResult=await getRepository(Key).findOne(req.params.id);
+        const keyResult=await getRepository(Key).findOne(req.params.id, {relations: ["readers"]});
         if(!keyResult) return res.status(404).send({message: `could not find key with id: ${req.params.id}`})
+        return res.send(keyResult);
     } catch (error) {
         res.status(500).send(error)
     }

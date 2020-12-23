@@ -1,6 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
+import * as path from 'path';
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
 import { sessionParser } from './config'
@@ -60,7 +61,13 @@ createConnection()
 
 
         //setup routes
-        app.use(routes);
+        app.use("/api", routes);
+
+        app.use(express.static(path.join(__dirname, 'build')));
+
+        app.get('/', function (req, res) {
+            res.sendFile(path.join(__dirname, 'build', 'index.html'));
+        });
 
         //setup mqtt client
         setupMqtt();

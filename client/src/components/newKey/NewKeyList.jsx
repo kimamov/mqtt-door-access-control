@@ -20,7 +20,7 @@ import { List, Datagrid, TextField, DateField} from 'react-admin';
 
 
 export const NewKeyList = (props) => (
-    <List {...props}>
+    <List title="Unknown Keys" {...props}>
         <Datagrid>
             <TextField source="uid" />
             <TextField source="door" />

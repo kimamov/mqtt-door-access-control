@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DeleteForever, LockOpen, SystemUpdate} from '@material-ui/icons';
 import {
     TopToolbar,
     Button,
@@ -72,13 +73,24 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
     return(
         <TopToolbar >
             <EditButton basePath={basePath} record={data}/>
-            <Button style={marginLeft} label="OPEN 1" color="primary" variant="contained" onClick={()=>openDoor(1)}/>
-            <Button style={marginLeft} label="OPEN 2" color="primary" variant="contained" onClick={()=>openDoor(2)}/>
-            <Button style={marginLeft} label="OPEN 3" color="primary" variant="contained" onClick={()=>openDoor(3)}/>
-            <Button style={marginLeft} label="OPEN 4" color="primary" variant="contained" onClick={()=>openDoor(4)}/>
-            {/* <Button style={marginLeft} label="SHOW READER KEYS" color="secondary" variant="contained" onClick={getReaderKeys}/> */}
-            <Button style={marginLeft} label="SYNC ALL!" color="secondary" variant="contained" onClick={syncAllKeys}/>
-            <Button style={marginLeft} label="DELETE ALL!" color="secondary" variant="contained" onClick={deleteAllKeys}/>
+            <Button style={marginLeft} label="OPEN 1" color="primary" variant="contained" onClick={()=>openDoor(1)}>
+                <LockOpen/>
+            </Button>
+            <Button style={marginLeft} label="OPEN 2" color="primary" variant="contained" onClick={()=>openDoor(2)}>
+                <LockOpen/>
+            </Button>
+            <Button style={marginLeft} label="OPEN 3" color="primary" variant="contained" onClick={()=>openDoor(3)}>
+                <LockOpen/>
+            </Button>
+            <Button style={marginLeft} label="OPEN 4" color="primary" variant="contained" onClick={()=>openDoor(4)}>
+                <LockOpen/>
+            </Button>
+            <Button style={marginLeft} label="SYNC" color="secondary" variant="contained" onClick={syncAllKeys}>
+                <SystemUpdate/>
+            </Button>
+            <Button style={marginLeft} label="DELETE" color="secondary" variant="contained" onClick={deleteAllKeys}>
+                <DeleteForever/>
+            </Button>
         </TopToolbar>
     )
 };

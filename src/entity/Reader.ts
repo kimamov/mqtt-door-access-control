@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from "typeorm";
+import { AccessLog } from "./AccessLog";
 import { Key } from "./Key";
+import { NewKey } from "./NewKey";
 
 @Entity()
 export class Reader {
@@ -15,7 +17,11 @@ export class Reader {
     @Column("timestamp")
     lastPing: Date
 
-    
+    @OneToMany(()=>AccessLog, access=>access.reader)
+    accessLogs: AccessLog[];
+
+    @OneToMany(()=>NewKey, newKey=>newKey.reader)
+    newKeys: NewKey[];
     
 
     @ManyToMany(type => Key, key => key.readers)

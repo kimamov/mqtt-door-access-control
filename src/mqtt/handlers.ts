@@ -170,10 +170,15 @@ async function logAccess(messageJSON) {
 
         console.log(messageJSON)
         const { uid, username, door, time, isKnown, type, access } = messageJSON;
+        // every accessLog needs to be connected to a reader
+        // try to find the reader
+        const readerResult=await getRepository(Reader).findOneOrFail({readerName: door});
+
         const accessRepo: Repository<AccessLog> = getRepository(AccessLog);
         const key = await accessRepo.create({
             uid: uid,
             name: username,
+            reader: readerResult,
             door: door,
             time: dateFromUnix(time),
             isKnown: isKnown || false,
@@ -217,13 +222,14 @@ async function handleUnknownKey(messageJSON) {
             return msg;
         } */
     try {
-        console.log("WAS CALLED")
         const { uid, username, door, time } = messageJSON;
+        const readerResult=await getRepository(Reader).findOneOrFail({readerName: door});
         const newKeyRepo: Repository<NewKey> = getRepository(NewKey);
         const key = await newKeyRepo.create({
             uid: uid,
             name: username,
             door: door,
+            reader: readerResult,
             time: dateFromUnix(time),  // transform unix timestamp to date
         });
         const result = await newKeyRepo.save(key)
@@ -236,9 +242,7 @@ async function handleUnknownKey(messageJSON) {
 }
 
 
-function waitForUserList(){
 
-}
 
 async function handleDoorKeyList(messageJSON) {
     console.log("handleDoorKeyList reached:  "+messageJSON)

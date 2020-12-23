@@ -39,7 +39,7 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextField source="ip" />
             <DateField source="lastPing" showTime locales="de"/>
             
-            <Create resource={props.resource} onSuccess={onSuccess}>
+            <Create title=" " resource={props.resource} onSuccess={onSuccess}>
                 <SimpleForm toolbar={<KeyEditToolbar/>}>
                     <ReferenceInput label="ADD KEY TO READER" reference="key" source="key_id"  allowEmpty required>
                         <SelectInput optionText="name" />
@@ -80,7 +80,7 @@ const ShowPropsExtractor=({children, ...props})=>{
 
 const ReaderShow = (props) => {
     return (
-        <Show title=" " actions={<ReaderShowActions/>}  {...props}>
+        <Show  actions={<ReaderShowActions/>}  {...props}>
             <ShowPropsExtractor/>
         </Show>
     )

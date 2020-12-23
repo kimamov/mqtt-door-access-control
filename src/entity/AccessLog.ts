@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Reader } from "./Reader";
 
 /* 
 msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
@@ -19,6 +20,10 @@ export class AccessLog {
 
     @Column("varchar")
     door: string;
+
+
+    @ManyToOne(()=> Reader, reader=> reader.accessLogs)
+    reader: Reader;
 
     @Column("varchar", { length: 20, nullable: false })
     type: string;

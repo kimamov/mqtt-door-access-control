@@ -13,6 +13,7 @@ import AccessList from './components/access/AccessList'
 import { NewKeyList } from './components/newKey/NewKeyList';
 import authProvider from './AuthProvider';
 import ReaderEdit from './components/reader/ReaderEdit';
+import {Fingerprint, VpnKey, FiberNew, Event, LockOpen} from '@material-ui/icons';
 
 
 
@@ -26,12 +27,12 @@ function App() {
   }
   return (
     <Admin dataProvider={restProvider(serverAdress)} locale="en" authProvider={authProvider}>
-        <Resource name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit}/>
-        <Resource name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>
-        <Resource name="newkey" list={NewKeyList} />
-        <Resource name="event" list={EventList}   />
-        <Resource name="access" list={AccessList}   />
-        <Resource name="readerkey"   />
+        <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit}/>
+        <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>
+        <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>
+        <Resource icon={Event} name="event" list={EventList}   />
+        <Resource icon={LockOpen} name="access" list={AccessList}   />
+        <Resource name="readerkey" />
     </Admin>
   );
 }

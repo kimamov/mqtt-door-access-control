@@ -1,6 +1,6 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, TextField, NumberField, DateField, BooleanField, EditButton, ShowButton } from 'react-admin';
+import { List, Datagrid, TextField, NumberField, DateField, BooleanField, EditButton} from 'react-admin';
 import KeyActions from "./KeyActions";
 
 export const KeyList = (props) => (
@@ -8,7 +8,7 @@ export const KeyList = (props) => (
         actions={<KeyActions/>} 
         {...props} 
     >
-        <Datagrid>
+        <Datagrid rowClick="show">
             <TextField source="name"/>
             <TextField source="uid" />
             <NumberField source="acctype" />
@@ -18,7 +18,6 @@ export const KeyList = (props) => (
             <DateField source="validUntil" showTime locales="de"/>
             <BooleanField source="isOneTimeCode" />
             <EditButton/>
-            <ShowButton/>
         </Datagrid>
     </List>
 );

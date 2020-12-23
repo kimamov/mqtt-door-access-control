@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Reader } from "./Reader";
 
 @Entity()
 export class NewKey {
@@ -17,7 +18,8 @@ export class NewKey {
     @Column("varchar", { nullable: false, length: 20 })
     door: string;
 
-   
+    @ManyToOne(()=> Reader, reader=> reader.newKeys)
+    reader: Reader;
 
 
 }

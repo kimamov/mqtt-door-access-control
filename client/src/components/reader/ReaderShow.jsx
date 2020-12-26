@@ -59,10 +59,10 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextButtonField onClick={()=>openDoor(2)} label="Relay 2 (acctype2)" variant="contained" source="acctype2Name">
                 <LockOpen/>
             </TextButtonField>
-            <TextButtonField onClick={()=>openDoor(3)} variant="Relay 3 (acctype3)" source="acctype3Name">
+            <TextButtonField onClick={()=>openDoor(3)} variant="Relay 3 (acctype3)" variant="contained" source="acctype3Name">
                 <LockOpen/>
             </TextButtonField>
-            <TextButtonField onClick={()=>openDoor(4)} variant="Relay 4 (acctype4)" source="acctype4Name">
+            <TextButtonField onClick={()=>openDoor(4)} variant="Relay 4 (acctype4)" variant="contained" source="acctype4Name">
                 <LockOpen/>
             </TextButtonField>
             

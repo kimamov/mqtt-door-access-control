@@ -1,18 +1,11 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
-import * as path from 'path';
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
 import { sessionParser } from './config'
 import {  setupMqtt } from './mqtt/connection'
-
-console.log(process.env.MQTT_HOST)
-
-if(!process.env.CLIENT_ADRESS){
-    console.warn("please provide the url of the client for cors. Falling back to the default http://localhost:3000")
-}
-const clientAdress=process.env.CLIENT_ADRESS || "http://localhost:3000";
+import {serverConfig} from './config';
 
 
 createConnection()
@@ -23,8 +16,9 @@ createConnection()
         const auth = require("./util/passportStrategies");
         const passport = require("passport");
         const routes = require("./routes/routes");
-
-        const PORT = process.env.PORT || 5000;
+        const https=require("https");
+        const fs=require("fs");
+        const path=require("path");
 
 
         const app = express();
@@ -35,6 +29,8 @@ createConnection()
         app.use(
             sessionParser
         );
+
+        const clientAdress=process.env.CLIENT_ADRESS || "http://localhost:3000";
         app.use(
             cors({
                 origin: [clientAdress],
@@ -63,18 +59,31 @@ createConnection()
         //setup routes
         app.use("/api", routes);
 
-        app.use(express.static(path.join(__dirname, 'build')));
+        app.use(express.static(path.join(__dirname, serverConfig.staticFilesPath)));
 
         app.get('/', function (req, res) {
-            res.sendFile(path.join(__dirname, 'build', 'index.html'));
+            res.sendFile(path.join(__dirname, serverConfig.clientPath));
         });
 
         //setup mqtt client
         setupMqtt();
         // express server listen on PORT
-        app.listen(PORT, (e: Error) => {
+
+
+        if(serverConfig.sslCertPath && serverConfig.sslKeyPath){
+            const httpsServer=https.createServer({ 
+                key: fs.readFileSync(serverConfig.sslKeyPath),
+                cert: fs.readFileSync(serverConfig.sslCertPath)
+            }, app)
+            httpsServer.listen(serverConfig.httpsPort, (e) => {
+                if (e) return console.log(e);
+                console.log(`started listening for HTTPS requests on port ${serverConfig.httpsPort}`);
+            });
+        }
+        
+        app.listen(serverConfig.httpPort, (e: Error) => {
             if (e) return console.log(e);
-            console.log(`server listening on port ${PORT}`);
+            console.log(`server listening on port ${serverConfig.httpPort}`);
         });
 
 

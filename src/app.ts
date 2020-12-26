@@ -17,6 +17,7 @@ createConnection()
         const passport = require("passport");
         const routes = require("./routes/routes");
         const https=require("https");
+        const http=require("http");
         const fs=require("fs");
         const path=require("path");
 
@@ -81,11 +82,11 @@ createConnection()
             });
         }
         
-        app.listen(serverConfig.httpPort, (e: Error) => {
+        const httpServer=http.createServer(app);
+        httpServer.listen(serverConfig.httpPort, (e: Error) => {
             if (e) return console.log(e);
             console.log(`server listening on port ${serverConfig.httpPort}`);
         });
-
-
+        
     })
     .catch((error) => console.log(error));

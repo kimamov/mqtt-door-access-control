@@ -72,8 +72,8 @@ createConnection()
 
         if(serverConfig.sslCertPath && serverConfig.sslKeyPath){
             const httpsServer=https.createServer({ 
-                key: fs.readFileSync(serverConfig.sslKeyPath),
-                cert: fs.readFileSync(serverConfig.sslCertPath)
+                key: fs.readFileSync(path.join(__dirname, serverConfig.sslKeyPath)),
+                cert: fs.readFileSync(path.join(__dirname, serverConfig.sslCertPath))
             }, app)
             httpsServer.listen(serverConfig.httpsPort, (e) => {
                 if (e) return console.log(e);

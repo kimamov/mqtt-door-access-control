@@ -30,8 +30,8 @@ export const readerConfig={
 export const serverConfig={
     httpPort: process.env.HTTP_PORT || 5000,
     httpsPort: process.env.HTTP_PORT || 443,
-    sslCertPath: process.env.SSL_CERT_PATH,
-    sslKeyPath: process.env.SSL_KEY_PATH,
+    sslCertPath: "../cert/csr.pem",
+    sslKeyPath: "../cert/key.pem",
     clientPath: "../client/build/index.html",
     staticFilesPath: "../client/build"
 }

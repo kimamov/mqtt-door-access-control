@@ -7,3 +7,5 @@ ormconfig.json
 package-lock.json
 .env
 .env*
+cert
+/cert

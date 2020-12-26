@@ -1,29 +1,17 @@
-import { getRepository, Repository } from "typeorm"
+import { createQueryBuilder, getRepository, Repository } from "typeorm"
 import { Request, Response } from "express"
 import { Reader } from "../entity/Reader"
 import { client } from "../mqtt/connection";
 import { Key } from "../entity/Key";
 import getList from "../util/getList";
-import { ReaderKey } from "../entity/ReaderKey";
+import { ReaderKeyReader } from "../entity/ReaderKeyReader";
 import dateFromUnix from "../util/dateFromUnix";
 import wait from "../util/wait";
 import dateToUnix from "../util/dateToUnix";
-
-/* var log = console.log;
-console.log = function() {
-    log.apply(console, arguments);
-    // Print the stack trace
-    console.trace();
-};
+import { ReaderKey } from "../entity/ReaderKey";
+import { readerConfig } from "../config";
 
 
-// Somewhere else...
-function foo(){
-    console.log('Foobar');
-}
-foo();
-
- */
 let gettingKeyList=false;
 
 
@@ -70,9 +58,12 @@ export async function generateReaderKeys(req: Request, res: Response) {
     const id=req.params.id;
     const readerRepository: Repository<Reader> = getRepository(Reader);
     const reader=await readerRepository.findOne(id);
-    console.log(reader)
+    
     if(!reader){
         return res.status(404).send({message: `could not find reader with the provided id: ${id}`})
+    }
+    if(!client.connected){
+        return res.status(500).send({error: "connection to the MQTT client was lost"})
     }
     /* TODO: get the reader from the doorid then use its ip to the command */
     client.publish("devnfc", JSON.stringify({
@@ -107,6 +98,7 @@ export async function generateReaderKeys(req: Request, res: Response) {
                     validUntil: dateFromUnix(messageJSON.validuntil)
                     
                 };
+                console.log(keyObj)
                 keys.push(keyObj);
                 createReaderKey(keyObj);
                 console.log("timer extended after receiving new key")
@@ -129,7 +121,9 @@ export async function generateReaderKeys(req: Request, res: Response) {
             
         }
     }
-
+    if(!client.connected){
+        return res.status(500).send({error: "connection to the MQTT client was lost"})
+    }
     timeout=setTimeout(()=>{ // wait 4 seconds for the device to send back users. If non are send there no
         console.log("timed out and listener removed")
         client.off('message', messageHandler);
@@ -162,6 +156,10 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
         if(!reader){
             return res.status(404).send({message: `could not find reader with the provided id: ${readerId}`})
         }
+        
+        if(!client.connected){
+            return res.status(500).send({error: "connection to the MQTT client was lost"})
+        }
         /* TODO: get the reader from the doorid then use its ip to the command */
         client.publish("devnfc", JSON.stringify({
             /* cmd: "getuser", */
@@ -180,7 +178,7 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
             const messageString = message.toString()
             try {
                 const messageJSON = JSON.parse(messageString)
-        
+                
                 if(topic==="devnfc/send" || topic==="/devnfc/send"){
                     console.log("received key")
                     const keyObj={
@@ -189,16 +187,17 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                         readerId: reader.id,
                         uid: messageJSON.uid,
                         name: messageJSON.user,
-                        acctype: messageJSON.acctype || 0,
-                        acctype2: messageJSON.acctype2  || 0,
-                        acctype3: messageJSON.acctype3 || 0,
-                        acctype4: messageJSON.acctype4 || 0,
+                        acctype: messageJSON.acctype? 1 : 0,
+                        acctype2: messageJSON.acctype2? 1 : 0,
+                        acctype3: messageJSON.acctype3? 1 : 0,
+                        acctype4: messageJSON.acctype4? 1 : 0,
                         validUntil: dateFromUnix(messageJSON.validuntil)
                         
                     };
                     keys.push(keyObj); // add the key to the array
                     createReaderKey(keyObj); // create a db entry for the key
                     console.log("timer extended after receiving new key")
+                    
                     if(timeout) clearTimeout(timeout); // stop the timer
                     timeout=setTimeout(()=>{ 
                         // start a new timer. If it is not cleared / stopped in n seconds (2 here) by receiving a new message 
@@ -220,6 +219,9 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
             }
         }
 
+        if(!client.connected){
+            return res.status(500).send({error: "connection to the MQTT client was lost"})
+        }
         timeout=setTimeout(()=>{ // initialy give the device 4 seconds to return the first user otherwise there are no and return
             console.log("timed out and listener removed")
             client.off('message', messageHandler);
@@ -245,9 +247,10 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
 
 async function createReaderKey(keyObj){
     try {
+        return;
         /* console.log(`keyobject is`)
         console.log(keyObj) */
-        const repo: Repository<ReaderKey>=getRepository(ReaderKey);
+        const repo: Repository<ReaderKeyReader>=getRepository(ReaderKeyReader);
         const key=await repo.findOne({readerId: keyObj.readerId, uid: keyObj.uid});
         /* console.log(key) */
         if(key){
@@ -268,10 +271,8 @@ export async function getReaders(req: Request, res: Response) {
 export async function getReaderWithKeys(req: Request, res: Response){
     try {
         const {id}=req.params;
-        const readerRepository: Repository<Reader> = getRepository(Reader);
-
-        const result = await readerRepository.findOne(id, {relations: ["keys"]});
-
+        const result = await getRepository(Reader).findOne(id, {relations: ["readerKeys", "readerKeys.key"]})
+        
         if(!result){
             return res.status(404).send({message: `could not find reader with the provided id ${id}`})
         }
@@ -290,40 +291,41 @@ export async function addReaderKeys(req: Request, res: Response) {
         const { body } = req;
         if (!(body.id && body.key_id)) throw "invalid request body"
         // check if reader with that ip exists
-        const readerRepository: Repository<Reader> = getRepository(Reader);
-        const readerResult = await readerRepository.findOneOrFail({ id: body.id}, {relations: ["keys"]})
-        if (!readerResult) throw "no door found"
+        const readerResult = await getRepository(Reader).findOneOrFail({ id: body.id})
         // check if key with that id exists
         const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
         
-        const readerHasKey=readerResult.keys.some(key=>key.uid === keyResult.uid)
-        if(readerHasKey){
-            return res.status(409).send({error: `reader already has a key with the same uid: ${keyResult.uid}`})
-        }
-
-        readerResult.keys=Array.isArray(readerResult.keys)? [...readerResult.keys, keyResult] : [keyResult];
-        await readerRepository.save(readerResult);
+        const readerKeyResult: ReaderKey=await getRepository(ReaderKey).save({
+            readerId: readerResult.id,
+            keyId: keyResult.id,
+            acctype: body.acctype || 0,
+            acctype2: body.acctype2 || 0,
+            acctype3: body.acctype3 || 0,
+            acctype4: body.acctype4 || 0
+        })
+        
         
         if(!client.connected){
-            res.status(500).send({error: "connection to the MQTT client was lost"})
+            return res.status(500).send({error: "connection to the MQTT client was lost"})
         }
         client.publish('devnfc', JSON.stringify({
             cmd: "adduser",
             doorip: readerResult.ip,
             uid: keyResult.uid,
             user: keyResult.name,
-            acctype: keyResult.acctype,
-            acctype2: keyResult.acctype2,
-            acctype3: keyResult.acctype3,
-            acctype4: keyResult.acctype4,
+            acctype: readerKeyResult.acctype,
+            acctype2: readerKeyResult.acctype2,
+            acctype3: readerKeyResult.acctype3,
+            acctype4: readerKeyResult.acctype4,
             validuntil: dateToUnix(keyResult.validUntil)
-        }))
-        res.send({
+        })) 
+
+        return res.send({
             message: "successfully created"
         })
     } catch (error) {
         console.log(error)
-        res.status(500).send({
+        return res.status(500).send({
             error: "failed to create link"
         })
     }
@@ -337,14 +339,35 @@ export async function editReaderKeys(req: Request, res: Response) {
             throw "please provide a valid reader id"
         }
         const { body } = req;
-        if (!body.keys || !Array.isArray(body.keys)) throw "invalid request body"
-        // check if reader with that ip exists
-        const readerRepository: Repository<Reader> = getRepository(Reader);
-        const readerResult = await readerRepository.findOne(readerId, {relations: ["keys"]})
-        if (!readerResult) throw "no door found"
+        if (!body.readerKeys || !Array.isArray(body.readerKeys)){
+            return res.status(400).send({error: "invalid request an array readerKeys is required"})
+        }
         
-        readerResult.keys=body.keys;
-        await readerRepository.save(readerResult);
+        // there has to be a better option then deleting all the relationships before adding new but this should do for now
+        getRepository(ReaderKey)
+            .createQueryBuilder()
+            .delete()
+            .from(ReaderKey)
+            .where("readerId = :readerId", {readerId: readerId})
+            .execute();
+        
+        // check if reader with that ip exists
+        const readerRepo=getRepository(Reader)
+        const readerResult = await readerRepo.findOne(readerId, {relations: ["readerKeys"]})
+
+        if (!readerResult) throw "no door found"
+
+        /* if(body.readerName){
+            readerResult.readerName=body.readerName;
+        } */
+        readerResult.acctypeName=body.acctypeName || "";
+        readerResult.acctype2Name=body.acctype2Name  || "";
+        readerResult.acctype3Name=body.acctype3Name  || "";
+        readerResult.acctype4Name=body.acctype4Name  || "";
+
+        readerResult.readerKeys=body.readerKeys;
+
+        await readerRepo.save(readerResult)
 
         return res.send(readerResult)
         
@@ -364,7 +387,7 @@ export async function deleteAllKeys(req: Request, res: Response){
         return res.status(404).send({message: `could not find reader with the provided id: ${id}`})
     }
     if(!client.connected){
-        res.status(500).send({error: "connection to the MQTT client was lost"})
+        return res.status(500).send({error: "connection to the MQTT client was lost"})
     }
     client.publish('devnfc', JSON.stringify({
         cmd: "deletusers",
@@ -381,52 +404,51 @@ export async function deleteAllKeys(req: Request, res: Response){
 export async function syncAllKeys(req: Request, res: Response){
     // first delete all key off the reader
     const {id}=req.params;
-    const readerResult=await getRepository(Reader).findOne(id, {relations: ["keys"]});
+    const readerResult = await getRepository(Reader).findOne(id, {relations: ["readerKeys", "readerKeys.key"]})
+
     if(!readerResult){
         return res.status(404).send({message: `could not find reader with the provided id: ${id}`})
     }
-    /* console.log(readerResult) */
     if(!client.connected){
-        res.status(500).send({error: "connection to the MQTT client was lost"})
+        return res.status(500).send({error: "connection to the MQTT client was lost"})
     }
     client.publish('devnfc', JSON.stringify({
         cmd: "deletusers",
         doorip: readerResult.ip,
         doorname: readerResult.readerName
     }))
-    const deleteWaitTime=2000; // lets give the reader 5 seconds to delete all keys
+
+    const deleteWaitTime=readerConfig.deleteTime; // lets give the reader some time to delete all the keys
     await wait(deleteWaitTime); 
-    // we should wait for an answer here
-    // now get all keys that are related to the reader from our database
     
-    if(readerResult.keys && readerResult.keys.length){
-        const delay=300;
-        const keyCount=readerResult.keys.length;
+   
+    if(readerResult.readerKeys && readerResult.readerKeys.length){
+        const delay=readerConfig.syncTime;
+        const keyCount=readerResult.readerKeys.length;
         const totalTime=delay*keyCount;
         //readerResult.keys.forEach()
-        for(let key of readerResult.keys){
-            if(client.connected){
+        for(let readerKey of readerResult.readerKeys){
+            if(client.connected && readerKey.key){
                 // if we are connected we send each key to the reader with delay of 0.3s
                 await wait(delay);
-                console.log(key)
                 client.publish('devnfc', JSON.stringify({
                     cmd: "adduser",
                     doorip: readerResult.ip,
-                    uid: key.uid,
-                    user: key.name,
-                    acctype: key.acctype,
-                    acctype2: key.acctype2,
-                    acctype3: key.acctype3,
-                    acctype4: key.acctype4,
-                    validuntil: dateToUnix(key.validUntil)
+                    uid: readerKey.key.uid,
+                    user: readerKey.key.name,
+                    acctype: readerKey.acctype,
+                    acctype2: readerKey.acctype2,
+                    acctype3: readerKey.acctype3,
+                    acctype4: readerKey.acctype4,
+                    validuntil: dateToUnix(readerKey.key.validUntil)
                 }))
             }
         }
         const timeInSeconds=(totalTime+deleteWaitTime) / 1000;
-        res.send({message: `started syncing ${keyCount} keys to the reader it should be done in ${timeInSeconds} seconds`, time: timeInSeconds})
+        return res.send({message: `started syncing ${keyCount} keys to the reader it should be done in ${timeInSeconds} seconds`, time: timeInSeconds})
 
     }else {
-        res.status(404).send({message: `looks like the reader does not have any keys related to it in the database`})
+        return res.status(404).send({message: `looks like the reader does not have any keys related to it in the database`})
     }
 
  

@@ -1,29 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-
+import { Entity, Column, PrimaryColumn,  OneToMany, JoinColumn, ManyToOne } from "typeorm";
+import { Key } from "./Key";
+import {Reader} from "./Reader"
 
 @Entity()
 export class ReaderKey {
-    @PrimaryGeneratedColumn()
-    id: number;
+    
+    
 
-    @Column("varchar", { length: 30, nullable: true })
-    readerIp: string;
-
-    @Column("integer", {nullable: true})
+    @PrimaryColumn()
     readerId: number;
+    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true, persistence: false})
+    @JoinColumn({name: "readerId", referencedColumnName: "id"})
+    reader: Reader;
 
+    @PrimaryColumn()
+    keyId: number;
+    @ManyToOne(() => Key, key => key.readerKeys, {primary: true})
+    @JoinColumn({name: "keyId", referencedColumnName: "id"})
+    key: Key;
+    
 
-    @Column("varchar", { length: 20, nullable: false })
-    uid: string;
-
-    @Column("varchar", { nullable: false })
-    name: string;
-
-    @Column("timestamp", {default: ()=>'CURRENT_TIMESTAMP'})
-    validUntil: Date
-
-    @Column("bool", { default: false, nullable: false })
-    isOneTimeCode: boolean
 
     @Column("integer", { default: 1 })
     acctype: number
@@ -37,6 +33,9 @@ export class ReaderKey {
     @Column("integer", { default: 0 })
     acctype4: number
 
+    
 
+    
 
+    
 }

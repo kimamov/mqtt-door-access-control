@@ -19,3 +19,10 @@ export const mqttConfig={
     clientId: "server_" + Date.now() +"_"+ Math.random(),
     ...process.env.MQTT_PASSWORD && {password: process.env.MQTT_PASSWORD},
 }
+
+
+export const readerConfig={
+    deleteTime: 2000,
+    syncTime: 300,
+    readerListWaitTime:  2000,
+}

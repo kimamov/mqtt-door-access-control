@@ -17,11 +17,12 @@ const KeyShow = (props) => {
                 <NumberField source="acctype4" />
                 <DateField source="validUntil" showTime locales="de"/>
                 <BooleanField source="isOneTimeCode" />
-                <ArrayField label="KEY IS ON THESE READERS" source="readers" >
+                
+                <ArrayField label="KEY IS ON THESE READERS" source="readerKeys" >
                     <Datagrid>
-                        <TextField source="readerName" />
-                        <TextField source="ip" />
-                        <DateField source="lastPing" showTime locales="de"/>
+                        <TextField label="name" source="reader.readerName" />
+                        <TextField label="local ip" source="reader.ip" />
+                        <DateField label="last ping" source="reader.lastPing" showTime locales="de"/>
                     </Datagrid>
                 </ArrayField>
             </SimpleShowLayout>

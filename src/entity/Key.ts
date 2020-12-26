@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
-import { Reader } from "./Reader";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { ReaderKey } from "./ReaderKey";
 
 @Entity()
 export class Key {
@@ -18,21 +18,8 @@ export class Key {
     @Column("bool", { default: false, nullable: false })
     isOneTimeCode: boolean
 
-    @Column("integer", { default: 1 })
-    acctype: number
-
-    @Column("integer", { default: 0 })
-    acctype2: number
-
-    @Column("integer", { default: 0 })
-    acctype3: number
-
-    @Column("integer", { default: 0 })
-    acctype4: number
-
-
-
-    @ManyToMany(type => Reader, reader => reader.keys)
-    readers: Reader[];
+    
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.key)
+    readerKeys: ReaderKey[];
 
 }

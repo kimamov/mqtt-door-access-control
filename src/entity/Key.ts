@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
 import { ReaderKey } from "./ReaderKey";
+import { User } from "./User";
 
 @Entity()
 export class Key {
@@ -19,7 +20,10 @@ export class Key {
     isOneTimeCode: boolean
 
     
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.key)
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.key, {cascade: true})
     readerKeys: ReaderKey[];
+
+    @ManyToOne(()=>User, user=>user.keys)
+    user: User;
 
 }

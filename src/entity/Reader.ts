@@ -30,15 +30,16 @@ export class Reader {
     acctype4Name: string
 
 
-    @OneToMany(()=>AccessLog, access=>access.reader)
+    @OneToMany(()=>AccessLog, access=>access.reader, {cascade: true})
     accessLogs: AccessLog[];
 
-    @OneToMany(()=>NewKey, newKey=>newKey.reader)
+    @OneToMany(()=>NewKey, newKey=>newKey.reader, {cascade: true})
     newKeys: NewKey[];
     
 
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, {cascade: true, persistence: false})
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, {cascade: true})
     readerKeys: ReaderKey[];
 
+    
     
 }

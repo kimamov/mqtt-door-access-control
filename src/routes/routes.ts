@@ -2,7 +2,8 @@ import { deleteAccess, editAccess, getAccess, getAccesses } from '../controllers
 import { deleteEvent, editEvent, getEvent, getEvents } from '../controllers/eventController';
 import { addKey, editKey, getKey, getKeys, deleteKey } from '../controllers/keyController';
 import { deleteNewKey, editNewKey, getNewKey, getNewKeys } from '../controllers/newKeyController';
-import { syncAllKeys, deleteAllKeys, getReaders, addReaderKeys, openDoor, getReaderWithKeys, generateReaderKeys, generateAllReaderKeys, editReaderKeys } from '../controllers/readerController';
+import { syncAllKeys, deleteAllKeys, openDoor, generateReaderKeys, generateAllReaderKeys} from '../controllers/deviceController';
+import { getReaders, addReaderKeys, getReaderWithKeys, editReaderKeys } from '../controllers/readerController';
 import createUser from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
@@ -119,10 +120,13 @@ router.get("/deleteall/:id", deleteAllKeys)
 
 router.get("/syncall/:id", syncAllKeys)
 
+router.get("/devicekey"/* , checkAuth */, generateAllReaderKeys)
+
+router.get("/devicekey/:id"/* , checkAuth */, generateReaderKeys)
+
 router.get("/readerkey"/* , checkAuth */, generateAllReaderKeys)
 
 router.get("/readerkey/:id"/* , checkAuth */, generateReaderKeys)
-
 
 router.post("/readerkey"/* , checkAuth */, addReaderKeys)
 

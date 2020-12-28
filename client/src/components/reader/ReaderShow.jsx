@@ -78,6 +78,7 @@ const ShowPropsExtractor=({children, ...props})=>{
                 </SimpleForm>
             </Create>
 
+            {/*TODO: make this a referencefield too after creating the route  */}
             <ArrayField label="KEYS IN THE DB" source="readerKeys" >
                 <Datagrid>
                     <TextField label="name" source="key.name" />
@@ -91,7 +92,7 @@ const ShowPropsExtractor=({children, ...props})=>{
                 </Datagrid>
             </ArrayField>
 
-            <ReferenceManyField reference="readerkey" target="readerId" label="KEYS ON READER" {...props}>
+            <ReferenceManyField reference="devicekey" target="readerId" label="KEYS ON READER" {...props}>
                 <Datagrid rowStyle={readerKeyRowStyle} {...props}>
                     <TextField source="name" />
                     <TextField source="uid" />

@@ -33,6 +33,7 @@ function App() {
         <Resource icon={Event} name="event" list={EventList}   />
         <Resource icon={LockOpen} name="access" list={AccessList}   />
         <Resource name="readerkey" />
+        <Resource name="devicekey" />
     </Admin>
   );
 }

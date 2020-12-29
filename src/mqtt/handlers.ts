@@ -1,8 +1,10 @@
 import { getRepository, Repository } from "typeorm"
 import { AccessLog } from '../entity/AccessLog'
 import { Event } from '../entity/Event'
+import { Key } from "../entity/Key"
 import { NewKey } from '../entity/NewKey'
 import { Reader } from "../entity/Reader"
+import { ReaderKey } from "../entity/ReaderKey"
 import dateFromUnix from "../util/dateFromUnix"
 
 
@@ -35,9 +37,9 @@ export default function messageHandler(topic: string, message: Buffer) {
                 handleAccessAndEvent(messageJSON);
                 break;
             case "devnfc/accesslist":
-            case "/devnfc/accesslist":
+            /* case "/devnfc/accesslist":
                 handleDoorKeyList(messageJSON);
-                break;
+                break; */
             case "devnfc/#":
             case "/devnfc/#":
                 console.log("messageJSON")
@@ -134,16 +136,7 @@ function handleAccessAndEvent(messageJSON) {
 }
 
 async function handleDoorEvent(messageJSON) {
-    /* devnfc / send
-    {
-        type: 'WARN',
-            src: 'websrv',
-                desc: 'New login attempt',
-                    data: '192.168.178.21',
-                        time: 1601410372,
-                            cmd: 'event',
-                                door: 'esp-rfid'
-    } */
+
     try {
         // store all incoming events in the database
         const eventRepository: Repository<Event> = getRepository(Event);
@@ -163,6 +156,23 @@ async function handleDoorEvent(messageJSON) {
 
 async function handleKnownKey(messageJSON) {
     console.log(`known key with the UID: ${messageJSON.uid} accessed door ${messageJSON.door}`);
+    try {
+        const readerResult=await getRepository(Reader).findOneOrFail({readerName: messageJSON.door}, {relations: ["readerKeys", "readerKeys.key"]});
+        
+        // update onetime key
+        // find a key with the provided uid on the reader
+        const foundReaderKey: ReaderKey | undefined=readerResult.readerKeys.find(result=>result.key.uid === messageJSON.uid);
+        if(!foundReaderKey) throw Error("could not find key with the provided uid on reader")
+        const currentDate=new Date();
+        currentDate.setMinutes(currentDate.getMinutes() + 30); // increase the date by 30 minutes
+        foundReaderKey.key.validUntil=currentDate; // set the key to be valid for 30 more minutes from now
+        
+        const updatedKeyResult=await getRepository(Key).save(foundReaderKey.key);
+        console.log(updatedKeyResult);
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 async function logAccess(messageJSON) {
@@ -183,7 +193,7 @@ async function logAccess(messageJSON) {
             time: dateFromUnix(time),
             isKnown: isKnown || false,
             type: type,
-            access: access
+            access: access,
         });
         const result = await accessRepo.save(key)
         console.log(result)
@@ -195,32 +205,7 @@ async function logAccess(messageJSON) {
 }
 
 async function handleUnknownKey(messageJSON) {
-    /* Access log on node-red
-        if ((msg.payload.type == "access") && (msg.payload.isKnown == "true")) {
-            if (msg.payload.cmd == "log") {
-                msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
-            }
-            msg.payload = "Tür von " + msg.payload.username + " geöffnet";
-            return msg;
-        }
-        adding event
-        else if (msg.payload.cmd == "event") {
-            msg.topic = "INSERT INTO events (type, src, description, data,time,door) VALUES ('" + msg.payload.type + "','" + msg.payload.src + "','" + msg.payload.desc + "','" + msg.payload.data + "','" + msg.payload.time + "','" + msg.payload.door + "')";
-            msg.paylod = "";
-            return msg;
-        }
-        user unknown with out log
-        else if ((msg.payload.type == "access") && (msg.payload.isKnown == "false")) {
-            ser unknown adding to newuser db
-            if (msg.payload.cmd == "log") {
-                msg.topic = "INSERT INTO accesslog (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "');" + " INSERT INTO newuser (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "');";
-            }
-            else {
-                msg.topic = "INSERT INTO newuser (uid, type, isknown, username,door,time) VALUES ('" + msg.payload.uid + "','" + msg.payload.type + "'," + msg.payload.isKnown + ",'" + msg.payload.username + "','" + msg.payload.door + "','" + msg.payload.time + "')";
-            }
-            msg.payload = "Kein Zugang User unbekannt";
-            return msg;
-        } */
+  
     try {
         const { uid, username, door, time } = messageJSON;
         const readerResult=await getRepository(Reader).findOneOrFail({readerName: door});
@@ -243,47 +228,8 @@ async function handleUnknownKey(messageJSON) {
 
 
 
-
-async function handleDoorKeyList(messageJSON) {
-    console.log("handleDoorKeyList reached:  "+messageJSON)
-    return null;
-    /* console.log("accesslist received")
-    console.dir(messageJSON) */
-
-    
-    /* {
-        [0]   command: 'userfile',
-        [0]   uid: 'zzzzzzzz',
-        [0]   user: 'qqqqqqq',
-        [0]   acctype: 1,
-        [0]   acctype2: null,
-        [0]   acctype3: null,
-        [0]   acctype4: null,
-        [0]   validuntil: 2145916800
-        [0] } */
-    /* const keyObject={
-        data: messageJSON.command,
-        type: messageJSON.type,
-        src: messageJSON.src,
-        time: dateFromUnix(messageJSON.time),
-        door: messageJSON.door,
-        description: messageJSON.desc
-    } */
-    
-}
-
 async function handleDoorKeyListOld(messageJSON) {
-    console.log("was called")
-    /* devnfc / send
-    {
-        type: 'WARN',
-            src: 'websrv',
-                desc: 'New login attempt',
-                    data: '192.168.178.21',
-                        time: 1601410372,
-                            cmd: 'event',
-                                door: 'esp-rfid'
-    } */
+
     const keyObject={
         data: messageJSON.data,
         type: messageJSON.type,
@@ -308,31 +254,6 @@ async function handleDoorKeyListOld(messageJSON) {
     } catch (error) {
         console.log(error)
     }
-}
-
-/* async function updateKey(keyObject){
-    try {
-        // store all incoming events in the database
-        const eventRepo: Repository<Event> = getRepository(Event);
-
-        const result = await eventRepo.save(keyObject)
-        console.log(result)
-    } catch (error) {
-        console.log(error)
-    }
-} */
-
-
-function syncToReader(readerIp: string, key) {
-    // sync single key to target reader
-}
-
-function syncAllToReader(readerIp: string) {
-    // sync all keys to target reader
-}
-
-function syncAllReaders() {
-
 }
 
 

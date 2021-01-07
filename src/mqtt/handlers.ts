@@ -13,13 +13,11 @@ import dateFromUnix from "../util/dateFromUnix"
 export default function messageHandler(topic: string, message: Buffer) {
     // message is Buffer
     const messageString = message.toString()
-    /* console.log(messageString) */
     try {
         const messageJSON = JSON.parse(messageString)
 
         /* console.log(topic)
         console.log(messageJSON) */
-
 
         // handle different topics
         switch (topic) {
@@ -44,7 +42,6 @@ export default function messageHandler(topic: string, message: Buffer) {
             case "/devnfc/#":
                 console.log("messageJSON")
             default:
-                /* console.log(messageJSON) */
                 console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
                 break;
         }

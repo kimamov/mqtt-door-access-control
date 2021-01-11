@@ -16,7 +16,10 @@ import ReaderEdit from './components/reader/ReaderEdit';
 import {Fingerprint, VpnKey, FiberNew, Event, LockOpen} from '@material-ui/icons';
 
 
-
+const isAdmin=permissions=>{
+  console.log(permissions)
+  return permissions==="admin"
+}
 
 function App() {
   const serverAdress=process.env.REACT_APP_SERVER;
@@ -27,15 +30,30 @@ function App() {
   }
   return (
     <Admin dataProvider={restProvider(serverAdress)} locale="en" authProvider={authProvider}>
-        <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit}/>
-        <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>
-        <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>
-        <Resource icon={Event} name="event" list={EventList}   />
-        <Resource icon={LockOpen} name="access" list={AccessList}   />
-        <Resource name="readerkey" />
+      {permissions=>[
+        <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controller'}}/>,
+        <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,
+        <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,
+        isAdmin(permissions) && <Resource icon={Event} name="event" list={EventList}   />,
+        isAdmin(permissions) && <Resource icon={LockOpen} name="access" list={AccessList} />,
+        /* TODO ADD USER RESOURCE */
+        <Resource name="readerkey" />,
         <Resource name="devicekey" />
+      ]}
     </Admin>
   );
 }
 
 export default App;
+
+/* 
+{permissions=>[
+          <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controller'}}/>,
+          <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,
+          <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,
+          <Resource icon={Event} name="event" list={EventList}   />,
+          <Resource icon={LockOpen} name="access" list={AccessList}   />,
+          <Resource name="readerkey" />,
+          <Resource name="devicekey" />
+        ]}
+*/

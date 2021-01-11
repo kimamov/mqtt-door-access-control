@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 
@@ -23,6 +24,10 @@ export async function createUser(username: string, password: string) {
             reject("could not create user. Most likely the user already exists.");
         }
     });
+}
+
+export async function updateUser(req: Request, res: Response){
+    
 }
 
 export default createUser;

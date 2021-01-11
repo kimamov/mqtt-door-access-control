@@ -1,0 +1,12 @@
+{
+    "type": "mysql",
+    "host": "",
+    "port": 3306,
+    "username": "",
+    "password": "",
+    "database": "access-control",
+    "entities": [
+        "src/entity/*.ts"
+    ],
+    "synchronize": true
+}

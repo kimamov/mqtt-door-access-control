@@ -49,8 +49,7 @@ createConnection()
             done(null, user.id);
         });
         passport.deserializeUser((userId, done) => {
-            const user = connection.getRepository(User);
-            user
+            connection.getRepository(User)
                 .findOne(userId, { select: ['id', 'username'] })
                 .then((data) => done(null, data))
                 .catch((error) => done(error));

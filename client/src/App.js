@@ -13,7 +13,8 @@ import AccessList from './components/access/AccessList'
 import { NewKeyList } from './components/newKey/NewKeyList';
 import authProvider from './AuthProvider';
 import ReaderEdit from './components/reader/ReaderEdit';
-import {Fingerprint, VpnKey, FiberNew, Event, LockOpen} from '@material-ui/icons';
+import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser} from '@material-ui/icons';
+import UserList from './components/user/UserList';
 
 
 const isAdmin=permissions=>{
@@ -36,6 +37,7 @@ function App() {
         <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,
         isAdmin(permissions) && <Resource icon={Event} name="event" list={EventList}   />,
         isAdmin(permissions) && <Resource icon={LockOpen} name="access" list={AccessList} />,
+        isAdmin(permissions) && <Resource icon={VerifiedUser} name="user" list={UserList} />,
         /* TODO ADD USER RESOURCE */
         <Resource name="readerkey" />,
         <Resource name="devicekey" />

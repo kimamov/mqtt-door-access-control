@@ -4,7 +4,7 @@ import { addKey, editKey, getKey, getKeys, deleteKey } from '../controllers/keyC
 import { deleteNewKey, editNewKey, getNewKey, getNewKeys } from '../controllers/newKeyController';
 import { syncAllKeys, deleteAllKeys, openDoor, generateReaderKeys, generateAllReaderKeys} from '../controllers/deviceController';
 import { getReaders, addReaderKeys, getReaderWithKeys, editReaderKeys } from '../controllers/readerController';
-import createUser from '../controllers/userController';
+import createUser, { editUser, getUsers } from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
 /* import { client } from '../mqtt/connection';
@@ -21,7 +21,7 @@ router.post(
   } */),
   async (req, res) => {
     req.session.myUser = "hello world";
-
+    https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure
     res.send({
       message: "you logged in successfully",
       user: req.user,
@@ -56,6 +56,11 @@ router.post("/signup", async (req, res) => {
     res.status(409).send(e);
   }
 });
+
+
+router.get("/user", getUsers)
+
+router.put("/user", editUser)
 
 
 // TODO: split the routes into different files

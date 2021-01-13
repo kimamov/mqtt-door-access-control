@@ -93,43 +93,46 @@ export async function generateReaderKeys(req: Request, res: Response) {
     
     function messageHandler(topic: string, message: Buffer) {
         // message is Buffer
-        const messageString = message.toString()
         try {
-            const messageJSON = JSON.parse(messageString)
-    
             if(topic==="devnfc/send" || topic==="/devnfc/send"){
-                console.log("received key")
-                const keyObj={
-                    readerIp: reader.ip,
-                    readerId: reader.id,
-                    uid: messageJSON.uid,
-                    name: messageJSON.user,
-                    acctype: messageJSON.acctype || 0,
-                    acctype2: messageJSON.acctype2  || 0,
-                    acctype3: messageJSON.acctype3 || 0,
-                    acctype4: messageJSON.acctype4 || 0,
-                    validUntil: dateFromUnix(messageJSON.validuntil)
-                    
-                };
-                console.log(keyObj)
-                keys.push(keyObj);
-                createReaderKey(keyObj);
-                console.log("timer extended after receiving new key")
-                if(timeout) clearTimeout(timeout); // 
-                timeout=setTimeout(()=>{
-                    console.log("last answer was to long ago listener removed")
-                    client.off('message', messageHandler);
-                    gettingKeyList=false;
-                    res.send({
+                const messageString = message.toString()
+                const messageJSON = JSON.parse(messageString)
+                if(messageJSON.cmd==="adduser"){
+                    console.log("received key");
+                    console.log(messageJSON);
+                    const keyObj={
+                        readerIp: reader.ip,
                         readerId: reader.id,
-                        keys: keys
-                    });
-
-                }, 2000);
+                        uid: messageJSON.uid,
+                        name: messageJSON.user,
+                        acctype: messageJSON.acctype || 0,
+                        acctype2: messageJSON.acctype2  || 0,
+                        acctype3: messageJSON.acctype3 || 0,
+                        acctype4: messageJSON.acctype4 || 0,
+                        validUntil: dateFromUnix(messageJSON.validuntil)
+                        
+                    };
+                    //console.log(keyObj)
+                    keys.push(keyObj);
+                    createReaderKey(keyObj);
+                    console.log("timer extended after receiving new key")
+                    if(timeout) clearTimeout(timeout); // 
+                    timeout=setTimeout(()=>{
+                        console.log("last answer was to long ago listener removed")
+                        client.off('message', messageHandler);
+                        gettingKeyList=false;
+                        res.send({
+                            readerId: reader.id,
+                            keys: keys
+                        });
+    
+                    }, 2000);
+                }
             }
+                
     
         } catch (error) {
-            console.log("error parsing following content as json: " + messageString)
+            console.log("error parsing following content as json: " + message.toString())
             console.log(error)
             
         }
@@ -188,47 +191,51 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
     
         const messageHandler=(topic: string, message: Buffer)=> {
             // message is Buffer
-            const messageString = message.toString()
-            try {
-                const messageJSON = JSON.parse(messageString)
-                
-                if(topic==="devnfc/send" || topic==="/devnfc/send"){
-                    console.log("received key")
-                    const keyObj={
-                        id: messageJSON.uid,
-                        readerIp: reader.ip,
-                        readerId: reader.id,
-                        uid: messageJSON.uid,
-                        name: messageJSON.user,
-                        acctype: messageJSON.acctype? 1 : 0,
-                        acctype2: messageJSON.acctype2? 1 : 0,
-                        acctype3: messageJSON.acctype3? 1 : 0,
-                        acctype4: messageJSON.acctype4? 1 : 0,
-                        validUntil: dateFromUnix(messageJSON.validuntil)
+            if(topic==="devnfc/send" || topic==="/devnfc/send"){
+
+                try {
+                    const messageString = message.toString()
+                    const messageJSON = JSON.parse(messageString)
+                    if(messageJSON.cmd==="adduser"){
+                        console.log("received key")
+                        const keyObj={
+                            id: messageJSON.uid,
+                            readerIp: reader.ip,
+                            readerId: reader.id,
+                            uid: messageJSON.uid,
+                            name: messageJSON.user,
+                            acctype: messageJSON.acctype? 1 : 0,
+                            acctype2: messageJSON.acctype2? 1 : 0,
+                            acctype3: messageJSON.acctype3? 1 : 0,
+                            acctype4: messageJSON.acctype4? 1 : 0,
+                            validUntil: dateFromUnix(messageJSON.validuntil)
+                            
+                        };
+                        keys.push(keyObj); // add the key to the array
+                        createReaderKey(keyObj); // create a db entry for the key
+                        console.log("timer extended after receiving new key")
                         
-                    };
-                    keys.push(keyObj); // add the key to the array
-                    createReaderKey(keyObj); // create a db entry for the key
-                    console.log("timer extended after receiving new key")
-                    
-                    if(timeout) clearTimeout(timeout); // stop the timer
-                    timeout=setTimeout(()=>{ 
-                        // start a new timer. If it is not cleared / stopped in n seconds (2 here) by receiving a new message 
-                        // we can be pretty sure that we received all keys and can return the response
-                        console.log("last answer was to long ago listener removed")
-                        client.off('message', messageHandler);
-                        gettingKeyList=false;
+                        if(timeout) clearTimeout(timeout); // stop the timer
+                        timeout=setTimeout(()=>{ 
+                            // start a new timer. If it is not cleared / stopped in n seconds (2 here) by receiving a new message 
+                            // we can be pretty sure that we received all keys and can return the response
+                            console.log("last answer was to long ago listener removed")
+                            client.off('message', messageHandler);
+                            gettingKeyList=false;
+    
+                            res.set('Content-Range', `key ${0}-${keys.length-1}/${keys.length}`)
+                            return res.send(keys); // send the response and return
+    
+                        }, 2000);
+                    }
 
-                        res.set('Content-Range', `key ${0}-${keys.length-1}/${keys.length}`)
-                        return res.send(keys); // send the response and return
-
-                    }, 2000);
-                }
+            }
         
-            } catch (error) {
-                console.log("error parsing following content as json: " + messageString)
-                console.log(error)
-                
+                catch (error) {
+                    console.log("error parsing following content as json: " + message.toString())
+                    console.log(error)
+                    
+                }
             }
         }
 

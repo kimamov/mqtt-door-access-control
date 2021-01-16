@@ -29,6 +29,12 @@ export class Reader {
     @Column("varchar", { default: "acctype4" })
     acctype4Name: string
 
+    @Column("varchar", { default: "acctype5" })
+    acctype5Name: string
+
+    @Column("varchar", { default: "acctype6" })
+    acctype6Name: string
+
 
     @OneToMany(()=>AccessLog, access=>access.reader, {cascade: true})
     accessLogs: AccessLog[];

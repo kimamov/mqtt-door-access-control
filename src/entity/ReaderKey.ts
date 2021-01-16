@@ -33,9 +33,12 @@ export class ReaderKey {
     @Column("integer", { default: 0 })
     acctype4: number
 
-    
+    @Column("integer", { default: 0 })
+    acctype5: number
+
+    @Column("integer", { default: 0 })
+    acctype6: number
 
     
-
     
 }

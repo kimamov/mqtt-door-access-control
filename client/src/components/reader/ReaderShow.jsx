@@ -38,7 +38,9 @@ const ShowPropsExtractor=({children, ...props})=>{
                     key.acctype === record.acctype &&
                     key.acctype2 === record.acctype2 &&
                     key.acctype3 === record.acctype3 &&
-                    key.acctype4 === record.acctype4 ) // add back valid until later 
+                    key.acctype4 === record.acctype4 &&
+                    key.acctype5 === record.acctype5 &&
+                    key.acctype6 === record.acctype6) // add back valid until later 
             }) ? '#efe' : 'white',
         }
     }
@@ -65,7 +67,14 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextButtonField onClick={()=>openDoor(4)} label="Relay 4 (acctype4)" variant="contained" source="acctype4Name">
                 <LockOpen/>
             </TextButtonField>
+            <TextButtonField onClick={()=>openDoor(5)} label="Relay 5 (acctype5)" variant="contained" source="acctype4Name">
+                <LockOpen/>
+            </TextButtonField>
+            <TextButtonField onClick={()=>openDoor(6)} label="Relay 6 (acctype6)" variant="contained" source="acctype4Name">
+                <LockOpen/>
+            </TextButtonField>
             
+            {/* TODO MAKE THIS GRID HAVING IT STACKED ON DESKTOP GETS MESSY */}
             <Create title=" " resource={props.resource} onSuccess={onSuccess}>
                 <SimpleForm toolbar={<KeyEditToolbar/>}>
                     <ReferenceInput label="ADD KEY TO READER" reference="key" source="key_id"  required>
@@ -75,6 +84,8 @@ const ShowPropsExtractor=({children, ...props})=>{
                     <BooleanInput label="acctype2" source="acctype2"/>
                     <BooleanInput label="acctype3" source="acctype3"/>
                     <BooleanInput label="acctype4" source="acctype4"/>
+                    <BooleanInput label="acctype5" source="acctype4"/>
+                    <BooleanInput label="acctype6" source="acctype4"/>
                 </SimpleForm>
             </Create>
 
@@ -89,6 +100,8 @@ const ShowPropsExtractor=({children, ...props})=>{
                     <NumberField source="acctype2" />
                     <NumberField source="acctype3" />
                     <NumberField source="acctype4" />
+                    <NumberField source="acctype5" />
+                    <NumberField source="acctype6" />
                 </Datagrid>
             </ArrayField>
 
@@ -101,6 +114,8 @@ const ShowPropsExtractor=({children, ...props})=>{
                     <NumberField source="acctype2" />
                     <NumberField source="acctype3" />
                     <NumberField source="acctype4" />
+                    <NumberField source="acctype5" />
+                    <NumberField source="acctype6" />
                 </Datagrid>
             </ReferenceManyField>
             

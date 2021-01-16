@@ -15,11 +15,12 @@ const serverAdress=process.env.REACT_APP_SERVER || "http://locaholst:5000";
 
 
 const ReaderShowActions = ({ basePath, data, resource }) => {
+    /* TODO PASS OPEN DOOR THROUGH PROPS */
     const notify=useNotify();
     const refresh=useRefresh();
     const dispatch=useDispatch();
     
-    const openDoor=async(port)=>{
+    /* const openDoor=async(port)=>{
         try {
             const response=await fetch(`${serverAdress}/opendoor/${data.id}?port=${port}`)
             await response.json();
@@ -29,7 +30,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             notify("could not open door", "error")
 
         }
-    }
+    } */
 
     const deleteAllKeys=async()=>{
         try {
@@ -73,7 +74,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
     return(
         <TopToolbar >
             <EditButton basePath={basePath} record={data}/>
-            <Button style={marginLeft} label="OPEN 1" color="primary" variant="contained" onClick={()=>openDoor(1)}>
+            {/* <Button style={marginLeft} label="OPEN 1" color="primary" variant="contained" onClick={()=>openDoor(1)}>
                 <LockOpen/>
             </Button>
             <Button style={marginLeft} label="OPEN 2" color="primary" variant="contained" onClick={()=>openDoor(2)}>
@@ -84,7 +85,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             </Button>
             <Button style={marginLeft} label="OPEN 4" color="primary" variant="contained" onClick={()=>openDoor(4)}>
                 <LockOpen/>
-            </Button>
+            </Button> */}
             <Button style={marginLeft} label="SYNC" color="secondary" variant="contained" onClick={syncAllKeys}>
                 <SystemUpdate/>
             </Button>

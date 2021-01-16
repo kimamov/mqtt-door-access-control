@@ -54,6 +54,8 @@ export async function openDoor(req: Request, res: Response){
             acctype2: port===2? 1 : 0,
             acctype3: port===3? 1 : 0,
             acctype4: port===4? 1 : 0,
+            acctype5: port===4? 1 : 0,
+            acctype6: port===4? 1 : 0,
         }))
         res.send({message: "succes"})
     } catch (error) {
@@ -109,6 +111,8 @@ export async function generateReaderKeys(req: Request, res: Response) {
                         acctype2: messageJSON.acctype2  || 0,
                         acctype3: messageJSON.acctype3 || 0,
                         acctype4: messageJSON.acctype4 || 0,
+                        acctype5: messageJSON.acctype5? 1 : 0,
+                        acctype6: messageJSON.acctype6? 1 : 0,
                         validUntil: dateFromUnix(messageJSON.validuntil)
                         
                     };
@@ -209,6 +213,8 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                             acctype2: messageJSON.acctype2? 1 : 0,
                             acctype3: messageJSON.acctype3? 1 : 0,
                             acctype4: messageJSON.acctype4? 1 : 0,
+                            acctype5: messageJSON.acctype5? 1 : 0,
+                            acctype6: messageJSON.acctype6? 1 : 0,
                             validUntil: dateFromUnix(messageJSON.validuntil)
                             
                         };
@@ -323,6 +329,8 @@ export async function syncAllKeys(req: Request, res: Response){
                     acctype2: readerKey.acctype2,
                     acctype3: readerKey.acctype3,
                     acctype4: readerKey.acctype4,
+                    acctype5: readerKey.acctype5,
+                    acctype6: readerKey.acctype6,
                     validuntil: dateToUnix(readerKey.key.validUntil)
                 }))
             }

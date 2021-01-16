@@ -50,7 +50,9 @@ export async function addReaderKeys(req: Request, res: Response) {
             acctype: body.acctype || 0,
             acctype2: body.acctype2 || 0,
             acctype3: body.acctype3 || 0,
-            acctype4: body.acctype4 || 0
+            acctype4: body.acctype4 || 0,
+            acctype5: body.acctype5 || 0,
+            acctype6: body.acctype6 || 0,
         })
         
         
@@ -66,6 +68,8 @@ export async function addReaderKeys(req: Request, res: Response) {
             acctype2: readerKeyResult.acctype2,
             acctype3: readerKeyResult.acctype3,
             acctype4: readerKeyResult.acctype4,
+            acctype5: readerKeyResult.acctype5,
+            acctype6: readerKeyResult.acctype6,
             validuntil: dateToUnix(keyResult.validUntil)
         })) 
 
@@ -113,6 +117,8 @@ export async function editReaderKeys(req: Request, res: Response) {
         readerResult.acctype2Name=body.acctype2Name  || "";
         readerResult.acctype3Name=body.acctype3Name  || "";
         readerResult.acctype4Name=body.acctype4Name  || "";
+        readerResult.acctype5Name=body.acctype5Name  || "";
+        readerResult.acctype6Name=body.acctype6Name  || "";
 
         readerResult.readerKeys=body.readerKeys;
 

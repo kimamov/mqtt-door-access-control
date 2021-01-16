@@ -1,7 +1,7 @@
 import React from 'react';
 import { Admin, Resource } from 'react-admin';
 import restProvider from 'ra-data-simple-rest';
-import {KeyList} from './components/key/key';
+import KeyList from './components/key/KeyList';
 import KeyCreate from './components/key/KeyCreate'
 import KeyShow from './components/key/KeyShow'
 import KeyEdit from './components/key/KeyEdit'

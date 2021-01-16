@@ -47,8 +47,9 @@ export default function messageHandler(topic: string, message: Buffer) {
         }
 
     } catch (error) {
-        console.log("error parsing following content as json: " + messageString)
-        console.log(error)
+        console.log("error parsing JSON");
+        //console.log("error parsing following content as json: " + messageString)
+        //console.log(error)
         // maybe handle non json messages here but rather dont handle them :)
         //console.log(error)
     }

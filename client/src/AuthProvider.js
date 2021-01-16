@@ -24,7 +24,7 @@ const authProvider = {
                     avatar: null,
                     fullName: user.username
                 }));
-                localStorage.setItem('permissions', user.type? "admin" : "user")
+                localStorage.setItem('permissions', user.type || "guest")
             })
             .catch((error) => {
                 throw new Error(error)

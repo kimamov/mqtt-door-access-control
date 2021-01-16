@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
-import { Repository } from "typeorm";
+import { Repository, FindManyOptions } from "typeorm";
 
 
-export async function getList<T>(repo: Repository<T>, req: Request, res: Response){
+export async function getList<T>(repo: Repository<T>, req: Request, res: Response, extraOptions?: FindManyOptions){
     try {
         const options:any={}
         if(req.query.sort){
@@ -16,7 +16,7 @@ export async function getList<T>(repo: Repository<T>, req: Request, res: Respons
         }
         
 
-        const [result, total] = await repo.findAndCount(options)
+        const [result, total] = await repo.findAndCount(extraOptions? {...options, ...extraOptions} : options)
 
         const first=options.skip || 0;
         const last=options.first + options.take;

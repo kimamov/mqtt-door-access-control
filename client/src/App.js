@@ -15,6 +15,8 @@ import authProvider from './AuthProvider';
 import ReaderEdit from './components/reader/ReaderEdit';
 import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser} from '@material-ui/icons';
 import UserList from './components/user/UserList';
+import UserCreate from './components/user/UserCreate';
+import UserEdit from './components/user/UserEdit';
 
 
 const isAdmin=permissions=>{
@@ -37,7 +39,7 @@ function App() {
         <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,
         isAdmin(permissions) && <Resource icon={Event} name="event" list={EventList}   />,
         isAdmin(permissions) && <Resource icon={LockOpen} name="access" list={AccessList} />,
-        isAdmin(permissions) && <Resource icon={VerifiedUser} name="user" list={UserList} />,
+        isAdmin(permissions) && <Resource icon={VerifiedUser} name="user" list={UserList} create={UserCreate} edit={UserEdit}/>,
         /* TODO ADD USER RESOURCE */
         <Resource name="readerkey" />,
         <Resource name="devicekey" />

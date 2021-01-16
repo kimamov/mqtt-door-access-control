@@ -198,6 +198,7 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                     const messageJSON = JSON.parse(messageString)
                     if(messageJSON.cmd==="adduser"){
                         console.log("received key")
+                        console.log(messageJSON.uid);
                         const keyObj={
                             id: messageJSON.uid,
                             readerIp: reader.ip,
@@ -222,18 +223,20 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                             console.log("last answer was to long ago listener removed")
                             client.off('message', messageHandler);
                             gettingKeyList=false;
-    
+                            console.log(`keyCount=${keys.length}`)
                             res.set('Content-Range', `key ${0}-${keys.length-1}/${keys.length}`)
                             return res.send(keys); // send the response and return
     
-                        }, 2000);
+                        }, 8000);
                     }
 
             }
         
                 catch (error) {
-                    console.log("error parsing following content as json: " + message.toString())
-                    console.log(error)
+                    //console.log("error parsing following content as json: " + message.toString())
+                    //console.log(error)
+                    console.log("error parsing following content as json: " )
+
                     
                 }
             }
@@ -252,7 +255,7 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                 message: "looks like there are no keys on the reader"
             });
 
-        }, 4000);
+        }, 14000);
 
         client.on('message', messageHandler)
     } catch (error) {

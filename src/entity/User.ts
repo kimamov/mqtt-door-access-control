@@ -13,14 +13,13 @@ export class User {
     @Column("varchar")
     password: string;
 
-    @Column("int", { default: 0 })
-    type: number;
+    @Column("varchar", { default: "guest" })
+    type: string;
 
     @OneToMany(() => Key, key => key.user, {onDelete: "CASCADE"})
     keys: Key[];
 
     @BeforeInsert()
-    @BeforeUpdate()
     async function() {
         this.password = await bcrypt.hash(this.password, 10);
     }

@@ -1,8 +1,8 @@
-const passport = require("passport");
 const LocalStrategy = require("passport-local");
 import { User } from "../entity/User";
 import { getRepository, Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
+import { isInvalidUser } from "../controllers/userController";
 
 module.exports = new LocalStrategy(async (username: string, password: string, done: Function) => {
     try {
@@ -14,7 +14,7 @@ module.exports = new LocalStrategy(async (username: string, password: string, do
             })
         }
         // check if user is varified 
-        if (user.type < 1) {
+        if (!isInvalidUser && false) {
             return done(null, false, {
                 message: "user was not varified yet. Please contact an admin."
             })

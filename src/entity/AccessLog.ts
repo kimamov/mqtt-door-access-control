@@ -22,8 +22,7 @@ export class AccessLog {
     door: string;
 
 
-    @ManyToOne(()=> Reader, reader=> reader.accessLogs)
-    reader: Reader;
+    
 
     @Column("varchar", { length: 20, nullable: false })
     type: string;
@@ -34,6 +33,9 @@ export class AccessLog {
 
     @Column("timestamp")
     time: Date;
+
+    @ManyToOne(()=> Reader, reader=> reader.accessLogs, {cascade: true})
+    reader: Reader;
 
 
 }

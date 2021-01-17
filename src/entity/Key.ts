@@ -23,7 +23,7 @@ export class Key {
     @OneToMany(()=>ReaderKey, readerKey=>readerKey.key, {cascade: true})
     readerKeys: ReaderKey[];
 
-    @ManyToOne(()=>User, user=>user.keys)
+    @ManyToOne(()=>User, user=>user.keys, {cascade: true})
     user: User;
 
 }

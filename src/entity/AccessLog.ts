@@ -34,7 +34,7 @@ export class AccessLog {
     @Column("timestamp")
     time: Date;
 
-    @ManyToOne(()=> Reader, reader=> reader.accessLogs, {cascade: true})
+    @ManyToOne(()=> Reader, reader=> reader.accessLogs)
     reader: Reader;
 
 

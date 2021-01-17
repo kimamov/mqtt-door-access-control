@@ -9,13 +9,13 @@ export class ReaderKey {
 
     @PrimaryColumn()
     readerId: number;
-    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true, cascade: true})
+    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true})
     @JoinColumn({name: "readerId", referencedColumnName: "id"})
     reader: Reader;
 
     @PrimaryColumn()
     keyId: number;
-    @ManyToOne(() => Key, key => key.readerKeys, {primary: true, cascade: true})
+    @ManyToOne(() => Key, key => key.readerKeys, {primary: true})
     @JoinColumn({name: "keyId", referencedColumnName: "id"})
     key: Key;
     

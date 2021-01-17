@@ -24,6 +24,6 @@ export class Event {
     @Column("varchar", { nullable: false, length: 100 })
     door: string;
 
-    @ManyToOne(()=> Reader, reader=> reader.events, {cascade: true})
+    @ManyToOne(()=> Reader, reader=> reader.events)
     reader: Reader;
 }

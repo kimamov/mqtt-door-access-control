@@ -172,7 +172,7 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
         }
         const readerRepository: Repository<Reader> = getRepository(Reader);
         const reader=await readerRepository.findOne(readerId);
-        console.log(reader)
+        
         if(!reader){
             return res.status(404).send({message: `could not find reader with the provided id: ${readerId}`})
         }
@@ -180,11 +180,13 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
         if(!client.connected){
             return res.status(500).send({error: "connection to the MQTT client was lost"})
         }
+        const keyBatchLength=3;
         /* TODO: get the reader from the doorid then use its ip to the command */
         client.publish("devnfc", JSON.stringify({
-            /* cmd: "getuser", */
             cmd: "listusr",
             doorip: reader.ip,
+            skip: 0,
+            take: keyBatchLength  // get the first 3 keys on the controller
         }))
 
         gettingKeyList=true;
@@ -192,17 +194,25 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
         let timeout=null;
         const keys=[];
 
+        const sendResponse=()=>{ 
+            console.log("last answer was to long ago listener removed")
+            client.off('message', messageHandler);
+            gettingKeyList=false;
+            console.log(`keyCount=${keys.length}`)
+            res.set('Content-Range', `key ${0}-${keys.length-1}/${keys.length}`)
+            return res.send(keys); // send the response and return
+
+        }
     
         const messageHandler=(topic: string, message: Buffer)=> {
-            // message is Buffer
             if(topic==="devnfc/send" || topic==="/devnfc/send"){
 
                 try {
                     const messageString = message.toString()
                     const messageJSON = JSON.parse(messageString)
                     if(messageJSON.cmd==="adduser"){
-                        console.log("received key")
                         console.log(messageJSON.uid);
+
                         const keyObj={
                             id: messageJSON.uid,
                             readerIp: reader.ip,
@@ -223,27 +233,35 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                         console.log("timer extended after receiving new key")
                         
                         if(timeout) clearTimeout(timeout); // stop the timer
-                        timeout=setTimeout(()=>{ 
-                            // start a new timer. If it is not cleared / stopped in n seconds (2 here) by receiving a new message 
-                            // we can be pretty sure that we received all keys and can return the response
-                            console.log("last answer was to long ago listener removed")
-                            client.off('message', messageHandler);
-                            gettingKeyList=false;
-                            console.log(`keyCount=${keys.length}`)
-                            res.set('Content-Range', `key ${0}-${keys.length-1}/${keys.length}`)
-                            return res.send(keys); // send the response and return
-    
-                        }, 8000);
+                        timeout=setTimeout(sendResponse, 3000); // wait another 3 seconds for the next key or listUserState message
+
+                    }else if(messageJSON.cmd==="listUserState"){
+                        /* json["cmd"]="listUserState";
+                            json["done"]=false;
+                            json["lastIndex"]=i;  
+                        */
+                       if(timeout) clearTimeout(timeout);
+                       if(messageJSON.done){
+                            // if everything goes well we return the response from here
+                            if(timeout) clearTimeout(timeout);
+                            return sendResponse();
+                       }else{
+                            if(timeout) clearTimeout(timeout); 
+                            timeout=setTimeout(sendResponse, 3000);
+
+                            client.publish("devnfc", JSON.stringify({ // if done is not true get another batch of keys
+                                cmd: "listusr",
+                                doorip: reader.ip,
+                                skip: keys.length, // start the batch at keys.length
+                                take: keyBatchLength  // get the first 3 keys on the controller
+                            }))
+                       }
                     }
 
             }
-        
                 catch (error) {
-                    //console.log("error parsing following content as json: " + message.toString())
                     //console.log(error)
                     console.log("error parsing following content as json: " )
-
-                    
                 }
             }
         }
@@ -251,7 +269,7 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
         if(!client.connected){
             return res.status(500).send({error: "connection to the MQTT client was lost"})
         }
-        timeout=setTimeout(()=>{ // initialy give the device 4 seconds to return the first user otherwise there are no and return
+        timeout=setTimeout(()=>{ // initialy give the controller 6 seconds to return the first key otherwise there are no and we can return
             console.log("timed out and listener removed")
             client.off('message', messageHandler);
             gettingKeyList=false;
@@ -261,7 +279,7 @@ export async function generateAllReaderKeys(req: Request, res: Response) {
                 message: "looks like there are no keys on the reader"
             });
 
-        }, 14000);
+        }, 6000);
 
         client.on('message', messageHandler)
     } catch (error) {

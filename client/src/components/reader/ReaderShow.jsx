@@ -84,8 +84,8 @@ const ShowPropsExtractor=({children, ...props})=>{
                     <BooleanInput label="acctype2" source="acctype2"/>
                     <BooleanInput label="acctype3" source="acctype3"/>
                     <BooleanInput label="acctype4" source="acctype4"/>
-                    <BooleanInput label="acctype5" source="acctype4"/>
-                    <BooleanInput label="acctype6" source="acctype4"/>
+                    <BooleanInput label="acctype5" source="acctype5"/>
+                    <BooleanInput label="acctype6" source="acctype6"/>
                 </SimpleForm>
             </Create>
 

@@ -37,17 +37,17 @@ export class Reader {
     acctype6Name: string
 
 
-    @OneToMany(()=>AccessLog, access=>access.reader, {cascade: true})
+    @OneToMany(()=>AccessLog, access=>access.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     accessLogs: AccessLog[];
 
-    @OneToMany(()=>ControllerEvent, controllerEvent=>controllerEvent.reader, {cascade: true})
+    @OneToMany(()=>ControllerEvent, controllerEvent=>controllerEvent.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     events: ControllerEvent[];
 
-    @OneToMany(()=>NewKey, newKey=>newKey.reader, {cascade: true})
+    @OneToMany(()=>NewKey, newKey=>newKey.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     newKeys: NewKey[];
     
 
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, {cascade: true})
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     readerKeys: ReaderKey[];
 
     

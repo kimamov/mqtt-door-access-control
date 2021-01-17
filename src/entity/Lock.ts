@@ -12,7 +12,7 @@ export class Lock {
     @Column("varchar", { unique: true, length: 100, nullable: false })
     name: string;
 
-    @ManyToOne(()=> Building, building=> building.locks)
+    @ManyToOne(()=> Building, building=> building.locks, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     building: Building;
 
     

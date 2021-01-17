@@ -12,7 +12,9 @@ export class Building {
     @Column("varchar", { unique: true, length: 100, nullable: false })
     name: string;
 
-    @OneToMany(()=>Lock, lock=>lock.building, {cascade: true})
+    @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     locks: Lock[];
+
+    
 
 }

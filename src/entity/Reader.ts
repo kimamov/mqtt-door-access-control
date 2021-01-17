@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { AccessLog } from "./AccessLog";
 import { NewKey } from "./NewKey";
 import { ReaderKey } from "./ReaderKey";
+import {Event as ControllerEvent} from "./Event";
 
 @Entity()
 export class Reader {
@@ -38,6 +39,9 @@ export class Reader {
 
     @OneToMany(()=>AccessLog, access=>access.reader, {cascade: true})
     accessLogs: AccessLog[];
+
+    @OneToMany(()=>ControllerEvent, controllerEvent=>controllerEvent.reader, {cascade: true})
+    events: ControllerEvent[];
 
     @OneToMany(()=>NewKey, newKey=>newKey.reader, {cascade: true})
     newKeys: NewKey[];

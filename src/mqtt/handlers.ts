@@ -16,8 +16,8 @@ export default function messageHandler(topic: string, message: Buffer) {
     try {
         const messageJSON = JSON.parse(messageString)
 
-        console.log(topic)
-        console.log(messageJSON)
+        /* console.log(topic)
+        console.log(messageJSON) */
 
         // handle different topics
         switch (topic) {

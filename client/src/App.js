@@ -17,6 +17,8 @@ import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser} from '@mat
 import UserList from './components/user/UserList';
 import UserCreate from './components/user/UserCreate';
 import UserEdit from './components/user/UserEdit';
+import LockList from './components/lock/LockList';
+import BuildingList from './components/building/BuildingList';
 
 
 const isAdmin=permissions=>{
@@ -34,6 +36,8 @@ function App() {
   return (
     <Admin dataProvider={restProvider(serverAdress)} locale="en" authProvider={authProvider}>
       {permissions=>[
+        <Resource icon={Fingerprint} name="building" list={BuildingList}/>,
+        <Resource icon={Fingerprint} name="lock" list={LockList} options={{label: 'Locks'}}/>,
         <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controller'}}/>,
         <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,
         <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,

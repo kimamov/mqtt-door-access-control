@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
 import { AccessLog } from "./AccessLog";
 import { NewKey } from "./NewKey";
 import { ReaderKey } from "./ReaderKey";
 import {Event as ControllerEvent} from "./Event";
+import { Lock } from "./Lock";
 
 @Entity()
 export class Reader {
@@ -35,6 +36,12 @@ export class Reader {
 
     @Column("varchar", { default: "acctype6" })
     acctype6Name: string
+
+   
+
+    @OneToMany(() => Lock, lock => lock.reader) // specify inverse side as a second parameter
+    locks: Lock[];
+
 
 
     @OneToMany(()=>AccessLog, access=>access.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })

@@ -6,6 +6,8 @@ import { Key } from "../entity/Key";
 import getList from "../util/getList";
 import dateToUnix from "../util/dateToUnix";
 import { ReaderKey } from "../entity/ReaderKey";
+import { Lock } from "../entity/Lock";
+import { Building } from "../entity/Building";
 
 
 
@@ -13,17 +15,17 @@ import { ReaderKey } from "../entity/ReaderKey";
 
 
 
-export async function getReaders(req: Request, res: Response) {
-    getList(getRepository(Reader), req, res)
+export async function getLocks(req: Request, res: Response) {
+    getList(getRepository(Lock), req, res, {relations: ["building", "reader"]})
 }
 
-export async function getReaderWithKeys(req: Request, res: Response){
+export async function getLock(req: Request, res: Response){
     try {
         const {id}=req.params;
-        const result = await getRepository(Reader).findOne(id, {relations: ["readerKeys", "readerKeys.key", "locks"]})
+        const result = await getRepository(Lock).findOne(id, {relations: ["keys", "reader", "previousLocks", "nextLocks"]})
         
         if(!result){
-            return res.status(404).send({message: `could not find reader with the provided id ${id}`})
+            return res.status(404).send({message: `could not find lock with the provided id ${id}`})
         }
         return res.send(result);
     } catch (error) {
@@ -33,58 +35,40 @@ export async function getReaderWithKeys(req: Request, res: Response){
 }
 
 
-
-export async function addReaderKeys(req: Request, res: Response) {
-    // function creates a connection between the reader and key inside the database and sends it over to the reader
+export async function createLock(req: Request, res: Response) {
     try {
-        const { body } = req;
-        if (!(body.id && body.key_id)) throw "invalid request body"
-        // check if reader with that ip exists
-        const readerResult = await getRepository(Reader).findOneOrFail({ id: body.id})
-        // check if key with that id exists
-        const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
+        /* 
+        const {building_id, reader_id, ...lockRest}=req.body;
         
-        const readerKeyResult: ReaderKey=await getRepository(ReaderKey).save({
-            readerId: readerResult.id,
-            keyId: keyResult.id,
-            acctype: body.acctype || 0,
-            acctype2: body.acctype2 || 0,
-            acctype3: body.acctype3 || 0,
-            acctype4: body.acctype4 || 0,
-            acctype5: body.acctype5 || 0,
-            acctype6: body.acctype6 || 0,
-        })
-        
-        
-        if(!client.connected){
-            return res.status(500).send({error: "connection to the MQTT client was lost"})
-        }
-        client.publish('devnfc', JSON.stringify({
-            cmd: "adduser",
-            doorip: readerResult.ip,
-            uid: keyResult.uid,
-            user: keyResult.name,
-            acctype: readerKeyResult.acctype,
-            acctype2: readerKeyResult.acctype2,
-            acctype3: readerKeyResult.acctype3,
-            acctype4: readerKeyResult.acctype4,
-            acctype5: readerKeyResult.acctype5,
-            acctype6: readerKeyResult.acctype6,
-            validuntil: dateToUnix(keyResult.validUntil)
-        })) 
+        const lock=getRepository(Lock).create(lockRest);
 
-        return res.send({
-            message: "successfully created"
-        })
+        
+
+        if(building_id){
+            const building=await getRepository(Building).findOne(building_id);
+            if(building){
+                lock.building=building;
+            }
+        }
+        if(reader_id){
+            const reader=await getRepository(Reader).findOne(reader_id);
+            if(reader){
+                lock.reader=reader;
+            }
+        } */
+
+        const result=await getRepository(Lock).save(req.body);
+        res.send(result)
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({
-            error: "failed to create link"
+        res.status(500).send({
+            error: error
         })
     }
+
 }
 
-export async function editReaderKeys(req: Request, res: Response) {
+
+export async function editLock(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const readerId=req.params.id;

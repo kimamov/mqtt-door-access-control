@@ -6,6 +6,8 @@ import { Key } from "../entity/Key";
 import getList from "../util/getList";
 import dateToUnix from "../util/dateToUnix";
 import { ReaderKey } from "../entity/ReaderKey";
+import { Lock } from "../entity/Lock";
+import { Building } from "../entity/Building";
 
 
 
@@ -13,17 +15,17 @@ import { ReaderKey } from "../entity/ReaderKey";
 
 
 
-export async function getReaders(req: Request, res: Response) {
-    getList(getRepository(Reader), req, res)
+export async function getBuildings(req: Request, res: Response) {
+    getList(getRepository(Building), req, res)
 }
 
-export async function getReaderWithKeys(req: Request, res: Response){
+export async function getBuilding(req: Request, res: Response){
     try {
         const {id}=req.params;
-        const result = await getRepository(Reader).findOne(id, {relations: ["readerKeys", "readerKeys.key", "locks"]})
+        const result = await getRepository(Building).findOne(id, {relations: ["locks"]})
         
         if(!result){
-            return res.status(404).send({message: `could not find reader with the provided id ${id}`})
+            return res.status(404).send({message: `could not find building with the provided id ${id}`})
         }
         return res.send(result);
     } catch (error) {
@@ -34,7 +36,7 @@ export async function getReaderWithKeys(req: Request, res: Response){
 
 
 
-export async function addReaderKeys(req: Request, res: Response) {
+export async function addLock(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const { body } = req;
@@ -84,7 +86,7 @@ export async function addReaderKeys(req: Request, res: Response) {
     }
 }
 
-export async function editReaderKeys(req: Request, res: Response) {
+export async function editLock(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const readerId=req.params.id;

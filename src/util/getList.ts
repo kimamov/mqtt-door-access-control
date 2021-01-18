@@ -14,7 +14,17 @@ export async function getList<T>(repo: Repository<T>, req: Request, res: Respons
             options.skip=first;
             options.take=last - first;
         }
-        
+        if(req.query.filter && req.query.filter!=="{}"){
+            try {
+                const parsedFilter=JSON.parse(req.query.filter as string);
+                options.where=parsedFilter;
+                //console.log("filter applied to getList");
+            } catch (_error) {
+                //console.log(error)
+            }
+            
+        }
+        await repo.findAndCount({where: {id: 1}})
 
         const [result, total] = await repo.findAndCount(extraOptions? {...options, ...extraOptions} : options)
 

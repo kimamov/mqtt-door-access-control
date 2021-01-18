@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { Lock } from "./Lock";
 import { ReaderKey } from "./ReaderKey";
 import { User } from "./User";
 
@@ -25,5 +26,8 @@ export class Key {
 
     @ManyToOne(()=>User, user=>user.keys, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     user: User;
+
+    @ManyToOne(()=>Lock, lock=>lock.keys, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    lock: Lock;
 
 }

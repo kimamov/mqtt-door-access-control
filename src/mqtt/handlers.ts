@@ -34,13 +34,13 @@ export default function messageHandler(topic: string, message: Buffer) {
                 //handleDoorKeyList(messageJSON);
                 handleAccessAndEvent(messageJSON);
                 break;
-            case "devnfc/accesslist":
-            /* case "/devnfc/accesslist":
+            /* case "devnfc/accesslist":
+            case "/devnfc/accesslist":
                 handleDoorKeyList(messageJSON);
                 break; */
-            case "devnfc/#":
+            /* case "devnfc/#":
             case "/devnfc/#":
-                console.log("messageJSON")
+                console.log("messageJSON") */
             default:
                 console.warn("there is no handler for this topic either create one or consider unsubscribing from it");
                 break;

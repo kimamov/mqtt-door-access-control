@@ -311,7 +311,7 @@ export async function deleteAllKeys(req: Request, res: Response){
 
 
 export async function syncAllKeys(req: Request, res: Response){
-    // first delete all key off the reader
+    // tells the device to delete all its users/keys waits for it to finish then sends keys from our db one by one
     const {id}=req.params;
     const readerResult = await getRepository(Reader).findOne(id, {relations: ["readerKeys", "readerKeys.key"]})
 
@@ -321,47 +321,94 @@ export async function syncAllKeys(req: Request, res: Response){
     if(!client.connected){
         return res.status(500).send({error: "connection to the MQTT client was lost"})
     }
+    
+    let deviceDeletingUsers=true;
+    let addedUserCount=0;
+
+    if(!readerResult.readerKeys || !readerResult.readerKeys.length){
+        return res.status(404).send({message: `looks like the reader does not have any keys related to it in the database`})
+    }
+
+    const sendUserToDevice=(readerKey)=>{
+        if(client.connected && readerKey.key){
+            client.publish('devnfc', JSON.stringify({
+                cmd: "adduser",
+                doorip: readerResult.ip,
+                uid: readerKey.key.uid,
+                user: readerKey.key.name,
+                acctype: readerKey.acctype,
+                acctype2: readerKey.acctype2,
+                acctype3: readerKey.acctype3,
+                acctype4: readerKey.acctype4,
+                acctype5: readerKey.acctype5,
+                acctype6: readerKey.acctype6,
+                validuntil: dateToUnix(readerKey.key.validUntil)
+            }))
+        }
+
+    }
+
+    const sendResponse=()=>{
+        // remove the handler
+        client.off("message", mqttMessageHandler); 
+        // send response to the client and return
+        return res.send({message: `started syncing ${addedUserCount} to the device ${readerResult.readerName}`})
+    }
+
+    let mqttTimeout; 
+    const mqttMaxResponseTime: number=4000; // give the device max 4 seconds between messages and otherwise return
+
+
+    const mqttMessageHandler=(topic: string, message: Buffer)=> {
+        if(topic==="devnfc/devicestate" || topic==="/devnfc/devicestate"){
+            const messageString = message.toString()
+            const messageJSON = JSON.parse(messageString)
+            if(messageJSON.deviceName===readerResult.readerName){ // make sure message comes from the same controller
+                if(deviceDeletingUsers){
+                    if(messageJSON.cmd==="deleteAllUsersState"){
+                        // once deleting is done we can send the first user
+                        deviceDeletingUsers=false;
+                        const readerKey=readerResult.readerKeys[0]
+                        sendUserToDevice(readerKey);
+                        console.log("finished deleting users")
+                    }
+                }else if(messageJSON.cmd==="dbUserAdded"){
+                    // first dbUserAdded message means our first user was added so increment the counter
+                    addedUserCount++; 
+                    if(readerResult.readerKeys.length === addedUserCount){
+                        // once length is the same we are successfully done
+                        console.log("finished syncing keys");
+                        return sendResponse();
+                    }else {
+                        console.log("sending next user");
+                        const readerKey=readerResult.readerKeys[addedUserCount]
+                        sendUserToDevice(readerKey);
+                    }
+                    
+                }
+                console.log(messageJSON);
+                // everytime we receive a valid message from the device we reset the timer
+                clearTimeout(mqttTimeout);
+                mqttTimeout=setTimeout(sendResponse, mqttMaxResponseTime);
+            }
+            
+        }
+    }
+
+    // start listening for delete user and create user state updates from the device
+    client.on("message", mqttMessageHandler)
+
+    // tell the device to start deleting all the users
     client.publish('devnfc', JSON.stringify({
         cmd: "deletusers",
         doorip: readerResult.ip,
         doorname: readerResult.readerName
-    }))
-    /* create listener that waits for delete done identify the reader by name and send code */
+    }));
 
-    const deleteWaitTime=readerConfig.deleteTime; // lets give the reader some time to delete all the keys
-    await wait(deleteWaitTime); 
-    
-   
-    if(readerResult.readerKeys && readerResult.readerKeys.length){
-        const delay=readerConfig.syncTime;
-        const keyCount=readerResult.readerKeys.length;
-        const totalTime=delay*keyCount;
-        //readerResult.keys.forEach()
-        for(let readerKey of readerResult.readerKeys){
-            if(client.connected && readerKey.key){
-                // if we are connected we send each key to the reader with delay of 0.3s
-                await wait(delay);
-                client.publish('devnfc', JSON.stringify({
-                    cmd: "adduser",
-                    doorip: readerResult.ip,
-                    uid: readerKey.key.uid,
-                    user: readerKey.key.name,
-                    acctype: readerKey.acctype,
-                    acctype2: readerKey.acctype2,
-                    acctype3: readerKey.acctype3,
-                    acctype4: readerKey.acctype4,
-                    acctype5: readerKey.acctype5,
-                    acctype6: readerKey.acctype6,
-                    validuntil: dateToUnix(readerKey.key.validUntil)
-                }))
-            }
-        }
-        const timeInSeconds=(totalTime+deleteWaitTime) / 1000;
-        return res.send({message: `started syncing ${keyCount} keys to the reader it should be done in ${timeInSeconds} seconds`, time: timeInSeconds})
+    // after starting our event chain by publishing deleteuser
+    // we give the device 4 seconds to return a message and otherwise return early
+    mqttTimeout=setTimeout(sendResponse, mqttMaxResponseTime)
 
-    }else {
-        return res.status(404).send({message: `looks like the reader does not have any keys related to it in the database`})
-    }
 
  
 }

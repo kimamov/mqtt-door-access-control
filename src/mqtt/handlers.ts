@@ -69,18 +69,18 @@ async function handleHeartBeat(messageJSON) {
         if(foundReader){
             /* if there already is a reader with that name and ip update it */
             foundReader.lastPing=lastPingDateTime;
-            const result=await readerRepo.save(foundReader);
+            await readerRepo.save(foundReader);
+            console.log("updated reader");
             //console.log(result)
         }else {
             /* otherwise create a new one */
-            const reader = await readerRepo.create({
+            const reader = readerRepo.create({
                 ip: ip,
                 lastPing: lastPingDateTime,  // transform unix timestamp to date
                 readerName: door
             });
-            const result = await readerRepo.save(reader)
-            /* console.log(result)
-            console.log("new reader but wont create it") */
+            await readerRepo.save(reader)
+            console.log("created new reader")
         }
         
     } catch (error) {
@@ -225,34 +225,6 @@ async function handleUnknownKey(messageJSON) {
 }
 
 
-
-async function handleDoorKeyListOld(messageJSON) {
-
-    const keyObject={
-        data: messageJSON.data,
-        type: messageJSON.type,
-        src: messageJSON.src,
-        time: dateFromUnix(messageJSON.time),
-        door: messageJSON.door,
-        description: messageJSON.desc
-    }
-    try {
-        // store all incoming events in the database
-        const eventRepo: Repository<Event> = getRepository(Event);
-
-        const result = await eventRepo.save({
-            data: messageJSON.data,
-            type: messageJSON.type,
-            src: messageJSON.src,
-            time: dateFromUnix(messageJSON.time),
-            door: messageJSON.door,
-            description: messageJSON.desc
-        })
-        console.log(result)
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 
 

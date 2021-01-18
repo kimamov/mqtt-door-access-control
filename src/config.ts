@@ -23,9 +23,9 @@ export const mqttConfig={
 
 
 export const readerConfig={
-    deleteTime: 2000,
-    syncTime: 300,
-    readerListWaitTime:  2000,
+    deleteTime: 4000,
+    syncTime: 600,
+    readerListWaitTime:  4000,
 }
 
 export const serverConfig={

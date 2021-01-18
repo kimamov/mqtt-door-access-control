@@ -1,7 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
 import { AccessLog } from "./AccessLog";
 import { NewKey } from "./NewKey";
 import { ReaderKey } from "./ReaderKey";
+import {Event as ControllerEvent} from "./Event";
+import { Lock } from "./Lock";
 
 @Entity()
 export class Reader {
@@ -35,15 +37,24 @@ export class Reader {
     @Column("varchar", { default: "acctype6" })
     acctype6Name: string
 
+   
 
-    @OneToMany(()=>AccessLog, access=>access.reader, {cascade: true})
+    @OneToMany(() => Lock, lock => lock.reader) // specify inverse side as a second parameter
+    locks: Lock[];
+
+
+
+    @OneToMany(()=>AccessLog, access=>access.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     accessLogs: AccessLog[];
 
-    @OneToMany(()=>NewKey, newKey=>newKey.reader, {cascade: true})
+    @OneToMany(()=>ControllerEvent, controllerEvent=>controllerEvent.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    events: ControllerEvent[];
+
+    @OneToMany(()=>NewKey, newKey=>newKey.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     newKeys: NewKey[];
     
 
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, {cascade: true})
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     readerKeys: ReaderKey[];
 
     

@@ -54,8 +54,8 @@ export async function openDoor(req: Request, res: Response){
             acctype2: port===2? 1 : 0,
             acctype3: port===3? 1 : 0,
             acctype4: port===4? 1 : 0,
-            acctype5: port===4? 1 : 0,
-            acctype6: port===4? 1 : 0,
+            acctype5: port===5? 1 : 0,
+            acctype6: port===6? 1 : 0,
         }))
         res.send({message: "succes"})
     } catch (error) {
@@ -107,10 +107,10 @@ export async function generateReaderKeys(req: Request, res: Response) {
                         readerId: reader.id,
                         uid: messageJSON.uid,
                         name: messageJSON.user,
-                        acctype: messageJSON.acctype || 0,
-                        acctype2: messageJSON.acctype2  || 0,
-                        acctype3: messageJSON.acctype3 || 0,
-                        acctype4: messageJSON.acctype4 || 0,
+                        acctype: messageJSON.acctype? 1 : 0,
+                        acctype2: messageJSON.acctype2? 1 : 0,
+                        acctype3: messageJSON.acctype3? 1 : 0,
+                        acctype4: messageJSON.acctype4? 1 : 0,
                         acctype5: messageJSON.acctype5? 1 : 0,
                         acctype6: messageJSON.acctype6? 1 : 0,
                         validUntil: dateFromUnix(messageJSON.validuntil)
@@ -307,6 +307,8 @@ export async function deleteAllKeys(req: Request, res: Response){
     res.send({message: `successfully deleted all keys on the reader with the ip: ${readerResult.ip} and name: ${readerResult.readerName}`})
 }
 
+// add delete for single user
+
 
 export async function syncAllKeys(req: Request, res: Response){
     // first delete all key off the reader
@@ -324,6 +326,7 @@ export async function syncAllKeys(req: Request, res: Response){
         doorip: readerResult.ip,
         doorname: readerResult.readerName
     }))
+    /* create listener that waits for delete done identify the reader by name and send code */
 
     const deleteWaitTime=readerConfig.deleteTime; // lets give the reader some time to delete all the keys
     await wait(deleteWaitTime); 

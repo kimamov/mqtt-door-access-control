@@ -13,10 +13,14 @@ import AccessList from './components/access/AccessList'
 import { NewKeyList } from './components/newKey/NewKeyList';
 import authProvider from './AuthProvider';
 import ReaderEdit from './components/reader/ReaderEdit';
-import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser} from '@material-ui/icons';
+import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser, LocationCity, Lock} from '@material-ui/icons';
 import UserList from './components/user/UserList';
 import UserCreate from './components/user/UserCreate';
 import UserEdit from './components/user/UserEdit';
+import LockList from './components/lock/LockList';
+import LockCreate from './components/lock/LockCreate';
+import BuildingList from './components/building/BuildingList';
+import BuildingCreate from './components/building/BuildingCreate';
 
 
 const isAdmin=permissions=>{
@@ -34,7 +38,9 @@ function App() {
   return (
     <Admin dataProvider={restProvider(serverAdress)} locale="en" authProvider={authProvider}>
       {permissions=>[
-        <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controller'}}/>,
+        <Resource icon={LocationCity} name="building" list={BuildingList} create={BuildingCreate}/>,
+        <Resource icon={Lock} name="lock" list={LockList} create={LockCreate} options={{label: 'Locks'}}/>,
+        <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controllers'}}/>,
         <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,
         <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,
         isAdmin(permissions) && <Resource icon={Event} name="event" list={EventList}   />,

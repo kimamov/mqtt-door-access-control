@@ -16,7 +16,7 @@ export class User {
     @Column("varchar", { default: "guest" })
     type: string;
 
-    @OneToMany(() => Key, key => key.user, {onDelete: "CASCADE"})
+    @OneToMany(() => Key, key => key.user, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     keys: Key[];
 
     @BeforeInsert()

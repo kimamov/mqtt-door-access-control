@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, ManyToOne } from "typeorm";
+import { Reader } from "./Reader";
 
 @Entity()
 export class Event {
@@ -22,4 +23,7 @@ export class Event {
 
     @Column("varchar", { nullable: false, length: 100 })
     door: string;
+
+    @ManyToOne(()=> Reader, reader=> reader.events)
+    reader: Reader;
 }

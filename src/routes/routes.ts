@@ -7,6 +7,8 @@ import { getReaders, addReaderKeys, getReaderWithKeys, editReaderKeys } from '..
 import  {signUp, editUser, getUsers, getUserById } from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
+import { createLock, getLock, getLocks } from '../controllers/lockController';
+import { getBuildings, getBuilding, createBuilding } from '../controllers/buildingController';
 /* import { client } from '../mqtt/connection';
  */
 
@@ -54,6 +56,25 @@ router.put("/user/:id", editUser)
 router.post("/user", signUp);
 
 
+router.get("/building"/* , checkAuth */, getBuildings)
+
+router.get("/building/:id", getBuilding)
+
+router.post("/building"/* , checkAuth */, createBuilding)
+
+
+
+router.post("/lock"/* , checkAuth */, createLock)
+
+router.get("/lock"/* , checkAuth */, getLocks)
+
+router.get("/lock/:id", getLock)
+
+/* router.put("/key/:id", editKey)
+
+router.delete("/key/:id", deleteKey) */
+
+
 // TODO: split the routes into different files
 router.post("/key"/* , checkAuth */, addKey)
 
@@ -64,6 +85,8 @@ router.get("/key/:id", getKey)
 router.put("/key/:id", editKey)
 
 router.delete("/key/:id", deleteKey)
+
+
 
 
 

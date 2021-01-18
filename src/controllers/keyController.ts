@@ -41,6 +41,7 @@ export async function getKeys(req: Request, res: Response) {
 }
 
 export async function getKey(req: Request, res: Response){
+    console.log("was called")
     try {
         const keyResult=await getRepository(Key).findOne(req.params.id, {relations: ["readerKeys", "readerKeys.reader"]});
         if(!keyResult) return res.status(404).send({message: `could not find key with id: ${req.params.id}`})

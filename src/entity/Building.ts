@@ -12,7 +12,7 @@ export class Building {
     @Column("varchar", { unique: true, length: 100, nullable: false })
     name: string;
 
-    @Column("varchar", { unique: true, length: 100, nullable: false })
+    @Column("varchar", { unique: true, length: 100, nullable: true })
     thumbnailSrc: string;
 
     @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })

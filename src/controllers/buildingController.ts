@@ -35,58 +35,19 @@ export async function getBuilding(req: Request, res: Response){
 }
 
 
-
-export async function addLock(req: Request, res: Response) {
-    // function creates a connection between the reader and key inside the database and sends it over to the reader
+export async function createBuilding(req: Request, res: Response) {
     try {
-        const { body } = req;
-        if (!(body.id && body.key_id)) throw "invalid request body"
-        // check if reader with that ip exists
-        const readerResult = await getRepository(Reader).findOneOrFail({ id: body.id})
-        // check if key with that id exists
-        const keyResult: Key = await getRepository(Key).findOneOrFail({ id: body.key_id })
-        
-        const readerKeyResult: ReaderKey=await getRepository(ReaderKey).save({
-            readerId: readerResult.id,
-            keyId: keyResult.id,
-            acctype: body.acctype || 0,
-            acctype2: body.acctype2 || 0,
-            acctype3: body.acctype3 || 0,
-            acctype4: body.acctype4 || 0,
-            acctype5: body.acctype5 || 0,
-            acctype6: body.acctype6 || 0,
-        })
-        
-        
-        if(!client.connected){
-            return res.status(500).send({error: "connection to the MQTT client was lost"})
-        }
-        client.publish('devnfc', JSON.stringify({
-            cmd: "adduser",
-            doorip: readerResult.ip,
-            uid: keyResult.uid,
-            user: keyResult.name,
-            acctype: readerKeyResult.acctype,
-            acctype2: readerKeyResult.acctype2,
-            acctype3: readerKeyResult.acctype3,
-            acctype4: readerKeyResult.acctype4,
-            acctype5: readerKeyResult.acctype5,
-            acctype6: readerKeyResult.acctype6,
-            validuntil: dateToUnix(keyResult.validUntil)
-        })) 
-
-        return res.send({
-            message: "successfully created"
-        })
+        const result=await getRepository(Building).save(req.body);
+        res.send(result)
     } catch (error) {
-        console.log(error)
-        return res.status(500).send({
-            error: "failed to create link"
+        res.status(500).send({
+            error: error
         })
     }
+
 }
 
-export async function editLock(req: Request, res: Response) {
+export async function editBuilding(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const readerId=req.params.id;

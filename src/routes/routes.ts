@@ -8,7 +8,7 @@ import  {signUp, editUser, getUsers, getUserById } from '../controllers/userCont
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
 import { createLock, getLock, getLocks } from '../controllers/lockController';
-import { getBuildings, getBuilding } from '../controllers/buildingController';
+import { getBuildings, getBuilding, createBuilding } from '../controllers/buildingController';
 /* import { client } from '../mqtt/connection';
  */
 
@@ -59,6 +59,8 @@ router.post("/user", signUp);
 router.get("/building"/* , checkAuth */, getBuildings)
 
 router.get("/building/:id", getBuilding)
+
+router.post("/building"/* , checkAuth */, createBuilding)
 
 
 

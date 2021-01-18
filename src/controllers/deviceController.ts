@@ -307,6 +307,8 @@ export async function deleteAllKeys(req: Request, res: Response){
     res.send({message: `successfully deleted all keys on the reader with the ip: ${readerResult.ip} and name: ${readerResult.readerName}`})
 }
 
+// add delete for single user
+
 
 export async function syncAllKeys(req: Request, res: Response){
     // first delete all key off the reader
@@ -324,6 +326,7 @@ export async function syncAllKeys(req: Request, res: Response){
         doorip: readerResult.ip,
         doorname: readerResult.readerName
     }))
+    /* create listener that waits for delete done identify the reader by name and send code */
 
     const deleteWaitTime=readerConfig.deleteTime; // lets give the reader some time to delete all the keys
     await wait(deleteWaitTime); 

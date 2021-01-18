@@ -9,27 +9,29 @@ export class Lock {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", { unique: true, length: 100, nullable: false })
+    @Column("varchar", { length: 100, nullable: false, default: "unbekanntes Schloss" })
     name: string;
 
-    @Column("varchar", { unique: true, length: 100, nullable: false, default: "room" })
+    @Column("varchar", { length: 100, nullable: false, default: "room" })
     type: string;
-
-    @ManyToOne(()=> Building, building=> building.locks, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    public building: Building;
-
-
-    @ManyToOne(()=> Reader, reader=> reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-    public reader: Reader;
 
     @Column("int", { default: 1 })
     slot: number
 
-    /* @ManyToMany(()=>Lock, lock=>lock.nextLocks)
-    previousLocks: Lock[];
+    @Column({ type: "int", nullable: true })
+    buildingId: number;
 
-    @ManyToMany(()=>Lock, lock=>lock.previousLocks)
-    nextLocks: Lock[]; */
+    @ManyToOne(()=> Building, building=> building.locks, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @JoinColumn({name: "buildingId"})
+    public building: Building;
+
+    @Column({ type: "int", nullable: true })
+    readerId: number;
+
+    @ManyToOne(()=> Reader, reader=> reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @JoinColumn({name: "readerId"})
+    public reader: Reader;
+
 
     @ManyToMany(type => Lock, lock => lock.previousLocks)
     @JoinTable()

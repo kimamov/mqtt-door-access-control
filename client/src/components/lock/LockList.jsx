@@ -12,10 +12,10 @@ export const LockList = (props) => (
             <TextField source="name"/>
             <TextField source="type" />
             <NumberField source="slot"/>
-            <ReferenceField label="Building" reference="building" source="building.id" link="show">
+            <ReferenceField label="Building" reference="building" source="buildingId" link="show">
                 <TextField source="name"/>
             </ReferenceField>
-            <ReferenceField label="Reader" reference="reader" source="reader.id"  link="show">
+            <ReferenceField label="Reader" reference="reader" source="readerId"  link="show">
                 <TextField source="readerName"/>
             </ReferenceField>
             <EditButton/>

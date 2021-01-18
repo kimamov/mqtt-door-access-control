@@ -16,7 +16,7 @@ import { Building } from "../entity/Building";
 
 
 export async function getLocks(req: Request, res: Response) {
-    getList(getRepository(Lock), req, res, {relations: ["building", "reader"]})
+    getList(getRepository(Lock), req, res)
 }
 
 export async function getLock(req: Request, res: Response){

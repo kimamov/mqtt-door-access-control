@@ -55,6 +55,15 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextField source="readerName" />
             <TextField source="ip" />
             <DateField source="lastPing" showTime locales="de"/>
+
+            
+            <ArrayField label="CONNECTED LOCKS" source="locks" >
+                <Datagrid>
+                    <TextField label="name" source="name" />
+                    <NumberField source="slot" />
+                </Datagrid>
+            </ArrayField>
+
             <TextButtonField onClick={()=>openDoor(1)} label="Relay 1 (acctype)" variant="contained" source="acctypeName">
                 <LockOpen/>
             </TextButtonField>

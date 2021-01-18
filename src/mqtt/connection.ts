@@ -10,11 +10,11 @@ export const setupMqtt = () => {
 
     client.on("error", (err) => console.log(err))
     client.on('connect', function () {
+        // devnfc/devicestate
         client.subscribe('devnfc/#', function (err) {
-            
-        })
-        client.subscribe('devnfc', function (err) {
-            if (!err) {
+            if(err){
+                console.log("mqtt could not subscribe to devnfc/#");
+                throw err;
             }
         })
     })

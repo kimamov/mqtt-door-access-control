@@ -40,7 +40,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             const json=await response.json();
             dispatch(fetchEnd());
             notify(json.message? json.message :`reader ${data.id} deleted all keys. Reader keys will be refreshed shortly`, "info")
-            setTimeout(refresh, 1000);
+            setTimeout(refresh, 4000);
         } catch (error) {
             dispatch(fetchEnd());
             console.log(error)
@@ -58,7 +58,7 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
             dispatch(fetchEnd());
             //notify(json.message? json.message :`reader ${data.id} synced all keys`, "info")
             notify(`reader ${data.id} synced all keys`, "info");
-            setTimeout(refresh, 800);
+            setTimeout(refresh, 6000);
         } catch (error) {
             dispatch(fetchEnd());
             console.log(error)

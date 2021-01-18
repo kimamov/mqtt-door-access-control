@@ -47,7 +47,7 @@ const ShowPropsExtractor=({children, ...props})=>{
 
     const onSuccess = () => {
         notify(`successfully added key to reader`)
-        refresh();
+        //refresh();
     };
 
     return (

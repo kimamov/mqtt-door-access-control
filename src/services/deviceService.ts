@@ -94,13 +94,9 @@ export function deleteDeviceKeys(reader: Reader, keys: ReaderKey[]): Promise<voi
                             // otherwise we are done
                             cleanupAndResolve();
                         }
-                        
                         console.log(messageJSON);
-                        
                     }
-                    
                 }
-                
             }
         }
     

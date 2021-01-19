@@ -6,6 +6,7 @@ import { Key } from "../entity/Key";
 import getList from "../util/getList";
 import dateToUnix from "../util/dateToUnix";
 import { ReaderKey } from "../entity/ReaderKey";
+import { updateDeviceKeys } from "../services/deviceService";
 
 
 
@@ -96,8 +97,9 @@ export async function editReaderKeys(req: Request, res: Response) {
             return res.status(400).send({error: "invalid request an array readerKeys is required"})
         }
         
+        updateDeviceKeys(readerId, body.readerKeys);
         // there has to be a better option then deleting all the relationships before adding new but this should do for now
-        getRepository(ReaderKey)
+        await getRepository(ReaderKey)
             .createQueryBuilder()
             .delete()
             .from(ReaderKey)
@@ -106,7 +108,7 @@ export async function editReaderKeys(req: Request, res: Response) {
         
         // check if reader with that ip exists
         const readerRepo=getRepository(Reader)
-        const readerResult = await readerRepo.findOne(readerId, {relations: ["readerKeys"]})
+        const readerResult = await readerRepo.findOne(readerId, {relations: ["readerKeys", "readerKeys.key"]})
 
         if (!readerResult) throw "no door found"
 
@@ -120,7 +122,7 @@ export async function editReaderKeys(req: Request, res: Response) {
         readerResult.acctype5Name=body.acctype5Name  || "";
         readerResult.acctype6Name=body.acctype6Name  || "";
 
-        readerResult.readerKeys=body.readerKeys;
+        readerResult.readerKeys=[...body.readerKeys];
 
         await readerRepo.save(readerResult)
 

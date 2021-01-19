@@ -9,7 +9,7 @@ export class ReaderKey {
 
     @PrimaryColumn()
     readerId: number;
-    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true})
+    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true, persistence: false})
     @JoinColumn({name: "readerId", referencedColumnName: "id"})
     reader: Reader;
 

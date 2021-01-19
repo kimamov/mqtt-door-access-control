@@ -70,7 +70,7 @@ async function handleHeartBeat(messageJSON) {
             /* if there already is a reader with that name and ip update it */
             foundReader.lastPing=lastPingDateTime;
             await readerRepo.save(foundReader);
-            console.log("updated reader");
+            //console.log("updated reader");
             //console.log(result)
         }else {
             /* otherwise create a new one */
@@ -80,7 +80,7 @@ async function handleHeartBeat(messageJSON) {
                 readerName: door
             });
             await readerRepo.save(reader)
-            console.log("created new reader")
+            //console.log("created new reader")
         }
         
     } catch (error) {

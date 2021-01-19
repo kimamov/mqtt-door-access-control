@@ -54,7 +54,7 @@ export class Reader {
     newKeys: NewKey[];
     
 
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { /* onDelete: 'CASCADE', onUpdate: 'CASCADE',  */cascade: true })
     readerKeys: ReaderKey[];
 
     

@@ -21,7 +21,7 @@ export class Key {
     isOneTimeCode: boolean
 
     
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.key, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.key, { /* onDelete: 'CASCADE', onUpdate: 'CASCADE', */ cascade: true })
     readerKeys: ReaderKey[];
 
     @ManyToOne(()=>User, user=>user.keys, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })

@@ -1,8 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { AccessLog } from "./AccessLog";
+import { Apartment } from "./Apartment";
 import { Lock } from "./Lock";
-import { NewKey } from "./NewKey";
-import { ReaderKey } from "./ReaderKey";
 
 @Entity()
 export class Building {
@@ -17,6 +15,9 @@ export class Building {
 
     @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     locks: Lock[];
+
+    @OneToMany(()=>Apartment, apartment=>apartment.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    apartments: Apartment[];
 
     
 

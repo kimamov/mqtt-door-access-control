@@ -8,11 +8,18 @@ export class Apartment {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", { length: 100, nullable: false, default: "unbekanntes Schloss" })
+    @Column("varchar", { length: 100, nullable: false, default: "unbekannte Wohnung" })
     name: string;
 
     @Column("varchar", { nullable: true })
     info: string;
+
+    @Column({ type: "int", nullable: true })
+    apartmentLockId: number;
+
+    @ManyToOne(()=> Lock)
+    @JoinColumn({name: "apartmentLockId"})
+    public apartmentLock: Lock;
 
 
     @Column({ type: "int", nullable: true })

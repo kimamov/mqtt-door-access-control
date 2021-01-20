@@ -19,6 +19,12 @@ export class Lock {
     @Column("int", { default: 1 })
     slot: number
 
+    @Column("boolean", { default: false })
+    open: boolean
+
+    @Column("boolean", { default: false })
+    taken: boolean
+
     @Column({ type: "int", nullable: true })
     buildingId: number;
 

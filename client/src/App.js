@@ -22,6 +22,8 @@ import LockCreate from './components/lock/LockCreate';
 import BuildingList from './components/building/BuildingList';
 import BuildingCreate from './components/building/BuildingCreate';
 import Dashboard from './components/dashboard';
+import ApartmentCreate from './components/apartment/ApartmentCreate';
+import ApartmentList from './components/apartment/ApartmentList';
 
 
 const isAdmin=permissions=>{
@@ -40,6 +42,7 @@ function App() {
     <Admin dataProvider={restProvider(serverAdress)} dashboard={Dashboard} locale="en" authProvider={authProvider}>
       {permissions=>[
         <Resource icon={LocationCity} name="building" list={BuildingList} create={BuildingCreate}/>,
+        <Resource icon={LocationCity} name="apartment" list={ApartmentList} create={ApartmentCreate}/>,
         <Resource icon={Lock} name="lock" list={LockList} create={LockCreate} options={{label: 'Locks'}}/>,
         <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controllers'}}/>,
         <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,

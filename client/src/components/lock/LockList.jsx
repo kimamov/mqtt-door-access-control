@@ -15,6 +15,9 @@ export const LockList = (props) => (
             <ReferenceField label="Building" reference="building" source="buildingId" link="show">
                 <TextField source="name"/>
             </ReferenceField>
+            <ReferenceField label="Apartment" reference="apartment" source="apartmentId" link="show">
+                <TextField source="name"/>
+            </ReferenceField>
             <ReferenceField label="Reader" reference="reader" source="readerId"  link="show">
                 <TextField source="readerName"/>
             </ReferenceField>

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField, useNotify, useRefresh, BooleanInput } from 'react-admin';
 import { LockOpen} from '@material-ui/icons';
 import ReaderShowActions from './ReaderShowActions'
 import TextButtonField from '../customFields/TextButtonField';
+import { Button } from '@material-ui/core';
 
 
 const KeyEditToolbar = props => (
@@ -14,7 +15,7 @@ const KeyEditToolbar = props => (
 const ShowPropsExtractor=({children, ...props})=>{
     const notify=useNotify();
     const refresh=useRefresh();
-    const {keys=[]}=props.record;
+    const [showDevice, setShow] = useState(false)
 
 
     const openDoor=async(port)=>{
@@ -30,17 +31,19 @@ const ShowPropsExtractor=({children, ...props})=>{
     }
 
     const readerKeyRowStyle = (record, _index) => {
+        const keys=props?.record?.readerKeys;
+        if(!keys) return false;
         return {
             backgroundColor: record && keys && keys.find(key=>{
                 return ( 
-                    key.uid === record.uid && 
-                    key.name === record.name &&
+                    key.key.uid === record.uid && 
+                    key.key.name === record.name &&
                     key.acctype === record.acctype &&
                     key.acctype2 === record.acctype2 &&
                     key.acctype3 === record.acctype3 &&
-                    key.acctype4 === record.acctype4 &&
+                    key.acctype4 === record.acctype4 /* &&
                     key.acctype5 === record.acctype5 &&
-                    key.acctype6 === record.acctype6) // add back valid until later 
+                    key.acctype6 === record.acctype6 */) // add back valid until later 
             }) ? '#efe' : 'white',
         }
     }
@@ -114,11 +117,16 @@ const ShowPropsExtractor=({children, ...props})=>{
                 </Datagrid>
             </ArrayField>
 
-            <ReferenceManyField reference="devicekey" target="readerId" label="KEYS ON READER" {...props}>
+            <Button onClick={()=>setShow(!showDevice)} variant="contained" color={showDevice? "primary" : "secondary"}>
+                {`${ showDevice? "HIDE" : "SHOW" } DEVICE KEYS`}
+            </Button>
+
+            {showDevice && <ReferenceManyField reference="devicekey" target="readerId" label="KEYS ON READER" {...props}>
                 <Datagrid rowStyle={readerKeyRowStyle} {...props}>
                     <TextField source="name" />
                     <TextField source="uid" />
                     <DateField source="validUntil" showTime locales="de"/>
+                    {/* <BooleanField label="one time" source="isOneTimeCode" /> */}
                     <NumberField source="acctype" />
                     <NumberField source="acctype2" />
                     <NumberField source="acctype3" />
@@ -126,7 +134,7 @@ const ShowPropsExtractor=({children, ...props})=>{
                     <NumberField source="acctype5" />
                     <NumberField source="acctype6" />
                 </Datagrid>
-            </ReferenceManyField>
+            </ReferenceManyField>}
             
 
         </SimpleShowLayout>

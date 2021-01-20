@@ -11,11 +11,13 @@ const LockCreate = (props) => (
         <SimpleForm>
             <TextInput source="name" />
             <TextInput source="type" />
-
             <ReferenceInput reference="reader" source="readerId"  allowEmpty {...props}>
                 <SelectInput optionText="readerName" />
             </ReferenceInput>
             <ReferenceInput reference="building" source="buildingId"  allowEmpty {...props}>
+                <SelectInput optionText="name" />
+            </ReferenceInput>
+            <ReferenceInput reference="apartment" source="apartmentId"  allowEmpty {...props}>
                 <SelectInput optionText="name" />
             </ReferenceInput>
         </SimpleForm>

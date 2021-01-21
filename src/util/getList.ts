@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
-import { Repository, FindManyOptions } from "typeorm";
+import { Repository, FindManyOptions, In } from "typeorm";
 
 
 export async function getList<T>(repo: Repository<T>, req: Request, res: Response, extraOptions?: FindManyOptions){
     try {
-        const options:any={}
+        const options:FindManyOptions={}
         if(req.query.sort){
             const [sortField="id", sortDirection="DESC"]=JSON.parse(req.query.sort as string);
             options.order={[sortField]: sortDirection}
@@ -16,8 +16,19 @@ export async function getList<T>(repo: Repository<T>, req: Request, res: Respons
         }
         if(req.query.filter && req.query.filter!=="{}"){
             try {
+                /* TODO: fix this cancer inside Dataprovider */
                 const parsedFilter=JSON.parse(req.query.filter as string);
-                options.where=parsedFilter;
+                if(parsedFilter.id && parsedFilter.id.length){
+                    if(parsedFilter.id.length>1){
+                        options.where={
+                            id: In(parsedFilter.id)
+                        };
+                    }else {
+                        options.where={
+                            id: parsedFilter.id[0]
+                        };
+                    }
+                }
                 //console.log("filter applied to getList");
             } catch (_error) {
                 //console.log(error)
@@ -29,7 +40,7 @@ export async function getList<T>(repo: Repository<T>, req: Request, res: Respons
         const [result, total] = await repo.findAndCount(extraOptions? {...options, ...extraOptions} : options)
 
         const first=options.skip || 0;
-        const last=options.first + options.take;
+        const last=first + options.take;
 
         const resultCount=result.length;
         const realLastIndex = options.take ? Math.min(resultCount - 1 + first, last) : (resultCount - 1);

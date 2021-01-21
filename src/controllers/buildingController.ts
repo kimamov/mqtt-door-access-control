@@ -22,7 +22,7 @@ export async function getBuildings(req: Request, res: Response) {
 export async function getBuilding(req: Request, res: Response){
     try {
         const {id}=req.params;
-        const result = await getRepository(Building).findOne(id, {relations: ["locks"]})
+        const result = await getRepository(Building).findOne(id, {relations: ["apartments", "apartments.locks"]})
         
         if(!result){
             return res.status(404).send({message: `could not find building with the provided id ${id}`})

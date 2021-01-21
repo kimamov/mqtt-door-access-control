@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { Apartment } from "./Apartment";
 import { Lock } from "./Lock";
 
@@ -12,6 +12,13 @@ export class Building {
 
     @Column("varchar", { unique: true, length: 100, nullable: true })
     thumbnailSrc: string;
+
+    @Column({ type: "int", nullable: true })
+    buildingLockId: number;
+
+    @ManyToOne(()=> Lock)
+    @JoinColumn({name: "buildingLockId"})
+    public buildingLock: Lock;
 
     @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     locks: Lock[];

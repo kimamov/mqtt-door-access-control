@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ApartmentOne = (props) => {
+const ApartmentThree = (props) => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ const ApartmentOne = (props) => {
     )
 }
 
-export default ApartmentOne
+export default ApartmentThree

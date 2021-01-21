@@ -13,6 +13,9 @@ export class Lock {
     @Column("varchar", { length: 100, nullable: false, default: "unbekanntes Schloss" })
     name: string;
 
+    @Column("int", { nullable: true })
+    number: string;
+
     @Column("varchar", { length: 100, nullable: false, default: "room" })
     type: string;
 

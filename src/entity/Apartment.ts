@@ -11,6 +11,8 @@ export class Apartment {
     @Column("varchar", { length: 100, nullable: false, default: "unbekannte Wohnung" })
     name: string;
 
+    
+
     @Column("varchar", { nullable: true })
     info: string;
 

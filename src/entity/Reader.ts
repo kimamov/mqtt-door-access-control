@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, ManyToOne, JoinColumn } from "typeorm";
 import { AccessLog } from "./AccessLog";
 import { NewKey } from "./NewKey";
 import { ReaderKey } from "./ReaderKey";
 import {Event as ControllerEvent} from "./Event";
 import { Lock } from "./Lock";
+import { Apartment } from "./Apartment";
 
 @Entity()
 export class Reader {
@@ -43,7 +44,6 @@ export class Reader {
     locks: Lock[];
 
 
-
     @OneToMany(()=>AccessLog, access=>access.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     accessLogs: AccessLog[];
 
@@ -57,6 +57,12 @@ export class Reader {
     @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { /* onDelete: 'CASCADE', onUpdate: 'CASCADE',  */cascade: true })
     readerKeys: ReaderKey[];
 
+    @Column({ type: "int", nullable: true })
+    apartmentId: number;
+
+    @ManyToOne(()=> Apartment, apartment=> apartment.readers, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @JoinColumn({name: "apartmentId"})
+    public apartment: Apartment;
     
     
 }

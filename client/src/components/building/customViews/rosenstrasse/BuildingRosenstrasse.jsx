@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Box, Typography } from '@material-ui/core'
 import React from 'react'
 import ApartmentOne from './ApartmentOne'
+import LockCell from '../../../dashboard/LockCell'
 
 
 
@@ -24,10 +25,14 @@ const BuildingRosenstrasse = (props) => {
                 Gebäude Rosenstraße
             </Typography>
             <Box position="relative" /* bgcolor="blue" */ display="flex" flexDirection="column">
-                <Box paddingY={4} paddingX={2} marginX="auto" marginY={0} bgcolor="red" display="inline-block">
-                    Haupteingang
-                </Box>
-                <Box display="flex" justifyContent="space-between" paddingTop={4} bgcolor="orange"> {/* Apartments */}
+                <LockCell/>
+                <Box 
+                    display="flex" 
+                    justifyContent="space-between"
+                    border="2px solid grey"
+                    borderRadius={4} 
+                    /* paddingTop={4} */ 
+                > {/* Apartments */}
                     <ApartmentOne />
                     <ApartmentOne />
                     <ApartmentOne />

@@ -52,7 +52,7 @@ export const useSaveContext = <
 ): SaveContextValue => {
     const context = useContext(SaveContext);
 
-    if (!context.save || !context.setOnFailure) {
+    if (!context || !context.save || !context.setOnFailure) {
         /**
          * The element isn't inside a <SaveContextProvider>
          * To avoid breakage in that case, fallback to props
@@ -61,7 +61,7 @@ export const useSaveContext = <
          */
         if (process.env.NODE_ENV !== 'production') {
             console.log(
-                "Edit or Create child components must be used inside a <SaveContextProvider>. Relying on props rather than context to get persistance related data and callbacks is deprecated and won't be supported in the next major version of react-admin."
+                "Edit or Create child components must be used inside a <SaveContextProvider>. Relying on props rather than context to get persistence related data and callbacks is deprecated and won't be supported in the next major version of react-admin."
             );
         }
 

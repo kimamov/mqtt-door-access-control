@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne } from "typeorm";
 import { Building } from "./Building";
 import { Lock } from "./Lock";
+import { Reader } from "./Reader";
 
 
 @Entity()
@@ -33,5 +34,8 @@ export class Apartment {
 
     @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     locks: Lock[];
+
+    @OneToMany(()=>Reader, reader=>reader.apartment, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    readers: Reader[];
 
 }

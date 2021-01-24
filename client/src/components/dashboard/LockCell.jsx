@@ -3,10 +3,15 @@ import Box from '@material-ui/core/Box'
 import { styled } from '@material-ui/core';
 
 const Cell=styled(Box)({
+    margin: "1px",
     transition: "0.2s",
     cursor: "pointer",
+    boxSizing: "border-box",
+    border: "2px solid rgba(100,100,100,0.4)",
+    borderRadius: "4px",
+    overflow: "hidden",
     '&:hover': {
-        transform: "scale(1.08)"
+        transform: "scale(1.04)"
     }
 })
 
@@ -26,7 +31,6 @@ const LockCell = ({
     return (
         <Cell 
             padding={2} 
-            border="1px solid black"
             bgcolor={lock.open? colors.open : colors.closed} 
             flex={1}
             style={style}

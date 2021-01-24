@@ -1,4 +1,5 @@
-import { Edit, SimpleForm, TextInput, ArrayInput, SimpleFormIterator, NumberInput } from 'react-admin';
+import * as React from 'react';
+import { Edit, SimpleForm, TextInput, ArrayInput, SimpleFormIterator, NumberInput, ReferenceInput, SelectInput } from 'react-admin';
 import { DisabledNumberInput, DisabledTextInput } from '../customFields/DisabledInput';
 
 
@@ -8,6 +9,14 @@ const ReaderEdit = (props) => (
         <SimpleForm>
             <TextInput label="reader name" source="readerName" disabled/>
             <TextInput source="ip" label="reader IP" disabled />
+            <ReferenceInput 
+                reference="apartment" 
+                source="apartmentId"  
+                allowEmpty 
+                {...props}
+            >
+                <SelectInput optionText="name" />
+            </ReferenceInput>
             <TextInput source="acctypeName" label="acctype opens?" />
             <TextInput source="acctype2Name" label="acctype2 opens?" />
             <TextInput source="acctype3Name" label="acctype3 opens?" />

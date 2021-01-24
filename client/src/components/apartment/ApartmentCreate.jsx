@@ -10,6 +10,9 @@ const ApartmentCreate = (props) => (
     <Create title="Create a Building"  {...props} >
         <SimpleForm>
             <TextInput source="name" />
+            <ReferenceInput reference="building" source="buildingId"  allowEmpty {...props}>
+                <SelectInput optionText="name" />
+            </ReferenceInput>
         </SimpleForm>
     </Create>
 );

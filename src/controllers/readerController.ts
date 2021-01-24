@@ -112,9 +112,9 @@ export async function editReaderKeys(req: Request, res: Response) {
 
         if (!readerResult) throw "no door found"
 
-        /* if(body.readerName){
-            readerResult.readerName=body.readerName;
-        } */
+        if(body.apartmentId){
+            readerResult.apartmentId=body.apartmentId;
+        }
         readerResult.acctypeName=body.acctypeName || "";
         readerResult.acctype2Name=body.acctype2Name  || "";
         readerResult.acctype3Name=body.acctype3Name  || "";

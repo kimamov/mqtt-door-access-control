@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Toolbar, SaveButton, Create, SimpleForm, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField, useNotify, useRefresh, BooleanInput } from 'react-admin';
+import { Toolbar, SaveButton, Create, SimpleForm, ReferenceField,ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField, useNotify, useRefresh, BooleanInput } from 'react-admin';
 import { LockOpen} from '@material-ui/icons';
 import ReaderShowActions from './ReaderShowActions'
 import TextButtonField from '../customFields/TextButtonField';
@@ -14,7 +14,7 @@ const KeyEditToolbar = props => (
 
 const ShowPropsExtractor=({children, ...props})=>{
     const notify=useNotify();
-    const refresh=useRefresh();
+    //const refresh=useRefresh();
     const [showDevice, setShow] = useState(false)
 
 
@@ -58,7 +58,10 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextField source="readerName" />
             <TextField source="ip" />
             <DateField source="lastPing" showTime locales="de"/>
-
+            
+            <ReferenceField label="Apartment" reference="apartment" source="apartmentId" link="show">
+                <TextField source="name"/>
+            </ReferenceField>
             
             <ArrayField label="CONNECTED LOCKS" source="locks" >
                 <Datagrid>

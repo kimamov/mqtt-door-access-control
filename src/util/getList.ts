@@ -18,16 +18,22 @@ export async function getList<T>(repo: Repository<T>, req: Request, res: Respons
             try {
                 /* TODO: fix this cancer inside Dataprovider */
                 const parsedFilter=JSON.parse(req.query.filter as string);
-                if(parsedFilter.id && parsedFilter.id.length){
-                    if(parsedFilter.id.length>1){
-                        options.where={
-                            id: In(parsedFilter.id)
-                        };
-                    }else {
-                        options.where={
-                            id: parsedFilter.id[0]
-                        };
-                    }
+                if(parsedFilter){
+                    const filterOptions={}
+                    Object.keys(parsedFilter).forEach(key=>{
+                        const val=parsedFilter[key];
+                        if(Array.isArray(val)){
+                            if(val.length>1){
+                                filterOptions[key]=In(parsedFilter[key])
+                            }else if(val.length===1) {
+                                filterOptions[key]=parsedFilter[key][0]
+                            }
+                        }else {
+                            filterOptions[key]=parsedFilter[key]
+                        }
+                    })
+                    options.where=filterOptions;
+                    
                 }
                 //console.log("filter applied to getList");
             } catch (_error) {

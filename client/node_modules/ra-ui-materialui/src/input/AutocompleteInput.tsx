@@ -39,7 +39,7 @@ interface Options {
  *
  * By default, the options are built from:
  *  - the 'id' property as the option value,
- *  - the 'name' property an the option text
+ *  - the 'name' property as the option text
  * @example
  * const choices = [
  *    { id: 'M', name: 'Male' },
@@ -265,9 +265,13 @@ const AutocompleteInput: FunctionComponent<AutocompleteInputProps> = props => {
 
     const handleChange = useCallback(
         (item: any) => {
+            if (getChoiceValue(item) == null && filterValue) {
+                setFilterValue('');
+            }
+
             input.onChange(getChoiceValue(item));
         },
-        [getChoiceValue, input]
+        [filterValue, getChoiceValue, input]
     );
 
     // This function ensures that the suggestion list stay aligned to the

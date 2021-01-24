@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Children, cloneElement, FC, memo, ReactElement } from 'react';
 import PropTypes from 'prop-types';
-import { LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     ListContextProvider,
@@ -16,6 +15,7 @@ import {
 import { fieldPropTypes, PublicFieldProps, InjectedFieldProps } from './types';
 import { ClassesOverride } from '../types';
 import sanitizeFieldRestProps from './sanitizeFieldRestProps';
+import { LinearProgress } from '../layout';
 
 /**
  * A container component that fetches records from another resource specified
@@ -57,7 +57,7 @@ import sanitizeFieldRestProps from './sanitizeFieldRestProps';
  * </ReferenceArrayField>
  *
  * By default, the field displays the results in the order in which they are referenced
- * (i.e in the order of the list of ids). You can change this order
+ * (i.e. in the order of the list of ids). You can change this order
  * by setting the `sort` prop (an object with `field` and `order` properties).
  *
  * @example

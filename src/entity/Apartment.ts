@@ -20,7 +20,7 @@ export class Apartment {
     @Column({ type: "int", nullable: true })
     apartmentLockId: number;
 
-    @ManyToOne(()=> Lock)
+    @ManyToOne(()=> Lock, lock=>lock.apartmentLock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     @JoinColumn({name: "apartmentLockId"})
     public apartmentLock: Lock;
 
@@ -32,7 +32,7 @@ export class Apartment {
     @JoinColumn({name: "buildingId"})
     public building: Building;
 
-    @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>Lock, lock=>lock.apartment, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     locks: Lock[];
 
     @OneToMany(()=>Reader, reader=>reader.apartment, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })

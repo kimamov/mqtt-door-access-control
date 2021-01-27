@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable, OneToOne } from "typeorm";
 import { Apartment } from "./Apartment";
 import { Building } from "./Building";
 import { Key } from "./Key";
@@ -42,6 +42,14 @@ export class Lock {
     @JoinColumn({name: "apartmentId"})
     public apartment: Apartment;
 
+    
+
+    @OneToOne(()=> Apartment, apartment=> apartment.apartmentLock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    public apartmentLock: Apartment;
+
+    @OneToOne(()=> Building, building=> building.buildingLock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    public buildingLock: Building;
+
 
     @Column({ type: "int", nullable: true })
     readerId: number;
@@ -51,13 +59,13 @@ export class Lock {
     public reader: Reader;
 
 
-    @ManyToMany(type => Lock, lock => lock.previousLocks)
+    /* @ManyToMany(type => Lock, lock => lock.previousLocks)
     @JoinTable()
     public nextLocks: Lock[];
  
     @ManyToMany(type=> Lock, lock => lock.nextLocks)
     @JoinTable()
-    public previousLocks: Lock[];
+    public previousLocks: Lock[]; */
 
     @OneToMany(type=> Key, key => key.lock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     public keys: Key[];

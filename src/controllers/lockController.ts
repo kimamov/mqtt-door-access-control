@@ -8,6 +8,7 @@ import dateToUnix from "../util/dateToUnix";
 import { ReaderKey } from "../entity/ReaderKey";
 import { Lock } from "../entity/Lock";
 import { Building } from "../entity/Building";
+import { Apartment } from "../entity/Apartment";
 
 
 
@@ -37,27 +38,17 @@ export async function getLock(req: Request, res: Response){
 
 export async function createLock(req: Request, res: Response) {
     try {
-        /* 
-        const {building_id, reader_id, ...lockRest}=req.body;
-        
-        const lock=getRepository(Lock).create(lockRest);
 
-        
+        const repo=await getRepository(Lock);
+        const lock=repo.create(req.body as Lock);
 
-        if(building_id){
-            const building=await getRepository(Building).findOne(building_id);
-            if(building){
-                lock.building=building;
-            }
+        if(lock.type==="Wohnungsschloss" && lock.apartmentId){
+            lock.apartmentLock=await getRepository(Apartment).findOne(lock.apartmentId)
+            lock.apartmentId=null;
+        }else if(lock.type==="Wohnungsschloss" && lock.buildingId){
+            lock.buildingLock=await getRepository(Building).findOne(lock.buildingId)
         }
-        if(reader_id){
-            const reader=await getRepository(Reader).findOne(reader_id);
-            if(reader){
-                lock.reader=reader;
-            }
-        } */
-
-        const result=await getRepository(Lock).save(req.body);
+        const result=await repo.save(lock);
         res.send(result)
     } catch (error) {
         res.status(500).send({

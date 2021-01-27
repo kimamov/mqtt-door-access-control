@@ -21,23 +21,26 @@ const BuildingRosenstrasse = (props) => {
     console.log(building)
     return (
         <Box display="inline-block">
-            <Typography>
+            <Typography variant="h5">
                 Gebäude Rosenstraße
             </Typography>
-            <Box position="relative" /* bgcolor="blue" */ display="flex" flexDirection="column">
-                <LockCell/>
-                <Box 
-                    display="flex" 
-                    justifyContent="space-between"
-                    border="2px solid grey"
-                    borderRadius={4} 
-                    /* paddingTop={4} */ 
-                > {/* Apartments */}
-                    <ApartmentOne />
-                    <ApartmentOne />
-                    <ApartmentOne />
+            {building && building.apartments?
+                <Box position="relative" /* bgcolor="blue" */ display="flex" flexDirection="column">
+                    <LockCell/>
+                    <Box 
+                        display="flex" 
+                        flexWrap="wrap"
+                        justifyContent="center"
+                        border="2px solid grey"
+                        borderRadius={4} 
+                    >
+                        {building?.apartments.map(apartment=><ApartmentOne apartment={apartment}/>)}{/* Apartments */}
+                    </Box>
                 </Box>
-            </Box>
+                :
+                <Typography>building could not be found</Typography>
+            }
+            
         </Box>
     )
 }

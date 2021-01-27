@@ -70,7 +70,7 @@ const ShowPropsExtractor=({children, ...props})=>{
                 </Datagrid>
             </ArrayField>
 
-            <TextButtonField onClick={()=>openDoor(1)} label="Relay 1 (acctype)" variant="contained" source="acctypeName">
+            {/* <TextButtonField onClick={()=>openDoor(1)} label="Relay 1 (acctype)" variant="contained" source="acctypeName">
                 <LockOpen/>
             </TextButtonField>
             <TextButtonField onClick={()=>openDoor(2)} label="Relay 2 (acctype2)" variant="contained" source="acctype2Name">
@@ -87,7 +87,7 @@ const ShowPropsExtractor=({children, ...props})=>{
             </TextButtonField>
             <TextButtonField onClick={()=>openDoor(6)} label="Relay 6 (acctype6)" variant="contained" source="acctype4Name">
                 <LockOpen/>
-            </TextButtonField>
+            </TextButtonField> */}
             
             {/* TODO MAKE THIS GRID HAVING IT STACKED ON DESKTOP GETS MESSY */}
             <Create title=" " resource={props.resource} onSuccess={onSuccess}>

@@ -71,6 +71,13 @@ router.get("/apartment/:id", getApartment)
 router.post("/apartment"/* , checkAuth */, createApartment)
 
 
+/* router.get("/openlock/:id", (req, res)=>{
+  console.log(req.params);
+  res.send({
+    message: `successfully opened lock`
+  })
+}) */
+
 router.post("/lock"/* , checkAuth */, createLock)
 
 router.get("/lock"/* , checkAuth */, getLocks)

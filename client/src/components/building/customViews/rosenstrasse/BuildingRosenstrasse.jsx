@@ -26,7 +26,7 @@ const BuildingRosenstrasse = (props) => {
             </Typography>
             {building && building.apartments?
                 <Box position="relative" /* bgcolor="blue" */ display="flex" flexDirection="column">
-                    <LockCell/>
+                    <LockCell customLabel="Eingang Rosenstraße" lock={building.buildingLock}/>
                     <Box 
                         display="flex" 
                         flexWrap="wrap"

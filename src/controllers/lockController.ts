@@ -1,10 +1,7 @@
 import {  getRepository } from "typeorm"
 import { Request, Response } from "express"
 import { Reader } from "../entity/Reader"
-import { client } from "../mqtt/connection";
-import { Key } from "../entity/Key";
 import getList from "../util/getList";
-import dateToUnix from "../util/dateToUnix";
 import { ReaderKey } from "../entity/ReaderKey";
 import { Lock } from "../entity/Lock";
 import { Building } from "../entity/Building";
@@ -45,7 +42,8 @@ export async function createLock(req: Request, res: Response) {
         if(lock.type==="Wohnungsschloss" && lock.apartmentId){
             lock.apartmentLock=await getRepository(Apartment).findOne(lock.apartmentId)
             lock.apartmentId=null;
-        }else if(lock.type==="Wohnungsschloss" && lock.buildingId){
+        }else if(lock.type==="Gebäudeschloss" && lock.buildingId){
+            console.log("lock")
             lock.buildingLock=await getRepository(Building).findOne(lock.buildingId)
         }
         const result=await repo.save(lock);

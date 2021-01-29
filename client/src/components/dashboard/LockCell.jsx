@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useRef} from 'react'
 import Box from '@material-ui/core/Box'
 import { styled } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
@@ -21,8 +21,12 @@ const Cell=styled(Box)({
     }
 })
 
-const LockCell = ({
-    lock, 
+const LockCell = (props) => props.lock? <ValidLockCell {...props} /> : <EmptyLockCell/>
+
+
+const ValidLockCell=({
+    lock,
+    customLabel, 
     style={}, 
     colors={
         open: "green",
@@ -32,9 +36,10 @@ const LockCell = ({
     },
     onClick, 
     ...props
-}) => {
-    
+})=>{
     const notify=useNotify();
+    const [menuOpen, setOpen]=useState(false);
+
 
     const openLock=async()=>{
         try {
@@ -48,7 +53,8 @@ const LockCell = ({
         }
     }
 
-    if(!lock) return <EmptyLockCell/>
+    const label=customLabel || lock.number || lock.name
+
     return (
         <Cell 
             padding={2} 
@@ -57,7 +63,7 @@ const LockCell = ({
             style={style}
             onClick={openLock}
         >
-            {lock.number || "no number"}
+            {label}
         </Cell>
     )
 }

@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react'
 import Box from '@material-ui/core/Box'
-import { styled } from '@material-ui/core';
+import { styled, Menu, MenuItem } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
 import {useRedirect, useNotify} from 'react-admin'
 
@@ -37,8 +37,20 @@ const ValidLockCell=({
     onClick, 
     ...props
 })=>{
+    const redirect=useRedirect();
     const notify=useNotify();
-    const [menuOpen, setOpen]=useState(false);
+    //const [menuOpen, setOpen]=useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open=!!anchorEl;
+
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
 
     const openLock=async()=>{
@@ -53,18 +65,45 @@ const ValidLockCell=({
         }
     }
 
+    const redirectToLock=()=>redirect(`/lock/${lock.id}`)
+
     const label=customLabel || lock.number || lock.name
 
     return (
-        <Cell 
-            padding={2} 
-            bgcolor={lock.open? colors.open : colors.closed} 
-            flex={1}
-            style={style}
-            onClick={openLock}
-        >
-            {label}
-        </Cell>
+        <>
+            <Cell 
+                padding={2} 
+                bgcolor={lock.open? colors.open : colors.closed} 
+                flex={1}
+                style={style}
+                onClick={handleMenu}
+            >
+                {label}
+            </Cell>
+            <Menu
+                id="menu-appbar"
+                //getContentAnchorEl={null}
+                //elevation={0}
+                anchorEl={anchorEl}
+                color="default"
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                open={open}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={openLock}>Open</MenuItem>
+                <MenuItem onClick={redirectToLock}>Manage</MenuItem>
+            </Menu>
+           
+        </>
+       
     )
 }
 

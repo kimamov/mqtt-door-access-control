@@ -1,8 +1,6 @@
 import {  getRepository } from "typeorm"
 import { Request, Response } from "express"
-import { Reader } from "../entity/Reader"
 import getList from "../util/getList";
-import { ReaderKey } from "../entity/ReaderKey";
 import { Lock } from "../entity/Lock";
 import { Building } from "../entity/Building";
 import { Apartment } from "../entity/Apartment";
@@ -20,7 +18,7 @@ export async function getLocks(req: Request, res: Response) {
 export async function getLock(req: Request, res: Response){
     try {
         const {id}=req.params;
-        const result = await getRepository(Lock).findOne(id, {relations: ["keys", "reader", "previousLocks", "nextLocks"]})
+        const result = await getRepository(Lock).findOne(id, {relations: ["keys", "reader", "building", "apartment", "apartmentLock", "buildingLock", ]})
         
         if(!result){
             return res.status(404).send({message: `could not find lock with the provided id ${id}`})
@@ -36,7 +34,7 @@ export async function getLock(req: Request, res: Response){
 export async function createLock(req: Request, res: Response) {
     try {
 
-        const repo=await getRepository(Lock);
+        const repo=getRepository(Lock);
         const lock=repo.create(req.body as Lock);
 
         if(lock.type==="Wohnungsschloss" && lock.apartmentId){
@@ -60,49 +58,21 @@ export async function createLock(req: Request, res: Response) {
 export async function editLock(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
-        const readerId=req.params.id;
-        if(readerId === undefined){
-            throw "please provide a valid reader id"
+        const updateObject: Lock={...this.body}
+
+        if(updateObject.type==="Wohnungsschloss" && updateObject.apartmentId){
+            updateObject.apartmentLock=await getRepository(Apartment).findOne(updateObject.apartmentId)
+            updateObject.apartmentId=null;
+        }else if(updateObject.type==="Gebäudeschloss" && updateObject.buildingId){
+            updateObject.buildingLock=await getRepository(Building).findOne(updateObject.buildingId)
         }
-        const { body } = req;
-        if (!body.readerKeys || !Array.isArray(body.readerKeys)){
-            return res.status(400).send({error: "invalid request an array readerKeys is required"})
-        }
-        
-        // there has to be a better option then deleting all the relationships before adding new but this should do for now
-        getRepository(ReaderKey)
-            .createQueryBuilder()
-            .delete()
-            .from(ReaderKey)
-            .where("readerId = :readerId", {readerId: readerId})
-            .execute();
-        
-        // check if reader with that ip exists
-        const readerRepo=getRepository(Reader)
-        const readerResult = await readerRepo.findOne(readerId, {relations: ["readerKeys"]})
+        const result=await getRepository(Lock).save(updateObject);
+        res.send(result)
 
-        if (!readerResult) throw "no door found"
-
-        /* if(body.readerName){
-            readerResult.readerName=body.readerName;
-        } */
-        readerResult.acctypeName=body.acctypeName || "";
-        readerResult.acctype2Name=body.acctype2Name  || "";
-        readerResult.acctype3Name=body.acctype3Name  || "";
-        readerResult.acctype4Name=body.acctype4Name  || "";
-        readerResult.acctype5Name=body.acctype5Name  || "";
-        readerResult.acctype6Name=body.acctype6Name  || "";
-
-        readerResult.readerKeys=body.readerKeys;
-
-        await readerRepo.save(readerResult)
-
-        return res.send(readerResult)
-        
     } catch (error) {
         console.log(error)
         res.status(500).send({
-            error: "failed to update keys on reader"
+            error: "failed to update lock"
         })
     }
 }

@@ -7,7 +7,7 @@ import { getReaders, addReaderKeys, getReaderWithKeys, editReaderKeys } from '..
 import  {signUp, editUser, getUsers, getUserById } from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
-import { createLock, getLock, getLocks } from '../controllers/lockController';
+import { createLock, editLock, getLock, getLocks } from '../controllers/lockController';
 import { getBuildings, getBuilding, createBuilding } from '../controllers/buildingController';
 import { createApartment, getApartment, getApartments } from '../controllers/apartmentController';
 /* import { client } from '../mqtt/connection';
@@ -83,6 +83,8 @@ router.post("/lock"/* , checkAuth */, createLock)
 router.get("/lock"/* , checkAuth */, getLocks)
 
 router.get("/lock/:id", getLock)
+
+router.put("/lock/:id", editLock)
 
 /* router.put("/key/:id", editKey)
 

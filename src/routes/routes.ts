@@ -7,9 +7,9 @@ import { getReaders, addReaderKeys, getReaderWithKeys, editReaderKeys } from '..
 import  {signUp, editUser, getUsers, getUserById } from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
-import { createLock, editLock, getLock, getLocks } from '../controllers/lockController';
-import { getBuildings, getBuilding, createBuilding } from '../controllers/buildingController';
-import { createApartment, getApartment, getApartments } from '../controllers/apartmentController';
+import { createLock, deleteLock, editLock, getLock, getLocks } from '../controllers/lockController';
+import { getBuildings, getBuilding, createBuilding, deleteBuilding } from '../controllers/buildingController';
+import { createApartment, deleteApartment, getApartment, getApartments } from '../controllers/apartmentController';
 /* import { client } from '../mqtt/connection';
  */
 
@@ -63,12 +63,16 @@ router.get("/building/:id", getBuilding)
 
 router.post("/building"/* , checkAuth */, createBuilding)
 
+router.delete("/building/:id", deleteBuilding)
+
 
 router.get("/apartment"/* , checkAuth */, getApartments)
 
 router.get("/apartment/:id", getApartment)
 
 router.post("/apartment"/* , checkAuth */, createApartment)
+
+router.delete("/apartment/:id", deleteApartment)
 
 
 /* router.get("/openlock/:id", (req, res)=>{
@@ -86,9 +90,8 @@ router.get("/lock/:id", getLock)
 
 router.put("/lock/:id", editLock)
 
-/* router.put("/key/:id", editKey)
+router.delete("/lock/:id", deleteLock)
 
-router.delete("/key/:id", deleteKey) */
 
 
 // TODO: split the routes into different files

@@ -4,12 +4,15 @@ import { Edit, SimpleForm, TextInput, NumberInput, ReferenceInput, SelectInput, 
 const LockEdit = (props) => (
     <Edit {...props}>
         <SimpleForm>
+            <TextInput disabled source="id" />
             <TextInput source="name" required/>
             <SelectInput source="type" choices={[
                 { id: 'Tresorschloss', name: 'Tresorschloss' },
                 { id: 'Wohnungsschloss', name: 'Wohnungsschloss' },
                 { id: 'Gebäudeschloss', name: 'Gebäudeschloss' },
             ]} required/>
+            <NumberInput source="number" />
+
             <NumberInput label="Slot (1-6)" source="slot" min={1} max={6} required/>
 
             <ReferenceInput reference="building" source="buildingId"  allowEmpty {...props}>

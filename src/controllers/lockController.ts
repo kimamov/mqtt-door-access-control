@@ -41,7 +41,6 @@ export async function createLock(req: Request, res: Response) {
             lock.apartmentLock=await getRepository(Apartment).findOne(lock.apartmentId)
             lock.apartmentId=null;
         }else if(lock.type==="Gebäudeschloss" && lock.buildingId){
-            console.log("lock")
             lock.buildingLock=await getRepository(Building).findOne(lock.buildingId)
         }
         const result=await repo.save(lock);
@@ -58,13 +57,14 @@ export async function createLock(req: Request, res: Response) {
 export async function editLock(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
-        const updateObject: Lock={...this.body}
+        const {building, apartment,reader,apartmentLock,buildingLock,...updateObject}=req.body
 
         if(updateObject.type==="Wohnungsschloss" && updateObject.apartmentId){
             updateObject.apartmentLock=await getRepository(Apartment).findOne(updateObject.apartmentId)
             updateObject.apartmentId=null;
         }else if(updateObject.type==="Gebäudeschloss" && updateObject.buildingId){
             updateObject.buildingLock=await getRepository(Building).findOne(updateObject.buildingId)
+            //updateObject.buildingId=null;
         }
         const result=await getRepository(Lock).save(updateObject);
         res.send(result)
@@ -77,6 +77,15 @@ export async function editLock(req: Request, res: Response) {
     }
 }
 
+
+export async function deleteLock(req: Request, res: Response){
+    try {
+        const result=await getRepository(Lock).delete(req.params.id)
+        return res.send(result);
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
 
 
 

@@ -1,6 +1,6 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, TextField, EditButton} from 'react-admin';
+import { List, Datagrid, TextField, EditButton, ReferenceField} from 'react-admin';
 
 export const ApartmentList = (props) => (
     <List 
@@ -8,6 +8,12 @@ export const ApartmentList = (props) => (
     >
         <Datagrid rowClick="show">
             <TextField source="name"/>
+            <ReferenceField label="Building" reference="building" source="buildingId" link="show">
+                <TextField source="name"/>
+            </ReferenceField>
+            <ReferenceField label="Aparment Lock" reference="lock" source="apartmentLockId" link="show">
+                <TextField source="name"/>
+            </ReferenceField>
             <EditButton/>
         </Datagrid>
     </List>

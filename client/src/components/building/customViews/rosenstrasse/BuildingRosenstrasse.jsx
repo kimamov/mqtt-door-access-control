@@ -11,7 +11,7 @@ const BuildingRosenstrasse = (props) => {
     const [building, setBuilding]=useState({});
     /* get data for building rosenstrasse */
     useEffect(() => {
-        fetch(`http://localhost:5000/api/building/1`)
+        fetch(`http://localhost:5000/api/building/3`)
             .then(data=>data.json())
             .then(json=>setBuilding(json))
             .catch(error=>console.log(error))

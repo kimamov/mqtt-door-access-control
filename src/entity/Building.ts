@@ -13,17 +13,17 @@ export class Building {
     @Column("varchar", { unique: true, length: 100, nullable: true })
     thumbnailSrc: string;
 
-    @Column({ type: "int", nullable: true })
+    @Column({ type: "int", nullable: true})
     buildingLockId: number;
 
-    @ManyToOne(()=> Lock)
-    @JoinColumn({name: "buildingLockId"})
+    @ManyToOne(()=> Lock, {onDelete: 'SET NULL'})
+    @JoinColumn({name: "buildingLockId",})
     public buildingLock: Lock;
 
-    @OneToMany(()=>Lock, lock=>lock.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>Lock, lock=>lock.building/* , { onDelete: 'CASCADE', onUpdate: 'CASCADE' } */)
     locks: Lock[];
 
-    @OneToMany(()=>Apartment, apartment=>apartment.building, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>Apartment, apartment=>apartment.building/* , { onDelete: 'CASCADE', onUpdate: 'CASCADE' } */)
     apartments: Apartment[];
 
     

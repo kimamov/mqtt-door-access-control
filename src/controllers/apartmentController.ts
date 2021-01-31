@@ -100,7 +100,14 @@ export async function editBuilding(req: Request, res: Response) {
 
 
 
-
+export async function deleteApartment(req: Request, res: Response){
+    try {
+        const result=await getRepository(Apartment).delete(req.params.id)
+        return res.send(result);
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
 
 
 

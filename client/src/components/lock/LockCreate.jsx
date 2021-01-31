@@ -17,7 +17,9 @@ const LockCreate = (props) => {
                     { id: 'Wohnungsschloss', name: 'Wohnungsschloss' },
                     { id: 'Gebäudeschloss', name: 'Gebäudeschloss' },
                 ]} required/>
+                
                 <NumberInput label="Slot (1-6)" source="slot" min={1} max={6} required/>
+                <NumberInput source="number" label="Lock Number"/>
 
                 <ReferenceInput reference="building" source="buildingId"  allowEmpty {...props}>
                     <SelectInput optionText="name" />

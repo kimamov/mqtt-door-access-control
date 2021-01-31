@@ -18,7 +18,7 @@ export class NewKey {
     @Column("varchar", { nullable: false, length: 20 })
     door: string;
 
-    @ManyToOne(()=> Reader, reader=> reader.newKeys, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Reader, reader=> reader.newKeys)
     reader: Reader;
 
 

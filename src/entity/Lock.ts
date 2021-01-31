@@ -31,30 +31,30 @@ export class Lock {
     @Column({ type: "int", nullable: true })
     buildingId: number;
 
-    @ManyToOne(()=> Building, building=> building.locks, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Building, building=> building.locks)
     @JoinColumn({name: "buildingId"})
     public building: Building;
 
     @Column({ type: "int", nullable: true })
     apartmentId: number;
 
-    @ManyToOne(()=> Apartment, apartment=> apartment.locks, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Apartment, apartment=> apartment.locks, {onDelete: "SET NULL"})
     @JoinColumn({name: "apartmentId"})
     public apartment: Apartment;
 
     
 
-    @OneToOne(()=> Apartment, apartment=> apartment.apartmentLock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToOne(()=> Apartment, apartment=> apartment.apartmentLock, {cascade: true, onDelete: "SET NULL"})
     public apartmentLock: Apartment;
 
-    @OneToOne(()=> Building, building=> building.buildingLock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToOne(()=> Building, building=> building.buildingLock, {cascade: true})
     public buildingLock: Building;
 
 
     @Column({ type: "int", nullable: true })
     readerId: number;
 
-    @ManyToOne(()=> Reader, reader=> reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Reader, reader=> reader)
     @JoinColumn({name: "readerId"})
     public reader: Reader;
 
@@ -67,6 +67,6 @@ export class Lock {
     @JoinTable()
     public previousLocks: Lock[]; */
 
-    @OneToMany(type=> Key, key => key.lock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(type=> Key, key => key.lock/* , { onDelete: 'CASCADE', onUpdate: 'CASCADE' } */)
     public keys: Key[];
 }

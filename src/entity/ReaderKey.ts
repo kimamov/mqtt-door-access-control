@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn,  OneToMany, JoinColumn, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryColumn,  JoinColumn, ManyToOne } from "typeorm";
 import { Key } from "./Key";
 import {Reader} from "./Reader"
 
@@ -9,13 +9,13 @@ export class ReaderKey {
 
     @PrimaryColumn()
     readerId: number;
-    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true, persistence: false})
+    @ManyToOne(() => Reader, reader => reader.readerKeys, {primary: true, persistence: false/* , onDelete: 'CASCADE', onUpdate: 'CASCADE' */})
     @JoinColumn({name: "readerId", referencedColumnName: "id"})
     reader: Reader;
 
     @PrimaryColumn()
     keyId: number;
-    @ManyToOne(() => Key, key => key.readerKeys, {primary: true})
+    @ManyToOne(() => Key, key => key.readerKeys, {primary: true, onDelete: "CASCADE"})
     @JoinColumn({name: "keyId", referencedColumnName: "id"})
     key: Key;
     

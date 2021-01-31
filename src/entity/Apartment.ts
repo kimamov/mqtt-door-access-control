@@ -20,7 +20,7 @@ export class Apartment {
     @Column({ type: "int", nullable: true })
     apartmentLockId: number;
 
-    @ManyToOne(()=> Lock, lock=>lock.apartmentLock, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Lock, lock=>lock.apartmentLock, { onDelete: "SET NULL"})
     @JoinColumn({name: "apartmentLockId"})
     public apartmentLock: Lock;
 
@@ -28,14 +28,14 @@ export class Apartment {
     @Column({ type: "int", nullable: true })
     buildingId: number;
 
-    @ManyToOne(()=> Building, building=> building.apartments, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Building, building=> building.apartments)
     @JoinColumn({name: "buildingId"})
     public building: Building;
 
-    @OneToMany(()=>Lock, lock=>lock.apartment, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>Lock, lock=>lock.apartment/* , { cascade: true, onDelete: 'SET NULL', onUpdate: "CASCADE" } */)
     locks: Lock[];
 
-    @OneToMany(()=>Reader, reader=>reader.apartment, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(()=>Reader, reader=>reader.apartment, { onDelete: 'SET NULL' })
     readers: Reader[];
 
 }

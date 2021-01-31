@@ -24,10 +24,10 @@ export class Key {
     @OneToMany(()=>ReaderKey, readerKey=>readerKey.key, { /* onDelete: 'CASCADE', onUpdate: 'CASCADE', */ cascade: true })
     readerKeys: ReaderKey[];
 
-    @ManyToOne(()=>User, user=>user.keys, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=>User, user=>user.keys)
     user: User;
 
-    @ManyToOne(()=>Lock, lock=>lock.keys, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=>Lock, lock=>lock.keys)
     lock: Lock;
 
 }

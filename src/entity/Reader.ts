@@ -54,13 +54,13 @@ export class Reader {
     newKeys: NewKey[];
     
 
-    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { /* onDelete: 'CASCADE', onUpdate: 'CASCADE',  */cascade: true })
+    @OneToMany(()=>ReaderKey, readerKey=>readerKey.reader, { onDelete: 'CASCADE', onUpdate: 'CASCADE', cascade: true })
     readerKeys: ReaderKey[];
 
     @Column({ type: "int", nullable: true })
     apartmentId: number;
 
-    @ManyToOne(()=> Apartment, apartment=> apartment.readers, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @ManyToOne(()=> Apartment, apartment=> apartment.readers ,{onDelete: 'SET NULL'}/* , { cascade: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' } */)
     @JoinColumn({name: "apartmentId"})
     public apartment: Apartment;
     

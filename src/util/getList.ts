@@ -4,6 +4,7 @@ import { Repository, FindManyOptions, In } from "typeorm";
 
 export async function getList<T>(repo: Repository<T>, req: Request, res: Response, extraOptions?: FindManyOptions){
     try {
+        //console.log("getList was called")
         const options:FindManyOptions={}
         if(req.query.sort){
             const [sortField="id", sortDirection="DESC"]=JSON.parse(req.query.sort as string);
@@ -36,8 +37,8 @@ export async function getList<T>(repo: Repository<T>, req: Request, res: Respons
                     
                 }
                 //console.log("filter applied to getList");
-            } catch (_error) {
-                //console.log(error)
+            } catch (error) {
+                console.log(error)
             }
             
         }

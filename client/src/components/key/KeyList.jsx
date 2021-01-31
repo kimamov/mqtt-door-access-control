@@ -1,11 +1,18 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, TextField, DateField, BooleanField, EditButton} from 'react-admin';
+import { List, Datagrid, TextField, DateField, BooleanField, EditButton, Filter, TextInput} from 'react-admin';
 import KeyActions from "./KeyActions";
+
+const KeyFilters = (props) => (
+    <Filter {...props}>
+        <TextInput label="Name" source="name" alwaysOn/>
+    </Filter>
+);
 
 export const KeyList = (props) => (
     <List 
         actions={<KeyActions/>} 
+        filters={<KeyFilters/>}
         {...props} 
     >
         <Datagrid rowClick="show">
@@ -18,9 +25,8 @@ export const KeyList = (props) => (
     </List>
 );
 
-export const PostTitle = ({ record }) => {
-    return <span>Post {record ? `"${record.title}"` : ''}</span>;
-};
+
+
 
 
 

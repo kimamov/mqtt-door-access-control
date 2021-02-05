@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { Lock } from "./Lock";
 import { ReaderKey } from "./ReaderKey";
 import { User } from "./User";
@@ -27,7 +27,9 @@ export class Key {
     @ManyToOne(()=>User, user=>user.keys)
     user: User;
 
-    @ManyToOne(()=>Lock, lock=>lock.keys)
-    lock: Lock;
+    
 
+    /* @ManyToMany(() => Lock, lock=>lock.keys)
+    @JoinTable()
+    locks: Lock[]; */
 }

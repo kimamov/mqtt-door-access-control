@@ -18,6 +18,7 @@ import UserList from './components/user/UserList';
 import UserCreate from './components/user/UserCreate';
 import UserEdit from './components/user/UserEdit';
 import LockList from './components/lock/LockList';
+import LockShow from './components/lock/LockShow';
 import LockCreate from './components/lock/LockCreate';
 import LockEdit from './components/lock/LockEdit';
 import BuildingList from './components/building/BuildingList';
@@ -44,7 +45,8 @@ function App() {
       {permissions=>[
         <Resource icon={LocationCity} name="building" list={BuildingList} create={BuildingCreate}/>,
         <Resource icon={LocationCity} name="apartment" list={ApartmentList} create={ApartmentCreate}/>,
-        <Resource icon={Lock} name="lock" list={LockList} create={LockCreate} edit={LockEdit} options={{label: 'Locks'}}/>,
+        <Resource icon={Lock} name="lock" list={LockList} create={LockCreate} edit={LockEdit} show={LockShow} options={{label: 'Locks'}}/>,
+        <Resource icon={Lock} name="lockkey" options={{label: 'Locks'}}/>,
         <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controllers'}}/>,
         <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,
         <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,

@@ -10,6 +10,7 @@ import { client } from '../mqtt/connection';
 import { createLock, deleteLock, editLock, getLock, getLocks } from '../controllers/lockController';
 import { getBuildings, getBuilding, createBuilding, deleteBuilding } from '../controllers/buildingController';
 import { createApartment, deleteApartment, getApartment, getApartments } from '../controllers/apartmentController';
+import { addLockKey, getLockKeys } from '../controllers/lockKeyController';
 /* import { client } from '../mqtt/connection';
  */
 
@@ -92,6 +93,10 @@ router.put("/lock/:id", editLock)
 
 router.delete("/lock/:id", deleteLock)
 
+
+router.get("/lockkey", getLockKeys)
+
+router.post("/lockkey", addLockKey)
 
 
 // TODO: split the routes into different files

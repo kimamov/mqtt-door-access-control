@@ -1,9 +1,9 @@
 import {  getRepository } from "typeorm"
 import { Request, Response } from "express"
-import getList from "../util/getList";
 import { Lock } from "../entity/Lock";
 import { Building } from "../entity/Building";
 import { Apartment } from "../entity/Apartment";
+import { ReaderKey } from "../entity/ReaderKey";
 
 
 
@@ -11,27 +11,49 @@ import { Apartment } from "../entity/Apartment";
 
 
 
-export async function getLocks(req: Request, res: Response) {
-    getList(getRepository(Lock), req, res)
-}
-
-export async function getLock(req: Request, res: Response){
+export async function getLockKeys(req: Request, res: Response) {
     try {
-        const {id}=req.params;
-        const result = await getRepository(Lock).findOne(id/* , {relations: ["keys", "reader", "building", "apartment", "apartmentLock", "buildingLock", ]} */)
-        
-        if(!result){
-            return res.status(404).send({message: `could not find lock with the provided id ${id}`})
+        const filter=JSON.parse(req.query.filter as string);
+        if(!filter.id) return res.send([]);
+        const lockId=filter.id;
+        const lock=await getRepository(Lock).findOneOrFail(lockId);
+
+        let skip=0;
+        let take=0;
+        if(req.query.range){
+            const [first=0, last]=JSON.parse(req.query.range as string);
+            skip=first;
+            take=last - first;
         }
-        return res.send(result);
+
+        const acctype=lock.slot<2? "acctype":`acctype${lock.slot}`
+        const [lockKey, total]=await getRepository(ReaderKey).findAndCount({where: {
+            readerId: lock.readerId,
+            [acctype]: 1
+        }/* , relations: ["key"] */})
+        const lockKeyWithId=lockKey.map(key=>({
+            ...key,
+            id: key.keyId
+        }))
+        console.log(lockKeyWithId)
+        const first=skip || 0;
+        const last=first + take;
+
+        const resultCount=lockKeyWithId.length;
+        const realLastIndex = take ? Math.min(resultCount - 1 + first, last) : (resultCount - 1);
+
+        res.set('Content-Range', `key ${first}-${realLastIndex}/${total}`)
+
+        return res.send(lockKeyWithId);
     } catch (error) {
-        console.log(error)
-        res.status(500).send({error: "server error"})
+        res.status(500).send(error)
     }
 }
 
 
-export async function createLock(req: Request, res: Response) {
+
+
+export async function addLockKey(req: Request, res: Response) {
     try {
 
         const repo=getRepository(Lock);
@@ -54,7 +76,7 @@ export async function createLock(req: Request, res: Response) {
 }
 
 
-export async function editLock(req: Request, res: Response) {
+export async function editLockKeys(req: Request, res: Response) {
     // function creates a connection between the reader and key inside the database and sends it over to the reader
     try {
         const {building, apartment,reader,apartmentLock,buildingLock,...updateObject}=req.body
@@ -78,7 +100,7 @@ export async function editLock(req: Request, res: Response) {
 }
 
 
-export async function deleteLock(req: Request, res: Response){
+export async function deleteLockKey(req: Request, res: Response){
     try {
         const result=await getRepository(Lock).delete(req.params.id)
         return res.send(result);

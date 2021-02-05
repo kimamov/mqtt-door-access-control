@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Create, SimpleForm, TextInput, BooleanInput, DateTimeInput, ReferenceInput, SelectInput } from 'react-admin';
+import { Create, SimpleForm, TextInput } from 'react-admin';
 
 
 

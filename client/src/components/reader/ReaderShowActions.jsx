@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DeleteForever, LockOpen, SystemUpdate} from '@material-ui/icons';
+import { DeleteForever, SystemUpdate} from '@material-ui/icons';
 import {
     TopToolbar,
     Button,

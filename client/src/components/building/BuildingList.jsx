@@ -1,6 +1,6 @@
 // in posts.js
 import * as React from "react";
-import { List, Datagrid, TextField, EditButton, NumberField, ReferenceField} from 'react-admin';
+import { List, Datagrid, TextField, EditButton} from 'react-admin';
 import KeyActions from "./KeyActions";
 
 export const BuildingList = (props) => (

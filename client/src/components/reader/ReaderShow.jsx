@@ -1,8 +1,6 @@
 import React, {useState} from 'react'
-import { Toolbar, SaveButton, Create, SimpleForm, ReferenceField,ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, ReferenceManyField, NumberField, useNotify, useRefresh, BooleanInput } from 'react-admin';
-import { LockOpen} from '@material-ui/icons';
+import { Toolbar, SaveButton, Create, SimpleForm, ReferenceField ,ReferenceManyField,ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, NumberField, useNotify, BooleanInput, ShowButton } from 'react-admin';
 import ReaderShowActions from './ReaderShowActions'
-import TextButtonField from '../customFields/TextButtonField';
 import { Button } from '@material-ui/core';
 
 
@@ -18,7 +16,7 @@ const ShowPropsExtractor=({children, ...props})=>{
     const [showDevice, setShow] = useState(false)
 
 
-    const openDoor=async(port)=>{
+    /* const openDoor=async(port)=>{
         try {
             const serverAdress=process.env.REACT_APP_SERVER || "http://locaholst:5000";
             const response=await fetch(`${serverAdress}/opendoor/${props.record.id}?port=${port}`)
@@ -28,7 +26,7 @@ const ShowPropsExtractor=({children, ...props})=>{
             console.log(error)
             notify("could not open door", "error")
         }
-    }
+    } */
 
     const readerKeyRowStyle = (record, _index) => {
         const keys=props?.record?.readerKeys;
@@ -63,12 +61,13 @@ const ShowPropsExtractor=({children, ...props})=>{
                 <TextField source="name"/>
             </ReferenceField>
             
-            <ArrayField label="CONNECTED LOCKS" source="locks" >
+            <ReferenceManyField reference="lock" target="readerId">
                 <Datagrid>
-                    <TextField label="name" source="name" />
+                    <TextField label="name" source="name"/>
                     <NumberField source="slot" />
+                    <ShowButton/>
                 </Datagrid>
-            </ArrayField>
+            </ReferenceManyField>
 
             {/* <TextButtonField onClick={()=>openDoor(1)} label="Relay 1 (acctype)" variant="contained" source="acctypeName">
                 <LockOpen/>

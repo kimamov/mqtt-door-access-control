@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React from 'react'
 import Box from '@material-ui/core/Box'
 import { styled, Menu, MenuItem } from '@material-ui/core';
 import {Add} from '@material-ui/icons';
@@ -56,7 +56,7 @@ const ValidLockCell=({
     const openLock=async()=>{
         try {
             notify(`started opening lock ${lock.name}`, "info")
-            const res=await fetch(`${"http://localhost:5000/api"}/opendoor/${lock.readerId}?port=${lock.slot}`)
+            await fetch(`${"http://localhost:5000/api"}/opendoor/${lock.readerId}?port=${lock.slot}`)
             //const json=await res.json();
             notify(`successfully opened lock ${lock.name}`, "info")
         } catch (error) {

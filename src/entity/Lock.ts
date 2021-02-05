@@ -67,6 +67,7 @@ export class Lock {
     @JoinTable()
     public previousLocks: Lock[]; */
 
-    @OneToMany(type=> Key, key => key.lock/* , { onDelete: 'CASCADE', onUpdate: 'CASCADE' } */)
-    public keys: Key[];
+    /* @ManyToMany(() => Key, key => key.locks)
+    @JoinTable()
+    keys: Key[]; */
 }

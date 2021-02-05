@@ -7,7 +7,6 @@ import LockCell from '../../../dashboard/LockCell'
 
 
 const BuildingRosenstrasse = (props) => {
-    const [modalOpen, setOpen]=useState(false);
     const [building, setBuilding]=useState({});
     /* get data for building rosenstrasse */
     useEffect(() => {

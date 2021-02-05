@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Typography } from '@material-ui/core'
+import { Card, CardContent, CardHeader } from '@material-ui/core'
 import React from 'react'
 import BuildingRosenstrasse from '../building/customViews/rosenstrasse/BuildingRosenstrasse'
 

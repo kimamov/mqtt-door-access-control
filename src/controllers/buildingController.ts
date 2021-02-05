@@ -1,12 +1,8 @@
 import {  getRepository } from "typeorm"
 import { Request, Response } from "express"
 import { Reader } from "../entity/Reader"
-import { client } from "../mqtt/connection";
-import { Key } from "../entity/Key";
 import getList from "../util/getList";
-import dateToUnix from "../util/dateToUnix";
 import { ReaderKey } from "../entity/ReaderKey";
-import { Lock } from "../entity/Lock";
 import { Building } from "../entity/Building";
 
 

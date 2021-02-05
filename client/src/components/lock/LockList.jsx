@@ -1,11 +1,9 @@
 // in posts.js
 import * as React from "react";
 import { List, Datagrid, TextField, EditButton, NumberField, ReferenceField} from 'react-admin';
-import KeyActions from "./KeyActions";
 
 export const LockList = (props) => (
     <List 
-        actions={<KeyActions/>} 
         {...props} 
     >
         <Datagrid rowClick="show">

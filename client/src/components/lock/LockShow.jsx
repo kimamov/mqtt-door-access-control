@@ -1,5 +1,5 @@
 import React from 'react'
-import {Datagrid,  Show, SimpleShowLayout,  ArrayField, BooleanField,  NumberField, DateField, TextField} from 'react-admin';
+import {Show, SimpleShowLayout,  NumberField, TextField, ReferenceField, ReferenceManyField, Datagrid} from 'react-admin';
 
 
 
@@ -10,21 +10,25 @@ const LockShow = (props) => {
         <Show title=" "  {...props}>
             <SimpleShowLayout {...props}>
                 <TextField source="name"/>
-                <TextField source="uid" />
-                <NumberField source="acctype" />
-                <NumberField source="acctype2" />
-                <NumberField source="acctype3" />
-                <NumberField source="acctype4" />
-                <DateField source="validUntil" showTime locales="de"/>
-                <BooleanField source="isOneTimeCode" />
+                <TextField source="type" />
+                <NumberField source="slot"/>
+                <ReferenceField label="Building" reference="building" source="buildingId" link="show">
+                    <TextField source="name"/>
+                </ReferenceField>
+                <ReferenceField label="Apartment" reference="apartment" source="apartmentId" link="show">
+                    <TextField source="name"/>
+                </ReferenceField>
+                <ReferenceField label="Reader" reference="reader" source="readerId"  link="show">
+                    <TextField source="readerName"/>
+                </ReferenceField>
                 
-                <ArrayField label="KEY IS ON THESE READERS" source="readerKeys" >
+                <ReferenceManyField label="Keys" reference="lockkey" target="id">
                     <Datagrid>
-                        <TextField label="name" source="reader.readerName" />
-                        <TextField label="local ip" source="reader.ip" />
-                        <DateField label="last ping" source="reader.lastPing" showTime locales="de"/>
+                        <ReferenceField reference="key" source="keyId" link="show">
+                            <TextField source="name"/>
+                        </ReferenceField>
                     </Datagrid>
-                </ArrayField>
+                </ReferenceManyField>
             </SimpleShowLayout>
         </Show>
     )

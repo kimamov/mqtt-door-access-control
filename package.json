@@ -28,6 +28,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
+    "rtsp-relay": "^1.1.2",
     "typeorm": "^0.2.26"
   },
   "devDependencies": {

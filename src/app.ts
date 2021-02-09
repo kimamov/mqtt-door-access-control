@@ -24,7 +24,7 @@ createConnection()
 
         const app = express();
 
-        app.set('view engine', 'ejs');
+        
 
         // setup express middlewares
         app.use(
@@ -56,18 +56,32 @@ createConnection()
         });
 
 
-        //setup routes
+        // setup api routes
         app.use("/api", routes);
 
+        // setup path for static files of react frontend
         app.use(express.static(path.join(__dirname, serverConfig.staticFilesPath)));
 
+        // setup fall through path for react frontend entry file index.html
         app.get('/', function (req, res) {
             res.sendFile(path.join(__dirname, serverConfig.clientPath));
         });
 
+        const { proxy } = require('rtsp-relay')(app); 
+
+        app.ws('/api/stream', (ws, req) => {
+            console.log("req.params")
+            return proxy({ url: `${'rtsp://admin:admin@meierscloud.synology.me:8001'}`, })(ws)
+        }); 
+
+
+        app.ws('/api/stream/:cameraAdress', (ws, req) => {
+            console.log(req.params)
+            return proxy({ url: `${req.params.cameraAdress}`, })(ws)
+        }); 
+
         //setup mqtt client
         setupMqtt();
-        // express server listen on PORT
 
 
         if(serverConfig.sslCertPath && serverConfig.sslKeyPath){

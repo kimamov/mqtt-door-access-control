@@ -1,11 +1,11 @@
 import React from 'react'
 import Box from '@material-ui/core/Box'
 import { styled, Menu, MenuItem } from '@material-ui/core';
-import {Add} from '@material-ui/icons';
-import {useRedirect, useNotify} from 'react-admin'
+import { Add } from '@material-ui/icons';
+import { useRedirect, useNotify } from 'react-admin'
 
 
-const Cell=styled(Box)({
+const Cell = styled(Box)({
     margin: "1px",
     transition: "0.2s",
     cursor: "pointer",
@@ -21,27 +21,27 @@ const Cell=styled(Box)({
     }
 })
 
-const LockCell = (props) => props.lock? <ValidLockCell {...props} /> : <EmptyLockCell/>
+const LockCell = (props) => props.lock ? <ValidLockCell {...props} /> : <EmptyLockCell />
 
 
-const ValidLockCell=({
+const ValidLockCell = ({
     lock,
-    customLabel, 
-    style={}, 
-    colors={
+    customLabel,
+    style = {},
+    colors = {
         open: "green",
         closed: "red",
         taken: "orange",
         free: "grey"
     },
-    onClick, 
+    onClick,
     ...props
-})=>{
-    const redirect=useRedirect();
-    const notify=useNotify();
+}) => {
+    const redirect = useRedirect();
+    const notify = useNotify();
     //const [menuOpen, setOpen]=useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open=!!anchorEl;
+    const open = !!anchorEl;
 
 
     const handleMenu = (event) => {
@@ -53,10 +53,10 @@ const ValidLockCell=({
     };
 
 
-    const openLock=async()=>{
+    const openLock = async () => {
         try {
             notify(`started opening lock ${lock.name}`, "info")
-            await fetch(`${"http://localhost:5000/api"}/opendoor/${lock.readerId}?port=${lock.slot}`)
+            await fetch(`${process.env.REACT_APP_SERVER}/opendoor/${lock.readerId}?port=${lock.slot}`)
             //const json=await res.json();
             notify(`successfully opened lock ${lock.name}`, "info")
         } catch (error) {
@@ -65,15 +65,15 @@ const ValidLockCell=({
         }
     }
 
-    const redirectToLock=()=>redirect(`/lock/${lock.id}`)
+    const redirectToLock = () => redirect(`/lock/${lock.id}`)
 
-    const label=customLabel || lock.number || lock.name
+    const label = customLabel || lock.number || lock.name
 
     return (
         <>
-            <Cell 
-                padding={2} 
-                bgcolor={lock.open? colors.open : colors.closed} 
+            <Cell
+                padding={2}
+                bgcolor={lock.open ? colors.open : colors.closed}
                 flex={1}
                 style={style}
                 onClick={handleMenu}
@@ -101,24 +101,24 @@ const ValidLockCell=({
                 <MenuItem onClick={openLock}>Open</MenuItem>
                 <MenuItem onClick={redirectToLock}>Manage</MenuItem>
             </Menu>
-           
+
         </>
-       
+
     )
 }
 
-const EmptyLockCell=()=>{
-    const redirect=useRedirect();
+const EmptyLockCell = () => {
+    const redirect = useRedirect();
 
     return (
-        <Cell 
-            padding={2} 
-            bgcolor={"lightgrey"} 
+        <Cell
+            padding={2}
+            bgcolor={"lightgrey"}
             flex={1}
-            onClick={()=>redirect(`/lock/create`)}
+            onClick={() => redirect(`/lock/create`)}
         >
-            <Add/>
-        </Cell> 
+            <Add />
+        </Cell>
     )
 }
 

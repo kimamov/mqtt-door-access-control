@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { Toolbar, SaveButton, Create, SimpleForm, ReferenceField ,ReferenceManyField,ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, NumberField, useNotify, BooleanInput, ShowButton } from 'react-admin';
+import React, { useState } from 'react'
+import { Toolbar, SaveButton, Create, SimpleForm, ReferenceField, ReferenceManyField, ReferenceInput, SelectInput, Datagrid, Show, SimpleShowLayout, TextField, DateField, ArrayField, BooleanField, NumberField, useNotify, BooleanInput, ShowButton } from 'react-admin';
 import ReaderShowActions from './ReaderShowActions'
 import { Button } from '@material-ui/core';
 
@@ -10,31 +10,19 @@ const KeyEditToolbar = props => (
     </Toolbar>
 );
 
-const ShowPropsExtractor=({children, ...props})=>{
-    const notify=useNotify();
+const ShowPropsExtractor = ({ children, ...props }) => {
+    const notify = useNotify();
     //const refresh=useRefresh();
     const [showDevice, setShow] = useState(false)
 
 
-    /* const openDoor=async(port)=>{
-        try {
-            const serverAdress=process.env.REACT_APP_SERVER || "http://locaholst:5000";
-            const response=await fetch(`${serverAdress}/opendoor/${props.record.id}?port=${port}`)
-            await response.json();
-            notify(`door ${props.record.id} opened port ${port}`, "info")
-        } catch (error) {
-            console.log(error)
-            notify("could not open door", "error")
-        }
-    } */
-
     const readerKeyRowStyle = (record, _index) => {
-        const keys=props?.record?.readerKeys;
-        if(!keys) return false;
+        const keys = props?.record?.readerKeys;
+        if (!keys) return false;
         return {
-            backgroundColor: record && keys && keys.find(key=>{
-                return ( 
-                    key.key.uid === record.uid && 
+            backgroundColor: record && keys && keys.find(key => {
+                return (
+                    key.key.uid === record.uid &&
                     key.key.name === record.name &&
                     key.acctype === record.acctype &&
                     key.acctype2 === record.acctype2 &&
@@ -55,17 +43,17 @@ const ShowPropsExtractor=({children, ...props})=>{
         <SimpleShowLayout {...props}>
             <TextField source="readerName" />
             <TextField source="ip" />
-            <DateField source="lastPing" showTime locales="de"/>
-            
+            <DateField source="lastPing" showTime locales="de" />
+
             <ReferenceField label="Apartment" reference="apartment" source="apartmentId" link="show">
-                <TextField source="name"/>
+                <TextField source="name" />
             </ReferenceField>
-            
+
             <ReferenceManyField reference="lock" target="readerId">
                 <Datagrid>
-                    <TextField label="name" source="name"/>
+                    <TextField label="name" source="name" />
                     <NumberField source="slot" />
-                    <ShowButton/>
+                    <ShowButton />
                 </Datagrid>
             </ReferenceManyField>
 
@@ -87,19 +75,19 @@ const ShowPropsExtractor=({children, ...props})=>{
             <TextButtonField onClick={()=>openDoor(6)} label="Relay 6 (acctype6)" variant="contained" source="acctype4Name">
                 <LockOpen/>
             </TextButtonField> */}
-            
+
             {/* TODO MAKE THIS GRID HAVING IT STACKED ON DESKTOP GETS MESSY */}
             <Create title=" " resource={props.resource} onSuccess={onSuccess}>
-                <SimpleForm toolbar={<KeyEditToolbar/>}>
-                    <ReferenceInput label="ADD KEY TO READER" reference="key" source="key_id"  required>
+                <SimpleForm toolbar={<KeyEditToolbar />}>
+                    <ReferenceInput label="ADD KEY TO READER" reference="key" source="key_id" required>
                         <SelectInput optionText="name" />
                     </ReferenceInput>
-                    <BooleanInput label="acctype"  source="acctype"/>
-                    <BooleanInput label="acctype2" source="acctype2"/>
-                    <BooleanInput label="acctype3" source="acctype3"/>
-                    <BooleanInput label="acctype4" source="acctype4"/>
-                    <BooleanInput label="acctype5" source="acctype5"/>
-                    <BooleanInput label="acctype6" source="acctype6"/>
+                    <BooleanInput label="acctype" source="acctype" />
+                    <BooleanInput label="acctype2" source="acctype2" />
+                    <BooleanInput label="acctype3" source="acctype3" />
+                    <BooleanInput label="acctype4" source="acctype4" />
+                    <BooleanInput label="acctype5" source="acctype5" />
+                    <BooleanInput label="acctype6" source="acctype6" />
                 </SimpleForm>
             </Create>
 
@@ -108,9 +96,9 @@ const ShowPropsExtractor=({children, ...props})=>{
                 <Datagrid>
                     <TextField label="name" source="key.name" />
                     <TextField label="UID" source="key.uid" />
-                    <DateField label="valid" source="key.validUntil" showTime locales="de"/>
+                    <DateField label="valid" source="key.validUntil" showTime locales="de" />
                     <BooleanField label="one time" source="key.isOneTimeCode" />
-                    <NumberField source="acctype"  />
+                    <NumberField source="acctype" />
                     <NumberField source="acctype2" />
                     <NumberField source="acctype3" />
                     <NumberField source="acctype4" />
@@ -119,15 +107,15 @@ const ShowPropsExtractor=({children, ...props})=>{
                 </Datagrid>
             </ArrayField>
 
-            <Button onClick={()=>setShow(!showDevice)} variant="contained" color={showDevice? "primary" : "secondary"}>
-                {`${ showDevice? "HIDE" : "SHOW" } DEVICE KEYS`}
+            <Button onClick={() => setShow(!showDevice)} variant="contained" color={showDevice ? "primary" : "secondary"}>
+                {`${showDevice ? "HIDE" : "SHOW"} DEVICE KEYS`}
             </Button>
 
             {showDevice && <ReferenceManyField reference="devicekey" target="readerId" label="KEYS ON READER" {...props}>
                 <Datagrid rowStyle={readerKeyRowStyle} {...props}>
                     <TextField source="name" />
                     <TextField source="uid" />
-                    <DateField source="validUntil" showTime locales="de"/>
+                    <DateField source="validUntil" showTime locales="de" />
                     {/* <BooleanField label="one time" source="isOneTimeCode" /> */}
                     <NumberField source="acctype" />
                     <NumberField source="acctype2" />
@@ -137,7 +125,7 @@ const ShowPropsExtractor=({children, ...props})=>{
                     <NumberField source="acctype6" />
                 </Datagrid>
             </ReferenceManyField>}
-            
+
 
         </SimpleShowLayout>
     )
@@ -146,8 +134,8 @@ const ShowPropsExtractor=({children, ...props})=>{
 
 const ReaderShow = (props) => {
     return (
-        <Show  actions={<ReaderShowActions/>}  {...props}>
-            <ShowPropsExtractor/>
+        <Show actions={<ReaderShowActions />}  {...props}>
+            <ShowPropsExtractor />
         </Show>
     )
 }

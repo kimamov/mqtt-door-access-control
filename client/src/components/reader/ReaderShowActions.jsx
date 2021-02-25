@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DeleteForever, SystemUpdate} from '@material-ui/icons';
+import { DeleteForever, SystemUpdate } from '@material-ui/icons';
 import {
     TopToolbar,
     Button,
@@ -11,35 +11,24 @@ import {
 } from 'react-admin';
 import { useDispatch } from 'react-redux';
 
-const serverAdress=process.env.REACT_APP_SERVER || "http://locaholst:5000";
+const serverAdress = process.env.REACT_APP_SERVER || "http://locaholst:5000";
 
 
 const ReaderShowActions = ({ basePath, data, resource }) => {
     /* TODO PASS OPEN DOOR THROUGH PROPS */
-    const notify=useNotify();
-    const refresh=useRefresh();
-    const dispatch=useDispatch();
-    
-    /* const openDoor=async(port)=>{
-        try {
-            const response=await fetch(`${serverAdress}/opendoor/${data.id}?port=${port}`)
-            await response.json();
-            notify(`door ${data.id} opened port ${port}`, "info")
-        } catch (error) {
-            console.log(error)
-            notify("could not open door", "error")
+    const notify = useNotify();
+    const refresh = useRefresh();
+    const dispatch = useDispatch();
 
-        }
-    } */
 
-    const deleteAllKeys=async()=>{
+    const deleteAllKeys = async () => {
         try {
             dispatch(fetchStart());
             notify("started deleting all keys this could take around 5 seconds", "info");
-            const response=await fetch(`${serverAdress}/deleteall/${data.id}`)
-            const json=await response.json();
+            const response = await fetch(`${serverAdress}/deleteall/${data.id}`)
+            const json = await response.json();
             dispatch(fetchEnd());
-            notify(json.message? json.message :`reader ${data.id} deleted all keys. Reader keys will be refreshed shortly`, "info")
+            notify(json.message ? json.message : `reader ${data.id} deleted all keys. Reader keys will be refreshed shortly`, "info")
             setTimeout(refresh, 4000);
         } catch (error) {
             dispatch(fetchEnd());
@@ -49,11 +38,11 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
         }
     }
 
-    const syncAllKeys=async()=>{
+    const syncAllKeys = async () => {
         try {
             dispatch(fetchStart());
             notify("started syncing please wait", "info")
-            const response=await fetch(`${serverAdress}/syncall/${data.id}`)
+            const response = await fetch(`${serverAdress}/syncall/${data.id}`)
             await response.json();
             dispatch(fetchEnd());
             //notify(json.message? json.message :`reader ${data.id} synced all keys`, "info")
@@ -67,13 +56,13 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
         }
     }
 
-    
 
-    const marginLeft={marginLeft: "8px"}
 
-    return(
+    const marginLeft = { marginLeft: "8px" }
+
+    return (
         <TopToolbar >
-            <EditButton basePath={basePath} record={data}/>
+            <EditButton basePath={basePath} record={data} />
             {/* <Button style={marginLeft} label="OPEN 1" color="primary" variant="contained" onClick={()=>openDoor(1)}>
                 <LockOpen/>
             </Button>
@@ -87,10 +76,10 @@ const ReaderShowActions = ({ basePath, data, resource }) => {
                 <LockOpen/>
             </Button> */}
             <Button style={marginLeft} label="SYNC" color="secondary" variant="contained" onClick={syncAllKeys}>
-                <SystemUpdate/>
+                <SystemUpdate />
             </Button>
             <Button style={marginLeft} label="DELETE" color="secondary" variant="contained" onClick={deleteAllKeys}>
-                <DeleteForever/>
+                <DeleteForever />
             </Button>
         </TopToolbar>
     )

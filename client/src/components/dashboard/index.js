@@ -9,7 +9,8 @@ const Dashboard = (props) => {
         <Card>
             <CardHeader title="Dashboard"/>
             <CardContent>
-                <CameraView/>
+                <CameraView cameraAdress="rtsp://admin:work4me!@mzvol.synology.me:1000/11"/>
+                <CameraView cameraAdress="rtsp://admin:meier1234@meierscloud.synology.me:9000/"/>
                 <BuildingRosenstrasse/>
             </CardContent>
         </Card>

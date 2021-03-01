@@ -61,18 +61,18 @@ async function handleHeartBeat(messageJSON) {
         if (!(messageJSON.type === "heartbeat")) throw "invalid type expected heartbeat"
         if (!(messageJSON.ip && messageJSON.time && messageJSON.door)) throw "required fileds are missing"
         const { ip, time, door } = messageJSON;
-        
+
         const readerRepo: Repository<Reader> = getRepository(Reader);
         /* check if reader already exists */
-        const foundReader=await readerRepo.findOne({readerName: door});
-        const lastPingDateTime=dateFromUnix(time);
-        if(foundReader){
+        const foundReader = await readerRepo.findOne({ readerName: door });
+        const lastPingDateTime = dateFromUnix(time);
+        if (foundReader) {
             /* if there already is a reader with that name and ip update it */
-            foundReader.lastPing=lastPingDateTime;
+            foundReader.lastPing = lastPingDateTime;
             await readerRepo.save(foundReader);
             //console.log("updated reader");
             //console.log(result)
-        }else {
+        } else {
             /* otherwise create a new one */
             const reader = readerRepo.create({
                 ip: ip,
@@ -82,7 +82,7 @@ async function handleHeartBeat(messageJSON) {
             await readerRepo.save(reader)
             //console.log("created new reader")
         }
-        
+
     } catch (error) {
         console.log(error)
     }
@@ -125,8 +125,8 @@ function handleAccessAndEvent(messageJSON) {
     if (messageJSON.cmd === "event") handleDoorEvent(messageJSON)
     else if (messageJSON.type === "access") {
         messageJSON.isKnown = messageJSON.isKnown === "true"
-        messageJSON.isKnown  ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
-        if(messageJSON.cmd==="log"){
+        messageJSON.isKnown ? handleKnownKey(messageJSON) : handleUnknownKey(messageJSON)
+        if (messageJSON.cmd === "log") {
             logAccess(messageJSON);
         }
     }
@@ -155,17 +155,17 @@ async function handleDoorEvent(messageJSON) {
 async function handleKnownKey(messageJSON) {
     console.log(`known key with the UID: ${messageJSON.uid} accessed door ${messageJSON.door}`);
     try {
-        const readerResult=await getRepository(Reader).findOneOrFail({readerName: messageJSON.door}, {relations: ["readerKeys", "readerKeys.key"]});
-        
+        const readerResult = await getRepository(Reader).findOneOrFail({ readerName: messageJSON.door }, { relations: ["readerKeys", "readerKeys.key"] });
+
         // update onetime key
         // find a key with the provided uid on the reader
-        const foundReaderKey: ReaderKey | undefined=readerResult.readerKeys.find(result=>result.key.uid === messageJSON.uid);
-        if(!foundReaderKey) throw Error("could not find key with the provided uid on reader")
-        const currentDate=new Date();
+        const foundReaderKey: ReaderKey | undefined = readerResult.readerKeys.find(result => result.key.uid === messageJSON.uid);
+        if (!foundReaderKey) throw Error("could not find key with the provided uid on reader")
+        const currentDate = new Date();
         currentDate.setMinutes(currentDate.getMinutes() + 30); // increase the date by 30 minutes
-        foundReaderKey.key.validUntil=currentDate; // set the key to be valid for 30 more minutes from now
-        
-        const updatedKeyResult=await getRepository(Key).save(foundReaderKey.key);
+        foundReaderKey.key.validUntil = currentDate; // set the key to be valid for 30 more minutes from now
+
+        const updatedKeyResult = await getRepository(Key).save(foundReaderKey.key);
         console.log(updatedKeyResult);
     } catch (error) {
         console.log(error);
@@ -180,7 +180,7 @@ async function logAccess(messageJSON) {
         const { uid, username, door, time, isKnown, type, access } = messageJSON;
         // every accessLog needs to be connected to a reader
         // try to find the reader
-        const readerResult=await getRepository(Reader).findOneOrFail({readerName: door});
+        const readerResult = await getRepository(Reader).findOneOrFail({ readerName: door });
 
         const accessRepo: Repository<AccessLog> = getRepository(AccessLog);
         const key = await accessRepo.create({
@@ -203,10 +203,10 @@ async function logAccess(messageJSON) {
 }
 
 async function handleUnknownKey(messageJSON) {
-  
+
     try {
         const { uid, username, door, time } = messageJSON;
-        const readerResult=await getRepository(Reader).findOneOrFail({readerName: door});
+        const readerResult = await getRepository(Reader).findOneOrFail({ readerName: door });
         const newKeyRepo: Repository<NewKey> = getRepository(NewKey);
         const key = await newKeyRepo.create({
             uid: uid,

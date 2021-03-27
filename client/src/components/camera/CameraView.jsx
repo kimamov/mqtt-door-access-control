@@ -15,7 +15,7 @@ const CameraView = ({ cameraAdress = "" }) => {
         ) */
         new JSMpeg.VideoElement(
             ref.current,
-            `ws://${window.location.host}:2000/api/customstream?cam=${cameraAdress}}`
+            `ws://${window.location.host}:2000/api/customstream?cam=${cameraAdress}`
         )
         /* new JSMpeg.VideoElement(
             ref.current,

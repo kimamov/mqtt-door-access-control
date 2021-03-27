@@ -2,15 +2,16 @@ import { deleteAccess, editAccess, getAccess, getAccesses } from '../controllers
 import { deleteEvent, editEvent, getEvent, getEvents } from '../controllers/eventController';
 import { addKey, editKey, getKey, getKeys, deleteKey } from '../controllers/keyController';
 import { deleteNewKey, editNewKey, getNewKey, getNewKeys } from '../controllers/newKeyController';
-import { syncAllKeys, deleteAllKeys, openDoor, generateReaderKeys, generateAllReaderKeys} from '../controllers/deviceController';
+import { syncAllKeys, deleteAllKeys, openDoor, generateReaderKeys, generateAllReaderKeys } from '../controllers/deviceController';
 import { getReaders, addReaderKeys, getReaderWithKeys, editReaderKeys } from '../controllers/readerController';
-import  {signUp, editUser, getUsers, getUserById } from '../controllers/userController';
+import { signUp, editUser, getUsers, getUserById } from '../controllers/userController';
 import { checkAuth } from '../middlewares/middlewares';
 import { client } from '../mqtt/connection';
 import { createLock, deleteLock, editLock, getLock, getLocks } from '../controllers/lockController';
 import { getBuildings, getBuilding, createBuilding, deleteBuilding } from '../controllers/buildingController';
 import { createApartment, deleteApartment, getApartment, getApartments } from '../controllers/apartmentController';
 import { addLockKey, getLockKeys } from '../controllers/lockKeyController';
+import { createCamera, deleteCamera, getCamera, getCameras } from '../controllers/cameraController';
 /* import { client } from '../mqtt/connection';
  */
 
@@ -74,6 +75,16 @@ router.get("/apartment/:id", getApartment)
 router.post("/apartment"/* , checkAuth */, createApartment)
 
 router.delete("/apartment/:id", deleteApartment)
+
+
+router.get("/camera", getCameras)
+
+router.get("/camera/:id", getCamera)
+
+router.post("/camera"/* , checkAuth */, createCamera)
+
+router.delete("/camera/:id", deleteCamera)
+
 
 
 /* router.get("/openlock/:id", (req, res)=>{

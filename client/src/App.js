@@ -26,6 +26,8 @@ import BuildingCreate from './components/building/BuildingCreate';
 import Dashboard from './components/dashboard';
 import ApartmentCreate from './components/apartment/ApartmentCreate';
 import ApartmentList from './components/apartment/ApartmentList';
+import CameraList from './components/camera/CameraList';
+import CameraCreate from './components/camera/CameraCreate';
 
 
 const isAdmin=permissions=>{
@@ -45,6 +47,8 @@ function App() {
       {permissions=>[
         <Resource icon={LocationCity} name="building" list={BuildingList} create={BuildingCreate}/>,
         <Resource icon={LocationCity} name="apartment" list={ApartmentList} create={ApartmentCreate}/>,
+        <Resource icon={LocationCity} name="camera" list={CameraList} create={CameraCreate}/>,
+
         <Resource icon={Lock} name="lock" list={LockList} create={LockCreate} edit={LockEdit} show={LockShow} options={{label: 'Locks'}}/>,
         <Resource icon={Lock} name="lockkey" options={{label: 'Locks'}}/>,
         <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controllers'}}/>,
@@ -63,14 +67,3 @@ function App() {
 
 export default App;
 
-/* 
-{permissions=>[
-          <Resource icon={Fingerprint} name="reader" list={ReaderList} show={ReaderShow} edit={ReaderEdit} options={{label: 'Controller'}}/>,
-          <Resource icon={VpnKey} name="key" list={KeyList} create={KeyCreate} edit={KeyEdit} show={KeyShow}/>,
-          <Resource icon={FiberNew} name="newkey" list={NewKeyList} options={{label: 'Unknown Keys'}}/>,
-          <Resource icon={Event} name="event" list={EventList}   />,
-          <Resource icon={LockOpen} name="access" list={AccessList}   />,
-          <Resource name="readerkey" />,
-          <Resource name="devicekey" />
-        ]}
-*/

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@material-ui/core/Box'
 import { styled, Menu, MenuItem } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
@@ -39,8 +39,8 @@ const ValidLockCell = ({
 }) => {
     const redirect = useRedirect();
     const notify = useNotify();
-    //const [menuOpen, setOpen]=useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [isLockOpen, setOpen] = useState(false);
     const open = !!anchorEl;
 
 
@@ -69,11 +69,19 @@ const ValidLockCell = ({
 
     const label = customLabel || lock.number || lock.name
 
+
+    useEffect(() => {
+
+        return () => {
+
+        }
+    }, [lock.id])
+
     return (
         <>
             <Cell
                 padding={2}
-                bgcolor={lock.open ? colors.open : colors.closed}
+                bgcolor={isLockOpen ? colors.open : colors.closed}
                 flex={1}
                 style={style}
                 onClick={handleMenu}

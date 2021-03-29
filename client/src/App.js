@@ -13,7 +13,7 @@ import AccessList from './components/access/AccessList'
 import { NewKeyList } from './components/newKey/NewKeyList';
 import authProvider from './AuthProvider';
 import ReaderEdit from './components/reader/ReaderEdit';
-import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser, LocationCity, Lock} from '@material-ui/icons';
+import {Fingerprint, VpnKey, FiberNew, Event, LockOpen, VerifiedUser, LocationCity, Lock, Camera} from '@material-ui/icons';
 import UserList from './components/user/UserList';
 import UserCreate from './components/user/UserCreate';
 import UserEdit from './components/user/UserEdit';
@@ -28,6 +28,8 @@ import ApartmentCreate from './components/apartment/ApartmentCreate';
 import ApartmentList from './components/apartment/ApartmentList';
 import CameraList from './components/camera/CameraList';
 import CameraCreate from './components/camera/CameraCreate';
+import CameraShow from './components/camera/CameraShow';
+
 
 
 const isAdmin=permissions=>{
@@ -47,7 +49,7 @@ function App() {
       {permissions=>[
         <Resource icon={LocationCity} name="building" list={BuildingList} create={BuildingCreate}/>,
         <Resource icon={LocationCity} name="apartment" list={ApartmentList} create={ApartmentCreate}/>,
-        <Resource icon={LocationCity} name="camera" list={CameraList} create={CameraCreate}/>,
+        <Resource icon={Camera} name="camera" list={CameraList} create={CameraCreate} show={CameraShow}/>,
 
         <Resource icon={Lock} name="lock" list={LockList} create={LockCreate} edit={LockEdit} show={LockShow} options={{label: 'Locks'}}/>,
         <Resource icon={Lock} name="lockkey" options={{label: 'Locks'}}/>,
